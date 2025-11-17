@@ -11,6 +11,21 @@ C++ for Simulations
 Rust Backend network layer
 next.js Frontend visualization and user interaction
 
+UAV Process 1 (Port 8001) ←→ Direct C++ networking ←→ UAV Process 2 (Port 8002)
+       ↓                                                        ↓
+   HTTP to Rust                                           HTTP to Rust  
+       ↓                                                        ↓
+    Rust Server ←→ Aggregates all UAV data ←→ WebSocket ←→ Next.js UI
+
+Roll of Rust:
+- Collect telemetry from multiple UAV processes
+
+- Aggregate swarm state from distributed sources
+
+- Provide centralized view to Next.js dashboard
+
+- Optional: Act as mission command center (send high-level goals)
+
 # Stretch Goals
 Allow Users to take control of an individual UAV and have all other UAVs respond in a way that maintains cohesion. 
 
