@@ -1,5 +1,5 @@
 # Individual Files
-src/test_run
+sim/src/test_run
 
 # Prerequisites
 *.d
