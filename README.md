@@ -26,6 +26,9 @@ Roll of Rust:
 
 - Optional: Act as mission command center (send high-level goals)
 
+# Required Packages
+nlohmann/json for json handling in C++ (sudo apt install nlohmann-json3-dev)
+
 # Stretch Goals
 Allow Users to take control of an individual UAV and have all other UAVs respond in a way that maintains cohesion. 
 

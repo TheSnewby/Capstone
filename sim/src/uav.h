@@ -1,34 +1,51 @@
 #pragma once
 #include <array>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <algorithm>
+#include <nlohmann/json.hpp>
+#include <iostream>
 
 // for the stretch goal of allowing a user to manually control an individual UAV
 enum class UAVControleMode {
 	AUTONOMOUS,
-	MANUAL
+	MANUAL,
+	// perhaps LEADER
 };
 
 class UAV {
 private:
 	int id;
+	int port;
+	std::vector<std::string> neighbor_address; /* 172.0.0.1:8001, ...*/
 	UAVControleMode mode = UAVControleMode::AUTONOMOUS;
+
 	std::array<double, 3> pos;
 	std::array<double, 3> vel;
 
+	struct NeighborInfo {
+		int id;
+		std::array<double, 3> last_known_pos;
+		std::chrono::time_point<std::chrono::steady_clock> last_time;
+	};
+	std::vector<NeighborInfo> neighbor_status;
+
 public:
 	// Constructor
-	UAV(int setid, double x, double y, double z) :
-		id(setid), pos{x, y, z}, vel{0, 0, 0} {}
+	UAV(int set_id, int set_port, double x, double y, double z) :
+		id(set_id), port(set_port), pos{x, y, z}, vel{0, 0, 0} {}
 
 	// Setters
-	void set_velocity(double x, double y, double z) {
-		vel = {x, y, z};
-	}
+	void set_velocity(double x, double y, double z) { vel = {x, y, z}; }
 	void set_velx(double x) { vel[0] = x; }
 	void set_vely(double y) { vel[1] = y; }
 	void set_velz(double z) { vel[2] = z; }
+	void set_neighbor_address(std::vector<std::string> addresses) {neighbor_address = addresses; }
 
 	// Getters
 	int get_id() const { return id; }
+	int get_port() const { return port; }
 
 	std::array<double, 3> get_pos() const { return pos; }
 	double get_x() const { return pos[0]; }
@@ -40,11 +57,18 @@ public:
 	double get_vely() const { return vel[1]; }
 	double get_velz() const { return vel[2]; }
 
-	// Updaters
-	void update_position(double dt) {
-		pos[0] += vel[0] * dt;
-		pos[1] += vel[1] * dt;
-		pos[2] += vel[2] * dt; 
-	}
+	std::vector<std::string> get_neighbor_address() { return neighbor_address; }
+	std::vector<NeighborInfo> get_neighbor_status() { return neighbor_status; }
 
+	// Updaters
+	void update_position(double dt);
+	void add_neighbor_address(const std::string& address) { neighbor_address.push_back(address); }
+	void remove_neighbor_address(const std::string& address);
+	void update_neighbor_status(int neighbor_id, const std::array<double, 3>& pos);
+	void remove_stale_neighbors();
+	std::vector<NeighborInfo> get_fresh_neighbors();
+
+	// JSON
+	void uav_telemetry_broadcast();
+	void uav_to_telemetry_server();
 };
