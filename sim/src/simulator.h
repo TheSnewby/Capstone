@@ -17,6 +17,9 @@ public:
 	UAVSimulator(int num_drones);
 	~UAVSimulator();
 
+	//getter
+	std::vector<UAV>& get_swarm() { return swarm; }
+
 	void start_sim();
 	void stop_sim();
 

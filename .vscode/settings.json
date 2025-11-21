@@ -1,0 +1,6 @@
+{
+	"C_Cpp.default.includePath": [
+		"\"/opt/homebrew/include\""
+	],
+	"cmake.sourceDirectory": "/Users/nashthames/Capstone/sim"
+}
