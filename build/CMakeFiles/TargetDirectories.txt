@@ -1,0 +1,5 @@
+/Users/nashthames/Capstone/build/CMakeFiles/sim.dir
+/Users/nashthames/Capstone/build/CMakeFiles/edit_cache.dir
+/Users/nashthames/Capstone/build/CMakeFiles/rebuild_cache.dir
+/Users/nashthames/Capstone/build/_deps/nlohmann_json-build/CMakeFiles/edit_cache.dir
+/Users/nashthames/Capstone/build/_deps/nlohmann_json-build/CMakeFiles/rebuild_cache.dir

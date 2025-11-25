@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { ConnectionStatus } from "../hooks/useTelemetry";
 
 export type Command =
@@ -45,6 +45,54 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
       ? "text-red-400"
       : "text-red-400";
 
+  const [keyPress, setKeyPress] = useState<string | null>(null);
+
+  // Keyboard bindings for visual feedback only (commands are handled in page.tsx)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isDisabled) return;
+      if (e.repeat) return;
+
+      const key = e.key.toLowerCase();
+      if (["w", "a", "s", "d", "q", "e"].includes(key)) {
+        switch (key) {
+          case "w":
+            setKeyPress("north");
+            break;
+          case "s":
+            setKeyPress("south");
+            break;
+          case "a":
+            setKeyPress("west");
+            break;
+          case "d":
+            setKeyPress("east");
+            break;
+          case "q":
+            setKeyPress("alt_up");
+            break;
+          case "e":
+            setKeyPress("alt_down");
+            break;
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if (["w", "a", "s", "d", "q", "e"].includes(key)) {
+        setKeyPress(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [isDisabled]);
+
   return (
     <section className="mc-panel mc-panel-inner bg-gradient-to-b from-black/80 to-black/95 nasa-text text-xs border border-emerald-700/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]">
       <h2 className="mb-4 flex items-center justify-between">
@@ -59,36 +107,59 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
       {/* leader movement */}
       <div className="mb-4">
         <div className="mb-1 tracking-wide">LEADER MOVEMENT</div>
-        <div className="grid grid-cols-3 gap-2 text-center">
+        <div className="flex flex-col items-center gap-2 text-center">
           <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className={
+              "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+              (keyPress === "north"
+                ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                : "")
+            }
             disabled={isDisabled}
             onClick={() => onCommand({ type: "move_leader", direction: "north" })}
           >
             ▲
           </button>
-          <div />
+
+          <div className="flex gap-2">
+            <button
+              className={
+                "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+                (keyPress === "west"
+                  ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                  : "")
+              }
+              disabled={isDisabled}
+              onClick={() => onCommand({ type: "move_leader", direction: "west" })}
+            >
+              ◀
+            </button>
+
+            <button
+              className={
+                "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+                (keyPress === "east"
+                  ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                  : "")
+              }
+              disabled={isDisabled}
+              onClick={() => onCommand({ type: "move_leader", direction: "east" })}
+            >
+              ▶
+            </button>
+          </div>
+
           <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className={
+              "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+              (keyPress === "south"
+                ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                : "")
+            }
             disabled={isDisabled}
             onClick={() => onCommand({ type: "move_leader", direction: "south" })}
           >
             ▼
-          </button>
-          <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
-            disabled={isDisabled}
-            onClick={() => onCommand({ type: "move_leader", direction: "west" })}
-          >
-            ◀
-          </button>
-          <div />
-          <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
-            disabled={isDisabled}
-            onClick={() => onCommand({ type: "move_leader", direction: "east" })}
-          >
-            ▶
           </button>
         </div>
       </div>
@@ -98,14 +169,24 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
         <div className="mb-1 tracking-wide">ALTITUDE</div>
         <div className="flex gap-2">
           <button
-            className="flex-1 mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className={
+              "flex-1 mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+              (keyPress === "alt_up"
+                ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                : "")
+            }
             disabled={isDisabled}
             onClick={() => onCommand({ type: "altitude_change", amount: +10 })}
           >
             +10m
           </button>
           <button
-            className="flex-1 mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className={
+              "flex-1 mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
+              (keyPress === "alt_down"
+                ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
+                : "")
+            }
             disabled={isDisabled}
             onClick={() => onCommand({ type: "altitude_change", amount: -10 })}
           >
@@ -119,21 +200,21 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
         <div className="mb-1 tracking-wide">FORMATION</div>
         <div className="grid grid-cols-3 gap-2">
           <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
             disabled={isDisabled}
             onClick={() => onCommand({ type: "formation", mode: "line" })}
           >
             LINE
           </button>
           <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
             disabled={isDisabled}
             onClick={() => onCommand({ type: "formation", mode: "vee" })}
           >
             VEE
           </button>
           <button
-            className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
             disabled={isDisabled}
             onClick={() => onCommand({ type: "formation", mode: "circle" })}
           >
@@ -146,21 +227,21 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
       <div className="mb-1 tracking-wide">GLOBAL COMMANDS</div>
       <div className="grid grid-cols-3 gap-2">
         <button
-          className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
           disabled={isDisabled}
           onClick={() => onCommand({ type: "pause" })}
         >
           PAUSE
         </button>
         <button
-          className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
           disabled={isDisabled}
           onClick={() => onCommand({ type: "resume" })}
         >
           RESUME
         </button>
         <button
-          className="mc-button btn-glow nasa-text text-[0.7rem] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-3 py-2 bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all"
           disabled={isDisabled}
           onClick={() => onCommand({ type: "rtb" })}
         >

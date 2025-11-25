@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/environment.cpp.o -c /Users/nashthames/Capstone/sim/src/environment.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/environment.cpp",
+  "output": "CMakeFiles/sim.dir/src/environment.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/main.cpp.o -c /Users/nashthames/Capstone/sim/src/main.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/main.cpp",
+  "output": "CMakeFiles/sim.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/pathfinder.cpp.o -c /Users/nashthames/Capstone/sim/src/pathfinder.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/pathfinder.cpp",
+  "output": "CMakeFiles/sim.dir/src/pathfinder.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/simulator.cpp.o -c /Users/nashthames/Capstone/sim/src/simulator.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/simulator.cpp",
+  "output": "CMakeFiles/sim.dir/src/simulator.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/swarm_coordinator.cpp.o -c /Users/nashthames/Capstone/sim/src/swarm_coordinator.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/swarm_coordinator.cpp",
+  "output": "CMakeFiles/sim.dir/src/swarm_coordinator.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/telemetry_encoder.cpp.o -c /Users/nashthames/Capstone/sim/src/telemetry_encoder.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/telemetry_encoder.cpp",
+  "output": "CMakeFiles/sim.dir/src/telemetry_encoder.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/telemetry_server.cpp.o -c /Users/nashthames/Capstone/sim/src/telemetry_server.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/telemetry_server.cpp",
+  "output": "CMakeFiles/sim.dir/src/telemetry_server.cpp.o"
+},
+{
+  "directory": "/Users/nashthames/Capstone/build",
+  "command": "/usr/bin/c++  -I/Users/nashthames/Capstone/build/_deps/nlohmann_json-src/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/sim.dir/src/uav.cpp.o -c /Users/nashthames/Capstone/sim/src/uav.cpp",
+  "file": "/Users/nashthames/Capstone/sim/src/uav.cpp",
+  "output": "CMakeFiles/sim.dir/src/uav.cpp.o"
+}
+]

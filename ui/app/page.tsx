@@ -37,19 +37,19 @@ export default function TelemetryPage() {
   }, [settings]);
 
   const handleCommand = (cmd: Command) => {
-    // Send command over the telemetry WebSocket to the Rust backend
+    // send command over the telemetry WebSocket to the Rust backend
     send({ type: "command", payload: cmd });
   };
 
   useEffect(() => {
-    // Broadcast swarm behavior settings to the backend via WebSocket
+    // broadcast swarm behavior settings to the backend via WebSocket
     send({ type: "swarm_settings", payload: swarmSettings });
   }, [swarmSettings, send]);
 
-  // Keyboard controls: WASD to move leader, Q/E altitude, T toggle trails
+  // keyboard controls: WASD to move leader, Q/E altitude, T toggle trails
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Don’t hijack typing in inputs/textareas/selects
+      // don’t hijack typing in inputs/textareas/selects
       const target = event.target as HTMLElement | null;
       if (target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)) {
         return;
@@ -57,40 +57,22 @@ export default function TelemetryPage() {
 
       switch (event.key.toLowerCase()) {
         case "w":
-          send({
-            type: "command",
-            payload: { type: "move_leader", direction: "north" },
-          });
+          handleCommand({ type: "move_leader", direction: "north" });
           break;
         case "s":
-          send({
-            type: "command",
-            payload: { type: "move_leader", direction: "south" },
-          });
+          handleCommand({ type: "move_leader", direction: "south" });
           break;
         case "a":
-          send({
-            type: "command",
-            payload: { type: "move_leader", direction: "west" },
-          });
+          handleCommand({ type: "move_leader", direction: "west" });
           break;
         case "d":
-          send({
-            type: "command",
-            payload: { type: "move_leader", direction: "east" },
-          });
+          handleCommand({ type: "move_leader", direction: "east" });
           break;
         case "q":
-          send({
-            type: "command",
-            payload: { type: "altitude_change", amount: 10 },
-          });
+          handleCommand({ type: "altitude_change", amount: 10 });
           break;
         case "e":
-          send({
-            type: "command",
-            payload: { type: "altitude_change", amount: -10 },
-          });
+          handleCommand({ type: "altitude_change", amount: -10 });
           break;
         case "t":
           setShowTrails((prev) => !prev);
@@ -168,13 +150,12 @@ export default function TelemetryPage() {
             </p>
           </div>
 
-          {/* NEW RETURN BUTTON */}
           <div className="flex flex-col items-end">
             <button
               className="mc-button nasa-text text-[0.65rem] mb-2 mr-1 btn-glow"
               onClick={() => setShowSplash(true)}
             >
-              ← Return
+              ← Back to Main
             </button>
 
             <div className="text-right text-xs nasa-text mc-panel-inner bg-black/40 rounded-lg px-3 py-2">

@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/nashthames/Capstone/build/cmake_install.cmake",
+		"/Users/nashthames/Capstone/build/_deps/nlohmann_json-build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
