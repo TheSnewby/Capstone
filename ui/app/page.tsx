@@ -143,10 +143,10 @@ export default function TelemetryPage() {
               SkyWeave
             </h1>
             <p className="text-zinc-400 mt-1 text-sm">
-              Live UAV swarm telemetry • C++ sim → Rust server → WebSocket → Next.js
+              Live UAV Swarm Telemetry • C++ sim → Rust server → WebSocket → Next.js
             </p>
             <p className="text-zinc-500 mt-1 text-xs nasa-text">
-              Controls: WASD move leader • Q/E altitude • T toggle trails
+              W-A-S-D : move leader • Q / E : change altitude • T : toggle trails
             </p>
           </div>
 
