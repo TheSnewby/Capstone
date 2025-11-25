@@ -210,9 +210,6 @@ export default function TelemetryPage() {
         </section>
 
         <section>
-          <h2 className="text-xs font-semibold text-emerald-400 uppercase tracking-wide mb-2 nasa-text">
-            Telemetry Console
-          </h2>
           <TelemetryTable uavs={uavs} />
         </section>
       </div>
