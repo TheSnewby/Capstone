@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useTelemetry } from "./hooks/useTelemetry";
 import UavScene from "./components/UavScene";
@@ -11,6 +11,8 @@ import CommandPanel, { Command } from "./components/CommandPanel";
 
 export default function TelemetryPage() {
   const { uavs, status, send } = useTelemetry();
+  const router = useRouter();
+  const [showSplash, setShowSplash] = useState(true);
   const [showTrails, setShowTrails] = useState(true);
   const [swarmSettings, setSwarmSettings] = useState<SwarmSettings>({
     cohesion: 1.0,
@@ -88,13 +90,61 @@ export default function TelemetryPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [send]);
 
+  if (showSplash) {
+    return (
+      <main className="min-h-screen w-full bg-black text-white flex justify-center items-center">
+        <div className="max-w-xl w-full px-6 text-center crt-scanlines mc-panel py-10 flex flex-col items-center justify-center">
+          <div className="mb-6 flex justify-center items-center w-full">
+            <svg
+              viewBox="0 0 200 60"
+              className="w-64 h-20 mx-auto block"
+              aria-hidden="true"
+            >
+              <g>
+                <polygon points="46,10 66,20 46,30" fill="#22d3ee" />
+                <polygon points="78,10 98,20 78,30" fill="#22d3ee" />
+                <polygon points="110,10 130,20 110,30" fill="#22d3ee" />
+                <polygon points="142,5 162,20 142,35" fill="#facc15" />
+              </g>
+            </svg>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-semibold nasa-text mb-2 mx-auto pl-2">
+            SkyWeave
+          </h1>
+          <p className="text-zinc-400 text-sm md:text-base mb-6">Control autonomous UAV swarms with real-time telemetry and commands.</p>
+          <div className="mt-8 w-full grid grid-cols-3 place-items-center gap-4">
+            <button
+              className="mc-button nasa-text text-xs px-5"
+              onClick={() => router.push("/guide")}
+            >
+              Guide
+            </button>
+
+            <button
+              className="mc-button nasa-text text-base px-10 py-3"
+              onClick={() => setShowSplash(false)}
+            >
+              Launch
+            </button>
+
+            <button
+              className="mc-button nasa-text text-xs px-5"
+              onClick={() => router.push("/developers")}
+            >
+              Developers
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className="min-h-screen w-full bg-black text-white flex justify-center items-start py-8">
-      <div className="w-full max-w-6xl px-4 crt-scanlines">
+      <div className="w-full max-w-6xl px-4 crt-scanlines mc-panel">
         <header className="flex items-baseline justify-between mb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-semibold tracking-tight nasa-text">
-              SKYWEAVE MISSION CONTROL
+              SkyWeave
             </h1>
             <p className="text-zinc-400 mt-1 text-sm">
               Live UAV swarm telemetry • C++ sim → Rust server → WebSocket → Next.js
@@ -104,17 +154,25 @@ export default function TelemetryPage() {
             </p>
           </div>
 
-          <div className="text-right text-xs nasa-text">
-            <div className="crt-flicker">
-              WS STATUS: {status.toUpperCase()}
+          <div className="text-right text-xs nasa-text mc-panel-inner bg-black/40 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 crt-flicker">
+              <span
+                className={
+                  "ws-dot " +
+                  (status.toString().toLowerCase() === "connected"
+                    ? "ws-dot--ok"
+                    : status.toString().toLowerCase() === "connecting"
+                    ? "ws-dot--warn"
+                    : "ws-dot--err")
+                }
+              />
+              WS: {status.toUpperCase()}
             </div>
-            <div className="mt-1">
-              ACTIVE UAVS: {uavs.length}
-            </div>
+            <div className="mt-1">UAVS: {uavs.length}</div>
           </div>
         </header>
 
-        <section className="mb-6 relative">
+        <section className="mb-6 relative mc-panel">
           {/* HUD overlays over the 3D view */}
           <div className="absolute top-2 left-3 z-10 nasa-text text-xs crt-flicker">
             SWARM: {uavs.length > 0 ? "ACTIVE" : "STANDBY"}
@@ -122,8 +180,8 @@ export default function TelemetryPage() {
           <div className="absolute top-2 right-3 z-10 flex flex-col items-end gap-1">
             <div className="nasa-text text-xs">VIEW: 3D ORBIT</div>
             <button
-              className="nasa-text text-[0.65rem] px-2 py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
-              onClick={() => setShowTrails(prev => !prev)}
+              className="mc-button nasa-text text-[0.65rem]"
+              onClick={() => setShowTrails((prev) => !prev)}
             >
               TRAILS: {showTrails ? "ON" : "OFF"}
             </button>
@@ -138,7 +196,7 @@ export default function TelemetryPage() {
         </section>
 
         <section>
-          <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2 nasa-text">
+          <h2 className="text-xs font-semibold text-emerald-400 uppercase tracking-wide mb-2 nasa-text">
             Telemetry Console
           </h2>
           <TelemetryTable uavs={uavs} />

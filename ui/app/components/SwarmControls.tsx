@@ -20,11 +20,10 @@ type SwarmControlsProps = {
 /**
  * SwarmControls
  *
- * Mission Control-style panel for tuning swarm behavior parameters.
- * - Exposes cohesion / separation / alignment weights
- * - Controls max speed and target altitude
- *
- * This component is presentational + emits setting changes upward via onChange.
+ * panel for tuning swarm behavior parameters
+ * - exposes cohesion / separation / alignment weights
+ * - controls max speed and target altitude
+ * - sliders update in real-time and send changes upstream
  */
 export default function SwarmControls({ settings, onChange }: SwarmControlsProps) {
   const updateField = (field: keyof SwarmSettings, value: number) => {
@@ -32,13 +31,13 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
   };
 
   return (
-    <section className="border border-zinc-700 rounded-lg p-4 bg-black/80 nasa-text text-xs">
+    <section className="mc-panel nasa-text text-xs">
       <h2 className="mb-3 uppercase tracking-wide text-[0.7rem] text-zinc-400">
         Swarm Behavior Controls
       </h2>
 
       <div className="space-y-3">
-        {/* Cohesion */}
+        {/* cohesion */}
         <ControlRow
           label="COHESION"
           min={0}
@@ -48,7 +47,7 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
           onChange={(v) => updateField("cohesion", v)}
         />
 
-        {/* Separation */}
+        {/* separation */}
         <ControlRow
           label="SEPARATION"
           min={0}
@@ -58,7 +57,7 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
           onChange={(v) => updateField("separation", v)}
         />
 
-        {/* Alignment */}
+        {/* alignment */}
         <ControlRow
           label="ALIGNMENT"
           min={0}
@@ -68,9 +67,9 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
           onChange={(v) => updateField("alignment", v)}
         />
 
-        <div className="h-px bg-zinc-700 my-2" />
+        <div className="h-px bg-zinc-800 my-2" />
 
-        {/* Max Speed */}
+        {/* max Speed */}
         <ControlRow
           label="MAX SPEED (m/s)"
           min={0}
@@ -80,7 +79,7 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
           onChange={(v) => updateField("maxSpeed", v)}
         />
 
-        {/* Target Altitude */}
+        {/* target Altitude */}
         <ControlRow
           label="TARGET ALT (m)"
           min={0}
@@ -117,7 +116,7 @@ function ControlRow({ label, min, max, step, value, onChange }: ControlRowProps)
         step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full accent-emerald-400 cursor-pointer"
+        className="mc-slider accent-emerald-400 cursor-pointer"
       />
     </div>
   );

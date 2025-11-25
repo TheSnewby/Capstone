@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React from "react";
@@ -27,7 +25,7 @@ type CommandPanelProps = {
  */
 export default function CommandPanel({ onCommand }: CommandPanelProps) {
   return (
-    <section className="border border-zinc-700 rounded-lg p-4 bg-black/80 nasa-text text-xs">
+    <section className="mc-panel nasa-text text-xs">
       <h2 className="mb-3 uppercase tracking-wide text-[0.7rem] text-zinc-400">
         Command Console
       </h2>
@@ -37,27 +35,27 @@ export default function CommandPanel({ onCommand }: CommandPanelProps) {
         <div className="mb-1 tracking-wide">LEADER MOVEMENT</div>
         <div className="grid grid-cols-3 gap-2 text-center">
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "move_leader", direction: "north" })}
           >
             ▲
           </button>
           <div />
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "move_leader", direction: "south" })}
           >
             ▼
           </button>
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "move_leader", direction: "west" })}
           >
             ◀
           </button>
           <div />
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "move_leader", direction: "east" })}
           >
             ▶
@@ -70,13 +68,13 @@ export default function CommandPanel({ onCommand }: CommandPanelProps) {
         <div className="mb-1 tracking-wide">ALTITUDE</div>
         <div className="flex gap-2">
           <button
-            className="flex-1 py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="flex-1 mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "altitude_change", amount: +10 })}
           >
             +10m
           </button>
           <button
-            className="flex-1 py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="flex-1 mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "altitude_change", amount: -10 })}
           >
             −10m
@@ -89,19 +87,19 @@ export default function CommandPanel({ onCommand }: CommandPanelProps) {
         <div className="mb-1 tracking-wide">FORMATION</div>
         <div className="grid grid-cols-3 gap-2">
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "formation", mode: "line" })}
           >
             LINE
           </button>
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "formation", mode: "vee" })}
           >
             VEE
           </button>
           <button
-            className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+            className="mc-button nasa-text text-[0.7rem]"
             onClick={() => onCommand({ type: "formation", mode: "circle" })}
           >
             CIRCLE
@@ -113,19 +111,19 @@ export default function CommandPanel({ onCommand }: CommandPanelProps) {
       <div className="mb-1 tracking-wide">GLOBAL COMMANDS</div>
       <div className="grid grid-cols-3 gap-2">
         <button
-          className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+          className="mc-button nasa-text text-[0.7rem]"
           onClick={() => onCommand({ type: "pause" })}
         >
           PAUSE
         </button>
         <button
-          className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+          className="mc-button nasa-text text-[0.7rem]"
           onClick={() => onCommand({ type: "resume" })}
         >
           RESUME
         </button>
         <button
-          className="py-1 border border-emerald-500 rounded hover:bg-emerald-600/20"
+          className="mc-button nasa-text text-[0.7rem]"
           onClick={() => onCommand({ type: "rtb" })}
         >
           RTB

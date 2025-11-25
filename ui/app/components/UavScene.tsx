@@ -24,8 +24,60 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
   const scale = 0.1; // shrinks world into view
   const trailsRef = useRef<Map<string, [number, number, number][]>>(new Map());
 
+  // leader is the first UAV in the list (if any)
+  const leader = uavs[0];
+  const uavCount = uavs.length;
+
+  // derive simple HUD metrics from the leader state
+  const headingDeg = leader
+    ? (((leader.orientation.yaw * 180) / Math.PI + 360) % 360)
+    : null;
+  const speed = leader ? leader.velocity_mps : null;
+  const altitude = leader ? leader.position.z : null;
+  const formation = "N/A"; // placeholder for future formation modes
+
   return (
-    <div className="w-full h-96 border border-zinc-300 dark:border-zinc-700 rounded-lg overflow-hidden bg-black">
+    <div className="w-full h-96 mc-panel overflow-hidden relative">
+      {leader && (
+        <div className="absolute top-3 left-3 z-10 mc-panel-inner nasa-text text-[0.65rem] bg-black/40 rounded-lg">
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-4">
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">Leader</div>
+                <div className="text-[0.75rem]">{leader.callsign}</div>
+              </div>
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">UAVs</div>
+                <div className="text-[0.75rem]">{uavCount}</div>
+              </div>
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">Heading</div>
+                <div className="text-[0.75rem]">
+                  {headingDeg !== null ? `${headingDeg.toFixed(0)}°` : "—"}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">Speed</div>
+                <div className="text-[0.75rem]">
+                  {speed !== null ? `${speed.toFixed(1)} m/s` : "—"}
+                </div>
+              </div>
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">Altitude</div>
+                <div className="text-[0.75rem]">
+                  {altitude !== null ? `${altitude.toFixed(1)} m` : "—"}
+                </div>
+              </div>
+              <div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-zinc-400">Formation</div>
+                <div className="text-[0.75rem]">{formation}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <Canvas camera={{ position: [0, 12, 22], fov: 50 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[8, 15, 5]} intensity={1.0} />
@@ -131,7 +183,7 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
                 center
                 distanceFactor={12}
               >
-                <div className="nasa-text text-[0.6rem] bg-black/70 px-2 py-1 rounded">
+                <div className="nasa-text text-[0.6rem] bg-black/40 px-2 py-1 rounded mc-panel-inner">
                   {uav.callsign}
                 </div>
               </Html>

@@ -9,14 +9,14 @@ type Props = {
 /**
  * TelemetryTable
  *
- * Displays a Mission-Control-style table of all UAV telemetry data.
- * Uses global .nasa-text styling for green glowing HUD text.
+ * displays a table of all UAV telemetry data.
+ * uses global .nasa-text styling for green glowing HUD text
  */
 export default function TelemetryTable({ uavs }: Props) {
   return (
-    <section className="border border-zinc-700 rounded-lg overflow-hidden bg-black/80">
+    <section className="mc-panel overflow-hidden">
       <table className="w-full text-xs md:text-sm">
-        <thead className="bg-zinc-900">
+        <thead className="bg-black/40">
           <tr>
             <th className="px-4 py-2 border-b border-zinc-700 text-left nasa-text">
               ID
@@ -55,7 +55,7 @@ export default function TelemetryTable({ uavs }: Props) {
             uavs.map((uav) => (
               <tr
                 key={uav.id}
-                className="border-b border-zinc-800 last:border-b-0"
+                className="border-b border-zinc-800/50 last:border-b-0"
               >
                 <td className="px-4 py-2 nasa-text">{uav.id}</td>
                 <td className="px-4 py-2 nasa-text">{uav.callsign}</td>

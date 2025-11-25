@@ -66,3 +66,178 @@ body {
   opacity: 0.4;
   mix-blend-mode: soft-light;
 }
+
+/* ===== SKYWEAVE Mission Control Panels & Buttons ===== */
+
+:root {
+  --mc-panel-bg: #050814;
+  --mc-panel-border: rgba(148, 163, 184, 0.4);
+  --mc-panel-shadow: 0 22px 45px rgba(0, 0, 0, 0.85);
+  --mc-button-bg: #0b1220;
+  --mc-button-hover-bg: #111827;
+  --mc-button-active-bg: #020617;
+}
+
+/* Raised console panels */
+.mc-panel {
+  border-radius: 0.75rem;
+  background-color: var(--mc-panel-bg);
+  background: radial-gradient(circle at 0% 0%, #0b1120 0%, #020617 70%, #000000 100%);
+  border: 1px solid var(--mc-panel-border);
+  box-shadow:
+    var(--mc-panel-shadow),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  padding: 1rem;
+}
+
+/* Optional inner layer for double-depth panels */
+.mc-panel-inner {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.9);
+  background: radial-gradient(circle at 10% 0%, #020617, #020617 55%, #000000 100%);
+  padding: 1rem;
+}
+
+/* Mission Control buttons */
+.mc-button {
+  border-radius: 9999px;
+  border: 1px solid rgba(16, 185, 129, 0.8);
+  background: radial-gradient(circle at 20% 0%, #0b1220 0%, #020617 65%);
+  box-shadow:
+    0 0 10px rgba(34, 197, 94, 0.25),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 80ms ease;
+  color: #00ff88;
+  font-family: "Orbitron", system-ui, sans-serif;
+  text-shadow: 0 0 6px #00ff88;
+}
+
+.mc-button:hover {
+  background-color: var(--mc-button-hover-bg);
+  box-shadow:
+    0 0 16px rgba(34, 197, 94, 0.4),
+    0 0 0 1px rgba(34, 197, 94, 0.7);
+}
+
+.mc-button:active {
+  background-color: var(--mc-button-active-bg);
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 6px rgba(34, 197, 94, 0.3),
+    0 0 0 1px rgba(21, 128, 61, 0.9);
+}
+
+.mc-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+/* Mission Control slider upgrades */
+.mc-slider {
+  width: 100%;
+}
+
+.mc-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0.3),
+    rgba(56, 189, 248, 0.25)
+  );
+}
+
+.mc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+  margin-top: -5px;
+}
+
+.mc-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0.3),
+    rgba(56, 189, 248, 0.25)
+  );
+}
+
+.mc-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+}
+
+/* ===== SKYWEAVE Background Vignette (Retro Monitor Glow) ===== */
+
+body {
+  background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(0, 0, 0, 0.55) 60%,
+      #000 100%
+    ),
+    #000;
+  background-attachment: fixed;
+}
+
+/* ===== WebSocket Status Indicator ===== */
+
+.ws-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.ws-dot--ok {
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.ws-dot--warn {
+  background-color: #facc15;
+  box-shadow: 0 0 6px #facc15;
+}
+
+.ws-dot--err {
+  background-color: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+/* ===== SKYWEAVE Button Hover Glow ===== */
+
+.btn-glow {
+  transition:
+    box-shadow 180ms ease,
+    transform 120ms ease,
+    background-color 150ms ease;
+}
+
+.btn-glow:hover {
+  box-shadow:
+    0 0 12px rgba(34, 197, 94, 0.6),
+    0 0 0 1px rgba(34, 197, 94, 0.9);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-glow:active {
+  box-shadow:
+    0 0 6px rgba(21, 128, 61, 0.9),
+    0 0 0 1px rgba(21, 128, 61, 1);
+  transform: translateY(0) scale(0.99);
+}
