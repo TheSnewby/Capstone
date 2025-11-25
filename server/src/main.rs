@@ -33,15 +33,23 @@ async fn main() {
     }
 
     // start HTTP/WebSocket server
-    let http_addr: SocketAddr = format!("{}:{}", cfg.http_bind_addr, cfg.http_port)
+    // Fly.io will inject $PORT for the container's HTTP service
+    let port_env = std::env::var("PORT").ok();
+    let port = port_env
+        .as_deref()
+        .unwrap_or(&cfg.http_port.to_string())
+        .parse::<u16>()
+        .expect("Invalid PORT env var");
+
+    let http_addr: SocketAddr = format!("0.0.0.0:{}", port)
         .parse()
         .expect("Invalid HTTP bind address");
+
     let listener = TcpListener::bind(http_addr)
         .await
         .expect("Failed to bind HTTP listener");
 
     tracing::info!("HTTP/WebSocket listening on {}", http_addr);
-    tracing::info!("UDP telemetry listening on {}", udp_addr);
 
     let app = router(shared);
 

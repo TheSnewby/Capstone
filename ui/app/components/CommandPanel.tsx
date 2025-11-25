@@ -27,23 +27,6 @@ type CommandPanelProps = {
  */
 export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
   const isDisabled = status !== "open";
-  const statusLabel =
-    status === "open"
-      ? "WS: CONNECTED"
-      : status === "connecting"
-      ? "WS: CONNECTING..."
-      : status === "closed"
-      ? "WS: DISCONNECTED"
-      : "WS: ERROR";
-
-  const statusColor =
-    status === "open"
-      ? "text-emerald-300"
-      : status === "connecting"
-      ? "text-yellow-300"
-      : status === "closed"
-      ? "text-red-400"
-      : "text-red-400";
 
   const [keyPress, setKeyPress] = useState<string | null>(null);
 
@@ -98,9 +81,6 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
       <h2 className="mb-4 flex items-center justify-between">
         <span className="uppercase tracking-widest text-[0.7rem] text-emerald-300">
           Command Console
-        </span>
-        <span className={`text-[0.65rem] tracking-wide ${statusColor}`}>
-          {statusLabel}
         </span>
       </h2>
 

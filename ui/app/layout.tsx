@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-  themeColor: "#0a0d12",
   openGraph: {
     title: "SkyWeave",
     description: "Control autonomous UAV swarms with real-time telemetry and commands.",
@@ -30,6 +29,10 @@ export const metadata: Metadata = {
     title: "SkyWeave",
     description: "Control autonomous UAV swarms with real-time telemetry and commands.",
   },
+};
+
+export const viewport = {
+  themeColor: "#0a0d12",
 };
 
 export default function RootLayout({
