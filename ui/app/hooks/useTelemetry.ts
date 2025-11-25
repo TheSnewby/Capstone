@@ -68,9 +68,18 @@ export function useTelemetry(): TelemetryState {
 		// only run on client
 		if (typeof window === "undefined") return;
 
-		// build WS URL: assume rust server on port 8080
-		const host = window.location.hostname || "localhost";
-		const wsUrl = `ws://${host}:8080/ws`;
+		// Prefer an explicit env var in production, fall back to localhost:8080 in dev
+		const envWsUrl = process.env.NEXT_PUBLIC_WS_URL;
+		let wsUrl: string;
+
+		if (envWsUrl && typeof envWsUrl === "string") {
+			wsUrl = envWsUrl;
+		} else {
+			const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+			const host = window.location.hostname || "localhost";
+			const port = 8080;
+			wsUrl = `${protocol}://${host}:${port}/ws`;
+		}
 
 		const ws = new WebSocket(wsUrl);
 		wsRef.current = ws;
