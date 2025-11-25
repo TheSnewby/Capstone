@@ -110,8 +110,8 @@ function ControlRow({ label, min, max, step, value, onChange }: ControlRowProps)
   return (
     <div>
       <div className="flex justify-between mb-1">
-        <span className="text-[0.85rem] tracking-widest text-emerald-300 font-medium">{label}</span>
-        <span className="text-[0.85rem] text-emerald-400 font-medium">{formatted}</span>
+        <span className="text-[0.7rem] tracking-widest text-emerald-300 font-medium">{label}</span>
+        <span className="text-[0.7rem] text-emerald-400 font-medium">{formatted}</span>
       </div>
       <input
         type="range"
