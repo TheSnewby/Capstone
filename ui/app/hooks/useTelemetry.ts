@@ -8,19 +8,17 @@ export type Position = {
 	z: number;
 };
 
-export type Orientation = {
-	roll: number;
-	pitch: number;
-	yaw: number;
+export type Velocity = {
+	vx: number;
+	vy: number;
+	vz: number;
 };
 
 export type UavState = {
 	id: string;
-	callsign: string;
 	position: Position;
-	orientation: Orientation;
-	velocity_mps: number;
-	last_update?: string;
+	velocity: Velocity;
+	timestamp: string;
 };
 
 export type ConnectionStatus = "connecting" | "open" | "closed" | "error";
@@ -69,7 +67,7 @@ export function useTelemetry(): TelemetryState {
 		if (typeof window === "undefined") return;
 
 		// Prefer an explicit env var in production, fall back to localhost:8080 in dev
-		const envWsUrl = process.env.NEXT_PUBLIC_WS_URL;
+		const envWsUrl = process.env.NEXT_PUBLIC_TELEMETRY_WS_URL;
 		let wsUrl: string;
 
 		if (envWsUrl && typeof envWsUrl === "string") {

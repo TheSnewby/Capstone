@@ -44,9 +44,12 @@ void UAVTelemetryServer::listen_loop() {
 	memset(&client_addr, 0, client_size);
 
 	while (running) {
-		ssize_t bytes_recvd = recvfrom(socketfd, buffer, client_size - 1, 0, (struct sockaddr*)&client_addr, &client_size);
+		ssize_t bytes_recvd = recvfrom(socketfd, buffer, sizeof(buffer) - 1, 0, (struct sockaddr*)&client_addr, &client_size);
 		if (bytes_recvd > 0)
+		{
+			buffer[bytes_recvd] = '\0';
 			update_json_pkg(buffer, client_addr);
+		}
 	}
 }
 

@@ -57,11 +57,11 @@ void UAV::uav_telemetry_broadcast() {
 	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
 	std::string timestamp = oss.str();
 
-	std::ostringstream id_oss;
-	id_oss << "00000000-0000-0000-0000-"
-	       << std::hex << std::nouppercase << std::setw(12) << std::setfill('0')
+	std::ostringstream id_hex;
+	id_hex << std::setw(12) << std::setfill('0')
+	       << std::hex << std::nouppercase
 	       << get_id();
-	std::string id_str = id_oss.str();
+	std::string id_str = std::string("00000000-0000-0000-0000-") + id_hex.str();
 
 	nlohmann::json j = {
 	    { "id", id_str },
@@ -96,11 +96,11 @@ void UAV::uav_to_telemetry_server(int port = 6000) {
 	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
 	std::string timestamp = oss.str();
 
-	std::ostringstream id_oss;
-	id_oss << "00000000-0000-0000-0000-"
-	       << std::hex << std::nouppercase << std::setw(12) << std::setfill('0')
+	std::ostringstream id_hex;
+	id_hex << std::setw(12) << std::setfill('0')
+	       << std::hex << std::nouppercase
 	       << get_id();
-	std::string id_str = id_oss.str();
+	std::string id_str = std::string("00000000-0000-0000-0000-") + id_hex.str();
 
 	nlohmann::json j = {
 	    { "id", id_str },

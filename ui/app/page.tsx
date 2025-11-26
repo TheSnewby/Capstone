@@ -1,3 +1,15 @@
+/**
+ * SkyWeave TelemetryPage
+ *
+ * data flow:
+ *   C++ sim → UDP → Rust telemetry server → WebSocket (/ws) → useTelemetry hook → this UI.
+ *
+ * This page handles:
+ *   - Splash screen and navigation
+ *   - Live UAV 3D scene (UavScene)
+ *   - Swarm controls and command panel
+ *   - Telemetry table and WebSocket connection status
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -211,6 +223,13 @@ export default function TelemetryPage() {
 
         <section>
           <TelemetryTable uavs={uavs} />
+        </section>
+
+        <section className="mt-4">
+          <h2 className="text-sm nasa-text mb-2">Swarm Telemetry (debug)</h2>
+          <pre className="text-[0.6rem] bg-black/60 rounded-lg p-3 overflow-x-auto max-h-64">
+            {JSON.stringify(uavs, null, 2)}
+          </pre>
         </section>
       </div>
     </main>

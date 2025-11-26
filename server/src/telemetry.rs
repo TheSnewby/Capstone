@@ -209,6 +209,6 @@ fn decode_frame(data: &[u8]) -> Result<UavState, serde_json::Error> {
         id: frame.id,
         position: frame.position,
         velocity: frame.velocity,
-        timestamp: Utc::now(),
+        timestamp: frame.timestamp,
     })
 }
