@@ -9,7 +9,7 @@ export default function GuidePage() {
       <div className="w-full max-w-4xl px-4 crt-scanlines mc-panel">
         <div className="mb-4 flex justify-end">
           <Link href="/" className="mc-button btn-glow text-xs px-4 py-1 text-emerald-200">
-            ← Back to SkyWeave
+            ← Back to Main
           </Link>
         </div>
         <header className="mb-6">

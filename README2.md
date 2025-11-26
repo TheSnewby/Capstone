@@ -228,7 +228,7 @@ Handles:
 
 - Collision detection  
 - Battery simulation + return-to-home logic  
-- Multiple formations (V, circle, wedge, spiral)  
+- Additional formations (V, circle, wedge, spiral)  
 - Click‑to‑place waypoints  
 - Rogue UAV behavior testing  
 - Real drone integration (future)  
@@ -238,11 +238,12 @@ Handles:
 ## About the Developers
 
 ### **Stephen Newby**
-**Project Manager / C++ Simulation Model / Telemetry**
-- UAV physics model  
-- Telemetry sender (UDP)  
-- Swarm cohesion, spacing, and autonomy logic  
-- Simulator threading model  
+**Project Manager / C++ / Simulation Model**
+- UAV Physics   
+- Telemetry Sender (UDP)  
+- Swarm Cohesion, Spacing, and Autonomy Logic  
+- Simulator Threading  
+- Pathfinding Algorithms 
 
 GitHub: https://github.com/TheSnewby  
 LinkedIn: https://www.linkedin.com/in/stephenjnewby/
@@ -251,11 +252,11 @@ LinkedIn: https://www.linkedin.com/in/stephenjnewby/
 
 ### **Nash Thames**
 **UI / Rust / System Architecture**
-- 3D mission control interface  
-- WebSocket + UDP Rust backend  
-- Fly.io server deployment  
-- UI design (HUD, trails, command console)  
-- App architecture and integration
+- 3D Mission Control Interface  
+- WebSocket + UDP Rust Backend  
+- Telemetry Pipeline 
+- UI Design 
+- App Construction + Deployment
 
 GitHub: https://github.com/internashionalist  
 LinkedIn: https://linkedin.com/in/nashthames  
