@@ -48,3 +48,4 @@ sim/src/test_run
 
 target/
 server/target/
+node_modules/
