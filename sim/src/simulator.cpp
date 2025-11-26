@@ -51,6 +51,13 @@ UAVSimulator::~UAVSimulator() {
 	stop_sim();
 }
 
+/**
+ * update_uav_pos - updates and broadcasts to the telemetry server
+ */
+void update_uav_pos(int index, int dt, int tel_serv_port) {
+	
+}
+
 void UAVSimulator::start_sim() {
 	running = true;
 

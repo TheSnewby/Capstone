@@ -6,6 +6,10 @@
 #include <algorithm>
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 // for the stretch goal of allowing a user to manually control an individual UAV
 enum class UAVControleMode {
@@ -70,5 +74,5 @@ public:
 
 	// JSON
 	void uav_telemetry_broadcast();
-	void uav_to_telemetry_server();
+	void uav_to_telemetry_server(int port);
 };

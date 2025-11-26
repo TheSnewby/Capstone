@@ -68,7 +68,8 @@ void UAV::uav_telemetry_broadcast() {
 	//send through stream
 	//close stream
 }
-void UAV::uav_to_telemetry_server() {
+
+void UAV::uav_to_telemetry_server(int port = 6000) {
 	//createa a json string
 	std::string json_str;
 	auto time = std::chrono::steady_clock::now();
@@ -84,9 +85,33 @@ void UAV::uav_to_telemetry_server() {
 		{"timestamp", timestamp}
 	};
 	json_str = j.dump();
+	std::cout << "JSON to Telemetry Server: " << json_str << "\n";
 
-	std::cout << "JSON to Server: " << json_str << "\n";
 	//open a stream to a port
-	//send through stream
-	//close stream
+	int socketfd;
+	ssize_t sendto_return = 0, json_size;
+	struct sockaddr_in addr;
+
+	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+	json_size = json_str.length();
+
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	//send to telemetry server
+	sendto_return = sendto(socketfd, json_str.c_str(), json_size, 0, (struct sockaddr*)&addr, sizeof(addr));
+	if (sendto_return == -1)
+	{
+		std::cout << "DEBUG: sendto in uav_to_telemetry_server returned -1" << std::endl;
+		close(socketfd);
+	}
+	if (sendto_return != json_size)
+	{
+		std::cout << "DEBUG: sendto in uav_to_telemetry_server sent size mismatch" << std::endl;
+		close(socketfd);
+	}
+
+	close(socketfd);
 }
