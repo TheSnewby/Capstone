@@ -1,6 +1,5 @@
 #include "uav.h"
 
-
 void UAV::update_position(double dt) {
 	pos[0] += vel[0] * dt;
 	pos[1] += vel[1] * dt;
@@ -51,14 +50,32 @@ std::vector<UAV::NeighborInfo> UAV::get_fresh_neighbors() {
 void UAV::uav_telemetry_broadcast() {
 	//createa a json string
 	std::string json_str;
-	auto time = std::chrono::steady_clock::now();
-	auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm tm = *std::gmtime(&now_c);
+	std::ostringstream oss;
+	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+	std::string timestamp = oss.str();
+
+	std::ostringstream id_oss;
+	id_oss << "00000000-0000-0000-0000-"
+	       << std::hex << std::nouppercase << std::setw(12) << std::setfill('0')
+	       << get_id();
+	std::string id_str = id_oss.str();
+
 	nlohmann::json j = {
-		{"id", get_id()},
-		{"x", get_x()},
-		{"y", get_y()},
-		{"z", get_z()},
-		{"timestamp", timestamp}
+	    { "id", id_str },
+	    { "position", {
+	        { "x", pos[0] },
+	        { "y", pos[1] },
+	        { "z", pos[2] }
+	    }},
+	    { "velocity", {
+	        { "vx", vel[0] },
+	        { "vy", vel[1] },
+	        { "vz", vel[2] }
+	    }},
+	    { "timestamp", timestamp }
 	};
 	json_str = j.dump();
 
@@ -72,13 +89,32 @@ void UAV::uav_telemetry_broadcast() {
 void UAV::uav_to_telemetry_server(int port = 6000) {
 	//createa a json string
 	std::string json_str;
-	auto time = std::chrono::steady_clock::now();
-	auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm tm = *std::gmtime(&now_c);
+	std::ostringstream oss;
+	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+	std::string timestamp = oss.str();
+
+	std::ostringstream id_oss;
+	id_oss << "00000000-0000-0000-0000-"
+	       << std::hex << std::nouppercase << std::setw(12) << std::setfill('0')
+	       << get_id();
+	std::string id_str = id_oss.str();
+
 	nlohmann::json j = {
-		{"id", get_id()},
-		{"position", get_pos()},
-		{"velocity", get_vel()},
-		{"timestamp", timestamp}
+	    { "id", id_str },
+	    { "position", {
+	        { "x", pos[0] },
+	        { "y", pos[1] },
+	        { "z", pos[2] }
+	    }},
+	    { "velocity", {
+	        { "vx", vel[0] },
+	        { "vy", vel[1] },
+	        { "vz", vel[2] }
+	    }},
+	    { "timestamp", timestamp }
 	};
 	json_str = j.dump();
 	std::cout << "JSON to Telemetry Server: " << json_str << "\n";
