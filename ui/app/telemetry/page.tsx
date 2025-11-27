@@ -68,7 +68,6 @@ export default function TelemetryPage() {
 					<thead style={{ backgroundColor: "#f8f8f8" }}>
 						<tr>
 							<th style={thStyle}>ID</th>
-							<th style={thStyle}>Callsign</th>
 							<th style={thStyle}>X</th>
 							<th style={thStyle}>Y</th>
 							<th style={thStyle}>Z</th>
@@ -89,12 +88,13 @@ export default function TelemetryPage() {
 							uavs.map((uav) => (
 								<tr key={uav.id}>
 									<td style={tdStyle}>{uav.id}</td>
-									<td style={tdStyle}>{uav.callsign}</td>
 									<td style={tdStyle}>{uav.position.x.toFixed(1)}</td>
 									<td style={tdStyle}>{uav.position.y.toFixed(1)}</td>
 									<td style={tdStyle}>{uav.position.z.toFixed(1)}</td>
-									<td style={tdStyle}>{uav.velocity_mps.toFixed(1)}</td>
-									<td style={tdStyle}>{formatLastUpdate(uav.last_update)}</td>
+									<td style={tdStyle}>{uav.velocity.vx.toFixed(1)}</td>
+									<td style={tdStyle}>{uav.velocity.vy.toFixed(1)}</td>
+									<td style={tdStyle}>{uav.velocity.vz.toFixed(1)}</td>
+									<td style={tdStyle}>{formatLastUpdate(uav.timestamp)}</td>
 								</tr>
 							))
 						)}
