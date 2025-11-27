@@ -18,6 +18,7 @@ int main() {
 	//physics loop (will later be moved to simulator.h)
 	while (cycle < cycles) {
 		int time_interval = 10; // 100 Hz ~ 10ms 
+		std::cout << "Cycle: " << cycle << "." << std::endl;
 		for (i = 0; i < num_uav; i++)
 		{
 			swarm[i].update_position(time_interval);
@@ -31,4 +32,6 @@ int main() {
 	}
 
 	tel_serv.stop_server();
+
+	return (0);
 }
