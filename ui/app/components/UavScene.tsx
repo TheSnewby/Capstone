@@ -22,17 +22,17 @@ type Props = {
 
 export default function UavScene({ uavs, showTrails = true }: Props) {
   const scale = 0.1; // shrinks world into view
-  const trailsRef = useRef<Map<string, [number, number, number][]>>(new Map());
+  const trailsRef = useRef<Map<number, [number, number, number][]>>(new Map());
 
   // leader is the first UAV in the list (if any)
   const leader = uavs[0];
   const uavCount = uavs.length;
 
   // derive simple HUD metrics from the leader state
-  const headingDeg = leader
-    ? (((leader.orientation.yaw * 180) / Math.PI + 360) % 360)
-    : null;
-  const speed = leader ? leader.velocity_mps : null;
+  const headingDeg = leader ?
+	(Math.atan2(leader.velocity.vy, leader.velocity.vx) * 180) / Math.PI + 90
+	: null;
+  const velocity = leader ? leader.velocity : null;
   const altitude = leader ? leader.position.z : null;
   const formation = "N/A"; // placeholder for future formation modes
 
@@ -49,9 +49,6 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
         <div className="absolute top-3 left-3 z-10 mc-panel-inner nasa-text text-[0.65rem] bg-black/40 rounded-lg">
           <div className="flex flex-col gap-1">
             <div className="flex gap-4">
-              <div>
-                <div className="uppercase tracking-wide text-[0.6rem] text-emerald-300">Leader</div>
-                <div className="text-[0.75rem]">{leader.callsign}</div>
               </div>
               <div>
                 <div className="uppercase tracking-wide text-[0.6rem] text-emerald-300">UAVs</div>
@@ -66,9 +63,9 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
             </div>
             <div className="flex gap-4">
               <div>
-                <div className="uppercase tracking-wide text-[0.6rem] text-emerald-300">Speed</div>
+                <div className="uppercase tracking-wide text-[0.6rem] text-emerald-300">Velocity</div>
                 <div className="text-[0.75rem]">
-                  {speed !== null ? `${speed.toFixed(1)} m/s` : "—"}
+                  {velocity !== null ? `${Math.sqrt(velocity.vx**2 + velocity.vy**2 + velocity.vz**2).toFixed(1)} m/s` : "—"}
                 </div>
               </div>
               <div>
@@ -83,8 +80,7 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
               </div>
             </div>
           </div>
-        </div>
-      )}
+	  	)}
       <Canvas camera={{ position: [0, 12, 22], fov: 50 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[8, 15, 5]} intensity={1.0} />
@@ -160,11 +156,7 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
             <group key={uav.id}>
               <mesh
                 position={[headX, headY, headZ]}
-                rotation={[
-                  -Math.PI / 2, // pitch downward for triangle forward direction
-                  uav.orientation.yaw,
-                  0,
-                ]}
+				rotation={[0, Math.atan2(uav.velocity.vy, uav.velocity.vx) - Math.PI / 2, 0]}
               >
                 {/* triangle to represent UAV */}
                 <coneGeometry args={[0.6, 1.2, 3]} />
@@ -183,17 +175,6 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
                   lineWidth={isLeader ? 2.5 : 1.5}
                 />
               )}
-
-              {/* callsign label */}
-              <Html
-                position={[headX, headY + 1.2, headZ]}
-                center
-                distanceFactor={12}
-              >
-                <div className="nasa-text text-[0.6rem] text-emerald-200 bg-black/40 px-2 py-1 rounded mc-panel-inner">
-                  {uav.callsign}
-                </div>
-              </Html>
             </group>
           );
         })}

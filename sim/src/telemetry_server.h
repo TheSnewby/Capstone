@@ -3,6 +3,10 @@
 #include <nlohmann/json.hpp>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string>

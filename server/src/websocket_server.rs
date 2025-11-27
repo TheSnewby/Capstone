@@ -48,14 +48,9 @@ async fn list_uavs(State(shared): State<TelemetryShared>) -> Json<Vec<UavState>>
 
 async fn get_uav(
     State(shared): State<TelemetryShared>,
-    Path(id): Path<String>,
+    Path(id): Path<u64>,
 ) -> impl IntoResponse {
-    let parsed = match uuid::Uuid::parse_str(&id) {
-        Ok(v) => v,
-        Err(_) => return (StatusCode::BAD_REQUEST, "invalid UUID").into_response(),
-    };
-
-    match shared.swarm.get_uav(parsed).await {
+    match shared.swarm.get_uav(id).await {
         Some(uav) => Json(uav).into_response(),
         None => (StatusCode::NOT_FOUND, "not found").into_response(),
     }

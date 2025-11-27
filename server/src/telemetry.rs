@@ -6,7 +6,6 @@ use std::sync::Arc;
 use tokio::net::UdpSocket;
 use tokio::sync::{broadcast, RwLock};
 use tracing::Instrument;
-use uuid::Uuid;
 
 /// 3D position in meters
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -26,7 +25,7 @@ pub struct Velocity {
 /// state of a single UAV sent to WebSocket clients
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UavState {
-    pub id: Uuid,
+    pub id: u64,
     pub position: Position,
     pub velocity: Velocity,
     pub timestamp: DateTime<Utc>,
@@ -35,7 +34,7 @@ pub struct UavState {
 /// Telemetry sent over UDP as JSON from telemetry_encoder.cpp
 #[derive(Debug, Clone, Deserialize)]
 pub struct TelemetryFrame {
-    pub id: Uuid,
+    pub id: u64,
     pub position: Position,
     pub velocity: Velocity,
 	pub timestamp: DateTime<Utc>,
@@ -56,7 +55,7 @@ pub struct SwarmSettings {
 /// state of UAV swarm
 #[derive(Clone)]
 pub struct SwarmState {
-    inner: Arc<RwLock<HashMap<Uuid, UavState>>>,
+    inner: Arc<RwLock<HashMap<u64, UavState>>>,
     settings: Arc<RwLock<SwarmSettings>>,
     last_command: Arc<RwLock<Option<serde_json::Value>>>,
 }
@@ -81,7 +80,7 @@ impl SwarmState {
         map.insert(state.id, state);
     }
 
-    pub async fn get_uav(&self, id: Uuid) -> Option<UavState> {
+    pub async fn get_uav(&self, id: u64) -> Option<UavState> {
         let map = self.inner.read().await;
         map.get(&id).cloned()
     }

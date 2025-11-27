@@ -1,5 +1,6 @@
 #include "uav.h"
 
+
 void UAV::update_position(double dt) {
 	pos[0] += vel[0] * dt;
 	pos[1] += vel[1] * dt;
@@ -57,14 +58,8 @@ void UAV::uav_telemetry_broadcast() {
 	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
 	std::string timestamp = oss.str();
 
-	std::ostringstream id_hex;
-	id_hex << std::setw(12) << std::setfill('0')
-	       << std::hex << std::nouppercase
-	       << get_id();
-	std::string id_str = std::string("00000000-0000-0000-0000-") + id_hex.str();
-
 	nlohmann::json j = {
-	    { "id", id_str },
+	    { "id", get_id() },
 	    { "position", {
 	        { "x", pos[0] },
 	        { "y", pos[1] },
@@ -96,14 +91,8 @@ void UAV::uav_to_telemetry_server(int port = 6000) {
 	oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
 	std::string timestamp = oss.str();
 
-	std::ostringstream id_hex;
-	id_hex << std::setw(12) << std::setfill('0')
-	       << std::hex << std::nouppercase
-	       << get_id();
-	std::string id_str = std::string("00000000-0000-0000-0000-") + id_hex.str();
-
 	nlohmann::json j = {
-	    { "id", id_str },
+	    { "id", get_id() },
 	    { "position", {
 	        { "x", pos[0] },
 	        { "y", pos[1] },
@@ -127,10 +116,31 @@ void UAV::uav_to_telemetry_server(int port = 6000) {
 	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 	json_size = json_str.length();
 
+	const char *host_env = std::getenv("SKYWEAVE_UDP_HOST");
+	const char *host = host_env ? host_env : "127.0.0.1";
+
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
-	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+	// Resolve hostname to IPv4 address (supports DNS names like *.fly.dev)
+	addrinfo hints;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_DGRAM;
+
+	addrinfo *res = nullptr;
+	int gai_err = getaddrinfo(host, nullptr, &hints, &res);
+	if (gai_err != 0 || res == nullptr)
+	{
+		std::cout << "DEBUG: getaddrinfo failed for host " << host << ": " << gai_strerror(gai_err) << std::endl;
+		close(socketfd);
+		return;
+	}
+
+	auto *addr_in = reinterpret_cast<sockaddr_in *>(res->ai_addr);
+	addr.sin_addr = addr_in->sin_addr;
+	freeaddrinfo(res);
 
 	//send to telemetry server
 	sendto_return = sendto(socketfd, json_str.c_str(), json_size, 0, (struct sockaddr*)&addr, sizeof(addr));

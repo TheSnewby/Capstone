@@ -15,7 +15,7 @@ export type Velocity = {
 };
 
 export type UavState = {
-	id: string;
+	id: number;
 	position: Position;
 	velocity: Velocity;
 	timestamp: string;
