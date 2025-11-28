@@ -125,7 +125,11 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                             }
                                         }
                                         Err(err) => {
-                                            tracing::warn!("Invalid WS client message: {}", err);
+                                            tracing::warn!(
+                                                "Invalid WS client message: {} (raw: {})",
+                                                err,
+                                                text
+                                            );
                                         }
                                     }
                                 }
