@@ -17,10 +17,17 @@ The system demonstrates real-time networking, distributed autonomy, and visually
 - [**SkyWeave — Autonomous UAV Swarm Simulator**](#skyweave--autonomous-uav-swarm-simulator)
 	- [Table of Contents](#table-of-contents)
 	- [Environment](#environment)
-	- [Installation](#installation)
+	- [Running SkyWeave Locally](#running-skyweave-locally)
+		- [Installation](#installation)
 		- [Install UI Dependencies](#install-ui-dependencies)
 		- [Run the Rust Backend](#run-the-rust-backend)
 		- [Build and Run the C++ Simulator](#build-and-run-the-c-simulator)
+	- [Running through Fly.io and the Vercel App](#running-through-flyio-and-the-vercel-app)
+		- [Installation](#installation-1)
+		- [Run the C++ Simulator:](#run-the-c-simulator)
+		- [Connect Bridge](#connect-bridge)
+		- [Open Vercel App](#open-vercel-app)
+		- [FLY](#fly)
 	- [Project Structure](#project-structure)
 	- [How It Works](#how-it-works)
 		- [1. C++ Simulator (UAV Processes)](#1-c-simulator-uav-processes)
@@ -56,7 +63,9 @@ This project was developed and tested on:
 
 ---
 
-## Installation
+## Running SkyWeave Locally
+
+### Installation
 
 Clone the project:
 
@@ -95,6 +104,49 @@ cmake ..
 make -j4
 ./simulator
 ```
+
+---
+
+## Running through Fly.io and the Vercel App
+
+### Installation
+
+Clone the project:
+
+```bash
+git clone https://github.com/TheSnewby/Capstone.git
+cd Capstone
+```
+
+### Run the C++ Simulator:
+
+Start simulation pointed at fly.io server:
+
+```bash
+cd sim/build
+export SKYWEAVE_UDP_HOST=127.0.0.1
+export SKYWEAVE_UDP_PORT=6000
+./sim
+```
+
+### Connect Bridge
+
+In a separate terminal, run UDP->WebSocket node:
+
+```bash
+cd Capstone/udp_ws_bridge
+node udp_ws_bridge.mjs
+```
+
+### Open Vercel App
+
+In browser, navigate to Skyweave
+
+- https://skyweave.vercel.app
+
+### FLY
+
+Live telemetry will instantly appear in the user interface.
 
 ---
 
