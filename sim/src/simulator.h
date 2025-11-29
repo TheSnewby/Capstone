@@ -42,6 +42,7 @@ public:
 
 	void print_swarm_status(); /* for testing */
 	void update_uav_pos(int index, int dt, int tel_serv_port);
+	void change_formation(formation f);
 
 private:
 	void physics_loop();

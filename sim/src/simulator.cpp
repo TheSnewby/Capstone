@@ -84,6 +84,28 @@ void UAVSimulator::stop_sim() {
 }
 
 /**
+ * change_formation - changes formation of swarm
+ * @f: formation enum (1: LINE, 2: FLYING_V, 3: CIRCLE)
+ */
+void UAVSimulator::change_formation(formation f) {
+	int uav_nums = swarm.size();
+
+	if (f == 1)
+	{
+		set_formation_line(uav_nums);
+		std::cout << "Formation changed to LINE." << std::endl;
+	} else if (f == 2)
+	{
+		set_formation_vee(uav_nums);
+		std::cout << "Formation changed to FLYING VEE." << std::endl;
+	} else if (f == 3)
+	{
+		set_formation_circle(uav_nums);
+		std::cout << "Formation changed to CIRCLE." << std::endl;
+	}
+}
+
+/**
  * create_formation_random - randomizes the placement of UAVs
  * @num_uavs: number of uavs to generate
  */
