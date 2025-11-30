@@ -10,7 +10,7 @@ int main() {
 
 	// initialize velocity for all UAVs
 	for (int i = 0; i < num_uav; i++) {
-		swarm[i].set_velocity(1.0, 0.0, 1.0);
+		swarm[i].set_velocity(1.0, 1.0, 1.0);
 	}
 
 	// start the simulator's internal loop (updates + telemetry)

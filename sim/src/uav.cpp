@@ -173,13 +173,18 @@ std::array<double, 3> UAV::calculate_cohesion_forces() {
 
 	// calculate center of mass
 	for (int i = 0; i < num_uav; i++) {
+		if (i == 0) { //added leader weight
+			center_of_mass[0] += neighbors_status[i].last_known_pos[0] * num_uav;
+			center_of_mass[1] += neighbors_status[i].last_known_pos[1] * num_uav;
+			center_of_mass[2] += neighbors_status[i].last_known_pos[2] * num_uav;
+		}
 		center_of_mass[0] += neighbors_status[i].last_known_pos[0];
 		center_of_mass[1] += neighbors_status[i].last_known_pos[1];
 		center_of_mass[2] += neighbors_status[i].last_known_pos[2];
 	}
-	center_of_mass[0] /= num_uav;
-	center_of_mass[1] /= num_uav;
-	center_of_mass[2] /= num_uav;
+	center_of_mass[0] /= num_uav * 2;
+	center_of_mass[1] /= num_uav * 2;
+	center_of_mass[2] /= num_uav * 2;
 
 	// calculate cohesion direction
 	cohesion_direction[0] = center_of_mass[0] - get_x();
@@ -242,20 +247,27 @@ std::array<double, 3> UAV::calculate_separation_forces() {
  */
 std::array<double, 3> UAV::calculate_alignment_forces() {
 	std::array<double, 3> alignment_force = {0, 0, 0};
+	std::array<double, 3> sum_of_velocities = {0, 0, 0};
 	std::array<double, 3> average_velocity = {0, 0, 0};
 	std::vector<NeighborInfo> neighbors_status = get_neighbors_status();
 	int num_uav = neighbors_status.size();
 
 	// calculate average velocity of all neighbors
 	for (int i = 0; i < num_uav; i++) {
-		average_velocity[0] += neighbors_status[i].last_known_vel[0];
-		average_velocity[1] += neighbors_status[i].last_known_vel[1];
-		average_velocity[2] += neighbors_status[i].last_known_vel[2];
+		if (i == 0) // made leader have much extra weight
+		{
+			sum_of_velocities[0] += neighbors_status[i].last_known_vel[0] * num_uav;
+			sum_of_velocities[1] += neighbors_status[i].last_known_vel[1] * num_uav;
+			sum_of_velocities[2] += neighbors_status[i].last_known_vel[2] * num_uav;
+		}
+		sum_of_velocities[0] += neighbors_status[i].last_known_vel[0];
+		sum_of_velocities[1] += neighbors_status[i].last_known_vel[1];
+		sum_of_velocities[2] += neighbors_status[i].last_known_vel[2];
 	}
 
-	average_velocity[0] /= num_uav;
-	average_velocity[1] /= num_uav;
-	average_velocity[2] /= num_uav;
+	average_velocity[0] = sum_of_velocities[0] / num_uav / 2;
+	average_velocity[1] = sum_of_velocities[1] / num_uav / 2;
+	average_velocity[2] = sum_of_velocities[2] / num_uav / 2;
 
 	// calculate alignment_force
 	alignment_force[0] = average_velocity[0] - get_velx();
@@ -269,6 +281,9 @@ std::array<double, 3> UAV::calculate_alignment_forces() {
  * apply_boids_forces - applies boids forces to the heading and velocity of the uav
  */
 void UAV::apply_boids_forces() {
+	double internal_cohesion_weight = 15;
+	double internal_separation_weight = 5;
+	double internal_alignment_weight = 8;
 	double cohesion_weight = SwarmCoord.get_cohesion();
 	double separation_weight = SwarmCoord.get_separation();
 	double alignment_weight = SwarmCoord.get_alignment();
@@ -280,17 +295,23 @@ void UAV::apply_boids_forces() {
 	std::array<double, 3> new_velocity;
 	std::array<double, 3> current_velocity = get_vel();
 
-	net_force[0] = (cohesion_force[0] * cohesion_weight) + (separation_force[0] * separation_weight) + (alignment_force[0] * alignment_weight);
-	net_force[1] = (cohesion_force[1] * cohesion_weight) + (separation_force[1] * separation_weight) + (alignment_force[1] * alignment_weight);
-	net_force[2] = (cohesion_force[2] * cohesion_weight) + (separation_force[2] * separation_weight) + (alignment_force[2] * alignment_weight);
+	net_force[0] = (cohesion_force[0] * cohesion_weight * internal_cohesion_weight) + (separation_force[0] * separation_weight * internal_separation_weight) + (alignment_force[0] * alignment_weight * internal_alignment_weight);
+	net_force[1] = (cohesion_force[1] * cohesion_weight * internal_cohesion_weight) + (separation_force[1] * separation_weight * internal_separation_weight) + (alignment_force[1] * alignment_weight * internal_alignment_weight);
+	net_force[2] = (cohesion_force[2] * cohesion_weight * internal_cohesion_weight) + (separation_force[2] * separation_weight * internal_separation_weight) + (alignment_force[2] * alignment_weight * internal_alignment_weight);
 
-	new_velocity[0] = current_velocity[0] + net_force[0] * UAVDT;
-	new_velocity[1] = current_velocity[1] + net_force[1] * UAVDT;
-	new_velocity[2] = current_velocity[2] + net_force[2] * UAVDT;
+	new_velocity[0] = current_velocity[0] + net_force[0]; //used to be ... + net_force[0] * UAVDT
+	new_velocity[1] = current_velocity[1] + net_force[1];
+	new_velocity[2] = current_velocity[2] + net_force[2];
 
 	new_velocity[0] = (new_velocity[0] <= max_speed) ? new_velocity[0] : max_speed;
 	new_velocity[1] = (new_velocity[1] <= max_speed) ? new_velocity[1] : max_speed;
 	new_velocity[2] = (new_velocity[2] <= max_speed) ? new_velocity[2] : max_speed;
+
+	// DEBUG PRINTOUT:
+	std::cout << "UAV " << get_id() << " forces: "
+	<< "cohesion(" << cohesion_force[0] << "," << cohesion_force[1] << "," << cohesion_force[2] << ") "
+	<< "separation(" << separation_force[0] << "," << separation_force[1] << "," << separation_force[2] << ") "
+	<< "net(" << net_force[0] << "," << net_force[1] << "," << net_force[2] << ")" << std::endl;
 
 	set_velocity(new_velocity[0], new_velocity[1], new_velocity[2]);
 }

@@ -63,12 +63,8 @@ void UAVSimulator::start_sim() {
 
 		while (running) {
 			for (auto &uav : swarm) {
-				// uav.update_neighbor_status(uav.get_id(), uav.get_pos(), uav.get_vel());
-				// uav.apply_boids_forces();
-				uav.update_position(UAVDT); // found in uav.h
+				uav.update_position(UAVDT); // UAVDT found in uav.h
 				uav.uav_to_telemetry_server(telemetry_port);
-
-
 			}
 
 			// Centralized neighbors updater
