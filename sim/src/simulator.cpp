@@ -63,8 +63,29 @@ void UAVSimulator::start_sim() {
 
 		while (running) {
 			for (auto &uav : swarm) {
+				// uav.update_neighbor_status(uav.get_id(), uav.get_pos(), uav.get_vel());
+				// uav.apply_boids_forces();
 				uav.update_position(UAVDT); // found in uav.h
 				uav.uav_to_telemetry_server(telemetry_port);
+
+
+			}
+
+			// Centralized neighbors updater
+			// (to be used until working and then will be decentralized)
+			const int num_uav = swarm.size();
+			for (int i = 0; i < num_uav; i++) {
+				for (int j = 0; j < num_uav; j++) {
+					if (i != j) {
+						swarm[i].update_neighbor_status(
+							swarm[j].get_id(),
+							swarm[j].get_pos(),
+							swarm[j].get_vel()
+						);
+					}
+				}
+				if (i != 0)
+					swarm[i].apply_boids_forces();
 			}
 
 			std::this_thread::sleep_for(sleep_duration);
