@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+// Coordinate convention:
+// - x, y: horizontal plane
+// - z: altitude (up/down)
 export type Position = {
 	x: number;
 	y: number;
@@ -192,12 +195,12 @@ export function useTelemetry(): TelemetryState {
 		if (uavs.length === 0) return;
 
 		console.log(
-			"UAV positions from useTelemetry:",
+			"UAV positions from useTelemetry (z = altitude):",
 			uavs.map((u) => ({
 				id: u.id,
 				x: u.position.x,
 				y: u.position.y,
-				z: u.position.z,
+				zAlt: u.position.z,
 			}))
 		);
 	}, [uavs]);

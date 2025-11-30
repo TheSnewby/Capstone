@@ -12,6 +12,7 @@ use axum::{
 };
 use futures::{sink::SinkExt, stream::StreamExt};
 use serde::Deserialize;
+use tokio::net::UdpSocket;
 use tracing::Instrument;
 
 /// message sent from the UI over WebSocket
@@ -65,6 +66,34 @@ async fn ws_handler(
     ws.on_upgrade(move |socket| handle_ws(socket, shared))
 }
 
+
+async fn send_formation_command_to_sim(formation: &str) {
+    let msg = match formation {
+        "line" => Some("LINE"),
+        "vee" => Some("VEE"),
+        "circle" => Some("CIRCLE"),
+        _ => None,
+    };
+
+    let Some(msg) = msg else {
+        tracing::warn!("Unknown formation command from client: {}", formation);
+        return;
+    };
+
+    let addr = "127.0.0.1:6001";
+
+    match UdpSocket::bind("0.0.0.0:0").await {
+        Ok(socket) => {
+            if let Err(err) = socket.send_to(msg.as_bytes(), addr).await {
+                tracing::warn!("Failed to send formation command to sim: {}", err);
+            }
+        }
+        Err(err) => {
+            tracing::warn!("Failed to bind UDP socket for formation command: {}", err);
+        }
+    }
+}
+
 /// handle a single WebSocket client connection
 async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
     let span = tracing::info_span!("ws_client");
@@ -88,7 +117,13 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                 Message::Text(text) => {
                                     match serde_json::from_str::<ClientMessage>(&text) {
                                         Ok(ClientMessage::Command(cmd)) => {
-                                            shared.swarm.apply_command(cmd).await;
+                                            if let Some(formation) = cmd.get("formation").and_then(|v| v.as_str()) {
+                                                // UI is asking for a formation change; forward to the C++ simulator
+                                                send_formation_command_to_sim(formation).await;
+                                            } else {
+                                                // Otherwise, treat it as a normal swarm command
+                                                shared.swarm.apply_command(cmd).await;
+                                            }
                                         }
                                         Ok(ClientMessage::SwarmSettings(settings)) => {
                                             // apply and then echo settings update back to this client
