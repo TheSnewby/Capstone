@@ -136,15 +136,16 @@ void UAVSimulator::create_formation_line(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
-		} else {			int wing = (i + 1) / 2;              // 1,1,2,2,...
+			y = 0.0;
+		} else {
+			int wing = (i + 1) / 2;              // 1,1,2,2,...
 			int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 			x = side * wing * spacing;          // horizontal offset
-			z = 0;                 				// distance behind leader
+			y = 0;                 				// distance behind leader
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -168,17 +169,17 @@ void UAVSimulator::create_formation_vee(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
+			y = 0.0;
 		} else {
 			// VEE formation - two per wing
 			int wing = (i + 1) / 2;              // 1,1,2,2,...
 			int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 			x = side * wing * spacing;          // horizontal offset
-			z = wing * spacing;                 // distance behind leader
+			y = wing * spacing;                 // distance behind leader
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -201,14 +202,14 @@ void UAVSimulator::create_formation_circle(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
+			y = 0.0;
 		} else {
 			double angle = 2.0 * M_PI * i / num_uavs;
 			x = radius * std::cos(angle);
-			z = radius * std::sin(angle);
+			y = radius * std::sin(angle);
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -258,9 +259,9 @@ void UAVSimulator::set_formation_vee(int num_uavs) {
 		int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 		x = leader_x + side * wing * spacing;          // horizontal offset
-		z = leader_z + wing * spacing;                 // distance behind leader
+		y = leader_y + wing * spacing;                 // distance behind leader
 
-		y = leader_y;
+		z = leader_z;
 
 		swarm[i].set_position(x, y, z);
 	}
@@ -282,9 +283,9 @@ void UAVSimulator::set_formation_circle(int num_uavs) {
 
 		double angle = 2.0 * M_PI * i / num_uavs;
 		x = leader_x + radius * std::cos(angle);
-		z = leader_z + radius * std::sin(angle);
+		y = leader_y + radius * std::sin(angle);
 
-		y = leader_y;
+		z = leader_z;
 
 		swarm[i].set_position(x, y, z);
 	}
