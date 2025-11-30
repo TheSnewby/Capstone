@@ -1,5 +1,4 @@
 #pragma once
-#include "uav.h"
 #include <vector>
 #include <thread>
 #include <mutex>
@@ -9,6 +8,8 @@
 #include <random>
 #include <string>
 #include <iomanip>
+
+class UAV; 
 
 enum formation {
 	RANDOM = 0,
@@ -24,6 +25,9 @@ private:
 	std::atomic<bool> running{false};
 	formation form;
 	std::thread physics_thread;
+	std::thread command_listener_thread;
+	std::atomic<bool> command_listener_running{false};
+	int command_port = 6001;
 
 public:
 	UAVSimulator(int num_drones);
@@ -36,13 +40,15 @@ public:
 	// setters
 	void set_formation(formation f) { form = f; }
 
-	// function
+	// methods
 	void start_sim();
 	void stop_sim();
 
 	void print_swarm_status(); /* for testing */
-	void update_uav_pos(int index, int dt, int tel_serv_port);
 	void change_formation(formation f);
+
+	void start_command_listener();
+	void stop_command_listener();
 
 private:
 	void physics_loop();
@@ -55,4 +61,6 @@ private:
 	void set_formation_line(int num_uavs);
 	void set_formation_vee(int num_uavs);
 	void set_formation_circle(int num_uavs);
+
+	void command_listener_loop();
 };

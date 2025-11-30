@@ -5,8 +5,6 @@
 
 class SwarmCoordinator {
 private:
-	UAVSimulator& sim;
-	std::mutex coord_mutex;
 	// cohesion sliders
 	double cohesion;
 	double separation;
@@ -15,14 +13,13 @@ private:
 	double target_altitude;
 
 public:
-	SwarmCoordinator(UAVSimulator s, formation num = RANDOM) : sim(s) {
+	SwarmCoordinator() {
 		cohesion = separation = alignment = 1.00;
 		double max_speed = 30;
 		double target_altitude = 150;
 	};
 
 	// getters
-	UAVSimulator& get_sim() { return sim; }
 	double get_cohesion() { return cohesion; }
 	double get_separation() { return separation; }
 	double get_alignment() { return alignment; }

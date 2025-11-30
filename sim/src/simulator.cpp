@@ -1,4 +1,5 @@
 #include "simulator.h"
+#include "uav.h"
 
 /**
  * print_swarm_status: prints all UAV's position and velocity to stdout
@@ -22,11 +23,11 @@ void UAVSimulator::print_swarm_status() {
  * Constructor for UAVSimulator
  */
 UAVSimulator::UAVSimulator(int num_uavs) {
-	swarm.reserve(num_uavs);
+	swarm.reserve(num_uavs); 				// allocates memory to reduce resizing slowdowns
 	create_formation_random(num_uavs);		// default, but can change to anything
-	// create_formation_circle(num_uavs); 	// for debug
-	// create_formation_line(num_uavs); 	// for debug
-	// create_formation_vee(num_uavs);		// for debug
+	// create_formation_circle(num_uavs); 	// for testing each formation creator
+	// create_formation_line(num_uavs);
+	// create_formation_vee(num_uavs);
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
 	print_swarm_status();
@@ -46,12 +47,6 @@ UAVSimulator::~UAVSimulator() {
 }
 
 /**
- * update_uav_pos - updates and broadcasts to the telemetry server
- */
-void update_uav_pos(int index, int dt, int tel_serv_port) {
-	
-}
-/**
  * start_sim -	starts the simulation loop in a separate thread,
  *				updating UAV positions and sending telemetry to server
  */
@@ -63,14 +58,30 @@ void UAVSimulator::start_sim() {
 
 	std::thread([this]() {
 		using namespace std::chrono;
-		const double dt_seconds = 0.05;                  // 50 ms time step
 		const auto sleep_duration = milliseconds(50);    // 20 updates per second
 		const int telemetry_port = 6000;
 
 		while (running) {
 			for (auto &uav : swarm) {
-				uav.update_position(dt_seconds);
+				uav.update_position(UAVDT); // UAVDT found in uav.h
 				uav.uav_to_telemetry_server(telemetry_port);
+			}
+
+			// Centralized neighbors updater
+			// (to be used until working and then will be decentralized)
+			const int num_uav = swarm.size();
+			for (int i = 0; i < num_uav; i++) {
+				for (int j = 0; j < num_uav; j++) {
+					if (i != j) {
+						swarm[i].update_neighbor_status(
+							swarm[j].get_id(),
+							swarm[j].get_pos(),
+							swarm[j].get_vel()
+						);
+					}
+				}
+				if (i != 0)
+					swarm[i].apply_boids_forces();
 			}
 
 			std::this_thread::sleep_for(sleep_duration);
@@ -80,7 +91,7 @@ void UAVSimulator::start_sim() {
 
 void UAVSimulator::stop_sim() {
 	running = false;
-
+	stop_command_listener();
 }
 
 /**
@@ -142,15 +153,16 @@ void UAVSimulator::create_formation_line(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
-		} else {			int wing = (i + 1) / 2;              // 1,1,2,2,...
+			y = 0.0;
+		} else {
+			int wing = (i + 1) / 2;              // 1,1,2,2,...
 			int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 			x = side * wing * spacing;          // horizontal offset
-			z = 0;                 				// distance behind leader
+			y = 0;                 				// distance behind leader
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -174,17 +186,17 @@ void UAVSimulator::create_formation_vee(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
+			y = 0.0;
 		} else {
 			// VEE formation - two per wing
 			int wing = (i + 1) / 2;              // 1,1,2,2,...
 			int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 			x = side * wing * spacing;          // horizontal offset
-			z = wing * spacing;                 // distance behind leader
+			y = wing * spacing;                 // distance behind leader
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -207,14 +219,14 @@ void UAVSimulator::create_formation_circle(int num_uavs) {
 		// leader front and center
 		if (i == 0) {
 			x = 0.0;
-			z = 0.0;
+			y = 0.0;
 		} else {
 			double angle = 2.0 * M_PI * i / num_uavs;
 			x = radius * std::cos(angle);
-			z = radius * std::sin(angle);
+			y = radius * std::sin(angle);
 		}
 
-		y = base_altitude;
+		z = base_altitude;
 
 		int uav_port = 8000 + i;
 		UAV uav(i, uav_port, x, y, z);
@@ -264,9 +276,9 @@ void UAVSimulator::set_formation_vee(int num_uavs) {
 		int side = (i % 2 == 1) ? -1 : 1;    // left/right
 
 		x = leader_x + side * wing * spacing;          // horizontal offset
-		z = leader_z + wing * spacing;                 // distance behind leader
+		y = leader_y + wing * spacing;                 // distance behind leader
 
-		y = leader_y;
+		z = leader_z;
 
 		swarm[i].set_position(x, y, z);
 	}
@@ -288,10 +300,55 @@ void UAVSimulator::set_formation_circle(int num_uavs) {
 
 		double angle = 2.0 * M_PI * i / num_uavs;
 		x = leader_x + radius * std::cos(angle);
-		z = leader_z + radius * std::sin(angle);
+		y = leader_y + radius * std::sin(angle);
 
-		y = leader_y;
+		z = leader_z;
 
 		swarm[i].set_position(x, y, z);
 	}
+}
+
+void UAVSimulator::start_command_listener() {
+	command_listener_running = true;
+	command_listener_thread = std::thread(&UAVSimulator::command_listener_loop, this);
+}
+
+void UAVSimulator::stop_command_listener() {
+	command_listener_running = false;
+	if (command_listener_thread.joinable())
+		command_listener_thread.join();
+}
+
+
+void UAVSimulator::command_listener_loop() {
+	int socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+	struct sockaddr_in addr;
+	char buffer[1024] = {0};
+
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = INADDR_ANY;
+	addr.sin_port = htons(command_port);
+
+	if (bind(socketfd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+		std::cout << "Failed to bind command listener to port " << command_port << std::endl;
+		return;
+	}
+
+	std::cout << "Command listener started on port " << command_port << std::endl;
+
+	while (command_listener_running) {
+		ssize_t received = recvfrom(socketfd, buffer, sizeof(buffer) - 1, 0 , nullptr, nullptr);
+		std::string command(buffer);
+
+		if (command == "1") {
+			change_formation(LINE);
+		} else if (command == "2") {
+			change_formation(FLYING_V);
+		} else if (command == "3") {
+			change_formation(CIRCLE);
+		}
+		memset(buffer, 0, 1024);
+	}
+	close(socketfd);
 }
