@@ -16,7 +16,7 @@ int main() {
 	// start the simulator's internal loop (updates + telemetry)
 	sim.start_sim();
 
-	std::cout << "Simulation running with " << num_uav << " UAVs in V formation." << std::endl;
+	// std::cout << "Simulation running with " << num_uav << " UAVs in V formation." << std::endl;
 
 	// program is now an indefinite loop - must be terminated manually
 	while (true) {

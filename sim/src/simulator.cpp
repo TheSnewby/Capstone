@@ -30,9 +30,9 @@ UAVSimulator::UAVSimulator(int num_uavs) {
 	// create_formation_vee(num_uavs);
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
-	print_swarm_status();
-	// set_formation_line(num_uavs);		// for testing each formation setter
 	// print_swarm_status();
+	set_formation_line(num_uavs);		// for testing each formation setter
+	print_swarm_status();
 	// set_formation_vee(num_uavs);
 	// print_swarm_status();
 	// set_formation_circle(num_uavs);
