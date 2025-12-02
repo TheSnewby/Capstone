@@ -14,6 +14,11 @@ use futures::{sink::SinkExt, stream::StreamExt};
 use serde::Deserialize;
 use tokio::net::UdpSocket;
 use tracing::Instrument;
+use std::env;
+
+fn sim_addr() -> String {
+    env::var("SKYWEAVE_SIM_ADDR").unwrap_or_else(|_| "127.0.0.1:6001".to_string())
+}
 
 /// message sent from the UI over WebSocket
 #[derive(Debug, Deserialize)]
@@ -80,11 +85,12 @@ async fn send_formation_command_to_sim(formation: &str) {
         return;
     };
 
-    let addr = "127.0.0.1:6001";
+    let addr = sim_addr();
 
     match UdpSocket::bind("0.0.0.0:0").await {
         Ok(socket) => {
-            if let Err(err) = socket.send_to(msg.as_bytes(), addr).await {
+            tracing::info!("sending formation UDP to sim {}: {}", addr, msg);
+            if let Err(err) = socket.send_to(msg.as_bytes(), &addr).await {
                 tracing::warn!("Failed to send formation command to sim: {}", err);
             }
         }
@@ -96,11 +102,12 @@ async fn send_formation_command_to_sim(formation: &str) {
 
 /// Send a generic control command (e.g., leader movement / altitude change) to the simulator over UDP.
 async fn send_control_command_to_sim(command: &str) {
-    let addr = "127.0.0.1:6001";
+    let addr = sim_addr();
 
     match UdpSocket::bind("0.0.0.0:0").await {
         Ok(socket) => {
-            if let Err(err) = socket.send_to(command.as_bytes(), addr).await {
+            tracing::info!("sending control UDP to sim {}: {}", addr, command);
+            if let Err(err) = socket.send_to(command.as_bytes(), &addr).await {
                 tracing::warn!("Failed to send control command to sim: {} (cmd = {})", err, command);
             }
         }
