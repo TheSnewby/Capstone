@@ -19,7 +19,7 @@
 #include <algorithm>
 #include "swarm_coordinator.h"
 
-#define UAVDT .05 // UAV time step
+#define UAVDT .025 // UAV time step
 
 // for the stretch goal of allowing a user to manually control an individual UAV
 enum class UAVControleMode {
@@ -68,6 +68,7 @@ public:
 	// Getters
 	int get_id() const { return id; }
 	int get_port() const { return port; }
+	SwarmCoordinator& get_SwarmCoord() { return SwarmCoord; }
 
 	std::array<double, 3> get_pos() const { return pos; }
 	double get_x() const { return pos[0]; }
@@ -91,7 +92,7 @@ public:
 	std::vector<NeighborInfo> get_fresh_neighbors();
 
 	// Cohesion
-	std::array<double, 3> calculate_cohesion_forces();
+	std::array<double, 3> calculate_formation_force();
 	std::array<double, 3> calculate_separation_forces();
 	std::array<double, 3> calculate_alignment_forces();
 	void apply_boids_forces();

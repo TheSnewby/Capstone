@@ -2,6 +2,7 @@
 #include "simulator.h"
 
 // Currently Centralized
+// Might need to be converted into a struct in uav.h or sim.h
 
 class SwarmCoordinator {
 private:
@@ -29,7 +30,7 @@ public:
 	double get_alignment() { return alignment; }
 	double get_max_speed() { return max_speed; }
 	double get_target_altitude() { return target_altitude;}
-	std::array<double, 3> get_formation_offset(int uav_id) { return formation_offsets[uav_id]; };
+	std::array<double, 3> get_formation_offset(int uav_id);
 
 	// updaters
 	void set_cohesion(double coh) { cohesion = coh; }
@@ -42,6 +43,5 @@ public:
 		const std::array<double, 3>& leader_velocity
 	);
 
-private:
 	void calculate_formation_offsets(int num_uavs, formation f);
 };

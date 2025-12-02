@@ -2,16 +2,20 @@
 
 void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f) {
 	formation_offsets.clear();
-	formation_offsets.reserve(num_uavs); //consider .resize()
+	formation_offsets.resize(num_uavs);
 
 	switch(f) {
 		case LINE:
 			for (int i = 0; i < num_uavs; i++) {
-				formation_offsets[i] = {
-					(i = num_uavs / 2.0) * separation,
-					0.0,
-					0.0
-				};
+				if (i == 0)
+					formation_offsets[0] = {0, 0, 0};
+				else {
+					int wing = (i + 1) / 2;
+					int side = (i % 2 == 1) ? -1 : 1;
+					formation_offsets[i] = {
+						wing * side * separation, 0, 0
+					};
+				}
 			}
 			break;
 
@@ -32,8 +36,8 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f) {
 			break;
 
 		case CIRCLE:
-			const double radius = 10.0; //might make dependent on user-input
-			const double base_altitude = 50.0;
+			const double radius = get_separation(); //might make dependent on user-input
+			const double base_altitude = get_target_altitude();
 
 			for (int i = 0; i < num_uavs; i++) {
 				double x, y, z;
@@ -76,6 +80,18 @@ std::array<double, 3> SwarmCoordinator::rotate_offset_3d (
 	rotation = {x1 * cos_pitch + z1 * sin_pitch, y1, -x1 * sin_pitch + z1 * cos_pitch};
 
 	return (rotation);
+}
+
+/**
+ * get's the formation offset for this specific uav
+ */
+std::array<double, 3> SwarmCoordinator::get_formation_offset(int uav_id) {
+	if (uav_id >= formation_offsets.size())
+	{
+		std::cout << "Invalid UAV ID " << uav_id << ". size of formation_offsets: " << formation_offsets.size() << std::endl;
+		return {0, 0, 0};
+	}
+	return (formation_offsets[uav_id]);
 }
 
 // add listeners for sliders
