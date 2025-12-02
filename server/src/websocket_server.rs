@@ -87,7 +87,7 @@ async fn send_formation_command_to_sim(formation: &str) {
 
     let addr = sim_addr();
 
-    match UdpSocket::bind("0.0.0.0:0").await {
+    match UdpSocket::bind("[::]:0").await {
         Ok(socket) => {
             tracing::info!("sending formation UDP to sim {}: {}", addr, msg);
             if let Err(err) = socket.send_to(msg.as_bytes(), &addr).await {
@@ -104,7 +104,7 @@ async fn send_formation_command_to_sim(formation: &str) {
 async fn send_control_command_to_sim(command: &str) {
     let addr = sim_addr();
 
-    match UdpSocket::bind("0.0.0.0:0").await {
+    match UdpSocket::bind("[::]:0").await {
         Ok(socket) => {
             tracing::info!("sending control UDP to sim {}: {}", addr, command);
             if let Err(err) = socket.send_to(command.as_bytes(), &addr).await {
