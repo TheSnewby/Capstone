@@ -26,6 +26,7 @@ private:
 	formation form;
 	std::thread physics_thread;
 	std::thread command_listener_thread;
+	std::thread turn_timer_thread;
 	std::atomic<bool> command_listener_running{false};
 	int command_port = 6001;
 
@@ -63,4 +64,5 @@ private:
 	void set_formation_circle(int num_uavs);
 
 	void command_listener_loop();
+	void start_turn_timer(); 							// for testing
 };
