@@ -46,6 +46,22 @@ UAVSimulator::~UAVSimulator() {
 	stop_sim();
 }
 
+//void UAVSimulator::start_turn_timer()
+// {
+//	turn_timer_thread = std::thread([this](){
+//		std::this_thread::sleep_for(std::chrono::seconds(10));
+//		if (running)
+//			swarm[0].set_velocity(1, 1, 0);
+//
+//		std::this_thread::sleep_for(std::chrono::seconds(20));
+//		if (running)
+//			change_formation(FLYING_V);
+//		std::this_thread::sleep_for(std::chrono::seconds(20));
+//		if (running)
+//			change_formation(CIRCLE); });
+//	turn_timer_thread.detach();
+// }
+
 /**
  * start_sim -	starts the simulation loop in a separate thread,
  *				updating UAV positions and sending telemetry to server
@@ -55,6 +71,8 @@ void UAVSimulator::start_sim() {
 		return;
 
 	running = true;
+
+//	start_turn_timer();
 
 	std::thread([this]() {
 		using namespace std::chrono;
@@ -101,6 +119,18 @@ void UAVSimulator::stop_sim() {
  */
 void UAVSimulator::change_formation(formation f) {
 	int uav_nums = swarm.size();
+
+	SwarmCoordinator &coords = swarm[0].get_SwarmCoord();
+	coords.calculate_formation_offsets(uav_nums, f);
+
+	// formation offsets stored in each uav
+	for (int i = 0; i < uav_nums; i++)
+	{
+		SwarmCoordinator &uav_coord = swarm[i].get_SwarmCoord();
+		uav_coord = coords;
+	}
+
+	form = f;
 
 	if (f == 1)
 	{
