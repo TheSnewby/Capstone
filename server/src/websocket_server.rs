@@ -2,8 +2,7 @@ use crate::telemetry::{SwarmSettings, TelemetryShared, UavState};
 use axum::{
     extract::{
         ws::{Message, WebSocket, WebSocketUpgrade},
-        State,
-        Path,
+        Path, State,
     },
     http::StatusCode,
     response::IntoResponse,
@@ -12,9 +11,9 @@ use axum::{
 };
 use futures::{sink::SinkExt, stream::StreamExt};
 use serde::Deserialize;
+use std::env;
 use tokio::net::UdpSocket;
 use tracing::Instrument;
-use std::env;
 
 fn sim_addr() -> String {
     env::var("SKYWEAVE_SIM_ADDR").unwrap_or_else(|_| "127.0.0.1:6001".to_string())
@@ -28,7 +27,7 @@ enum ClientMessage {
     Command(serde_json::Value),
     #[serde(rename = "swarm_settings")]
     SwarmSettings(SwarmSettings),
-	#[serde(rename = "telemetry")]
+    #[serde(rename = "telemetry")]
     Telemetry(UavState),
 }
 
@@ -54,10 +53,7 @@ async fn list_uavs(State(shared): State<TelemetryShared>) -> Json<Vec<UavState>>
     Json(list)
 }
 
-async fn get_uav(
-    State(shared): State<TelemetryShared>,
-    Path(id): Path<u64>,
-) -> impl IntoResponse {
+async fn get_uav(State(shared): State<TelemetryShared>, Path(id): Path<u64>) -> impl IntoResponse {
     match shared.swarm.get_uav(id).await {
         Some(uav) => Json(uav).into_response(),
         None => (StatusCode::NOT_FOUND, "not found").into_response(),
@@ -70,7 +66,6 @@ async fn ws_handler(
 ) -> impl IntoResponse {
     ws.on_upgrade(move |socket| handle_ws(socket, shared))
 }
-
 
 async fn send_formation_command_to_sim(formation: &str) {
     let msg = match formation {
@@ -108,7 +103,11 @@ async fn send_control_command_to_sim(command: &str) {
         Ok(socket) => {
             tracing::info!("sending control UDP to sim {}: {}", addr, command);
             if let Err(err) = socket.send_to(command.as_bytes(), &addr).await {
-                tracing::warn!("Failed to send control command to sim: {} (cmd = {})", err, command);
+                tracing::warn!(
+                    "Failed to send control command to sim: {} (cmd = {})",
+                    err,
+                    command
+                );
             }
         }
         Err(err) => {
@@ -146,40 +145,51 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                         Ok(ClientMessage::Command(cmd)) => {
                                             tracing::info!("swarm_command_from_ui={}", cmd);
 
-                                            if let Some(formation) = cmd.get("formation").and_then(|v| v.as_str()) {
-                                                // UI is asking for a formation change; forward to the C++ simulator
-                                                send_formation_command_to_sim(formation).await;
-                                            } else if let Some(cmd_type) = cmd.get("type").and_then(|v| v.as_str()) {
-                                                // Typed control commands from the UI (move leader, altitude, etc.)
+                                            if let Some(cmd_type) = cmd.get("type").and_then(|v| v.as_str()) {
                                                 match cmd_type {
+                                                    // formation commands from UI
+                                                    "formation" => {
+                                                        if let Some(mode) = cmd.get("mode").and_then(|v| v.as_str()) {
+                                                            // mode: "line" | "vee" | "circle"
+                                                            send_formation_command_to_sim(mode).await;
+                                                        } else {
+                                                            tracing::warn!("formation command missing `mode` field: {:?}", cmd);
+                                                        }
+                                                    }
+
+                                                    // leader movement
                                                     "move_leader" => {
                                                         if let Some(direction) = cmd.get("direction").and_then(|v| v.as_str()) {
-                                                            // Match the C++ parser: "move_leader accelerate|decelerate|left|right"
                                                             let command = format!("move_leader {}", direction.to_lowercase());
                                                             send_control_command_to_sim(&command).await;
                                                         } else {
                                                             tracing::warn!("move_leader command missing `direction` field: {:?}", cmd);
                                                         }
                                                     }
+
+                                                    // altitude change
                                                     "altitude_change" => {
                                                         if let Some(amount) = cmd.get("amount").and_then(|v| v.as_f64()) {
-                                                            // Match the C++ parser: "altitude_change <delta>"
                                                             let command = format!("altitude_change {}", amount);
                                                             send_control_command_to_sim(&command).await;
                                                         } else {
                                                             tracing::warn!("altitude_change command missing `amount` field: {:?}", cmd);
                                                         }
                                                     }
+
+                                                    // anything else: apply locally
                                                     _ => {
-                                                        // Unknown typed command: apply locally for now
                                                         shared.swarm.apply_command(cmd).await;
                                                     }
                                                 }
+                                            } else if let Some(formation) = cmd.get("formation").and_then(|v| v.as_str()) {
+                                                // legacy shape: { "formation": "line" }
+                                                send_formation_command_to_sim(formation).await;
                                             } else {
-                                                // No special routing; treat it as a normal swarm command
                                                 shared.swarm.apply_command(cmd).await;
                                             }
                                         }
+
                                         Ok(ClientMessage::SwarmSettings(settings)) => {
                                             // apply and then echo settings update back to this client
                                             let settings_clone = settings.clone();
@@ -200,6 +210,7 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                                 let _ = sender.send(Message::Text(txt)).await;
                                             }
                                         }
+
                                         Ok(ClientMessage::Telemetry(uav)) => {
                                             let id = uav.id;
                                             tracing::info!("ws_recv: telemetry frame for UAV {} via WebSocket", id);
@@ -214,6 +225,7 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                                 );
                                             }
                                         }
+
                                         Err(err) => {
                                             tracing::warn!(
                                                 "Invalid WS client message: {} (raw: {})",
@@ -223,19 +235,23 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                         }
                                     }
                                 }
+
                                 Message::Close(_) => {
                                     tracing::info!("WebSocket client closed connection");
                                     break;
                                 }
+
                                 _ => {
                                     // ignore non-text messages for now
                                 }
                             }
                         }
+
                         Some(Err(err)) => {
                             tracing::warn!("WebSocket receive error: {}", err);
                             break;
                         }
+
                         None => {
                             tracing::info!("WebSocket client stream ended");
                             break;
