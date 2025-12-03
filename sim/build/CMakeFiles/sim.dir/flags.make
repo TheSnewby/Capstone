@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/nashthames/skyweave/sim/build/_deps/nlohmann_json-src/include
+CXX_INCLUDES = -I/Users/nashthames/SkyWeave-1/sim/build/_deps/nlohmann_json-src/include
 
 CXX_FLAGSarm64 = -std=gnu++20 -arch arm64
 
