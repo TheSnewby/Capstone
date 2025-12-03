@@ -35,7 +35,7 @@ export default function TelemetryTable({ uavs }: Props) {
               Y
             </th>
             <th className="px-4 py-2 border-b border-emerald-700/60 text-left nasa-text text-emerald-300 tracking-widest uppercase">
-              Z
+              Altitude
             </th>
             <th className="px-4 py-2 border-b border-emerald-700/60 text-left nasa-text text-emerald-300 tracking-widest uppercase">
               Velocity (m/s)
