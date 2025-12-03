@@ -1,6 +1,3 @@
-   0.047097208s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/Capstone/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/Capstone/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/Capstone/server/src/main.rs", Edition2021) }
-   0.047110375s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/Capstone/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: NothingObvious
-   0.051869000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/Capstone/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/Capstone/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/Capstone/server/src/main.rs", Edition2021) }
-   0.051879458s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/Capstone/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: NothingObvious
-    Checking skyweave-server v0.1.0 (/Users/nashthames/Capstone/server)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.84s

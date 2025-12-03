@@ -1,8 +1,8 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/nashthames/Capstone/sim/build/cmake_install.cmake",
-		"/Users/nashthames/Capstone/sim/build/_deps/nlohmann_json-build/cmake_install.cmake"
+		"/Users/nashthames/skyweave/sim/build/cmake_install.cmake",
+		"/Users/nashthames/skyweave/sim/build/_deps/nlohmann_json-build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

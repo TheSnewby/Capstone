@@ -200,7 +200,7 @@ export function useTelemetry(): TelemetryState {
 				id: u.id,
 				x: u.position.x,
 				y: u.position.y,
-				zAlt: u.position.z,
+				z: u.position.z,
 			}))
 		);
 	}, [uavs]);

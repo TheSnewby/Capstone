@@ -25,7 +25,7 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
   const trailsRef = useRef<Map<number, [number, number, number][]>>(new Map());
 
   // leader is first in list
-  const leader = uavs[0];
+  const leader = uavs.find((u) => u.id === 0) ?? uavs[0];
   const uavCount = uavs.length;
 
   // center frame on leader
@@ -103,7 +103,7 @@ export default function UavScene({ uavs, showTrails = true }: Props) {
 
         {/* UAVs */}
         {uavs.map((uav, index) => {
-          const isLeader = index === 0; // first UAV is leader
+          const isLeader = uav.id === 0; // UAV with ID 0 is leader
 
           // render positions in a frame centered on the leader so the grid moves with the swarm
           const headX = uav.position.x * scale - originX;

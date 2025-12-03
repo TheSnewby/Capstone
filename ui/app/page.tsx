@@ -69,16 +69,16 @@ export default function TelemetryPage() {
 
       switch (event.key.toLowerCase()) {
         case "w":
-          handleCommand({ type: "move_leader", direction: "north" });
+          handleCommand({ type: "move_leader", direction: "accelerate" });
           break;
         case "s":
-          handleCommand({ type: "move_leader", direction: "south" });
+          handleCommand({ type: "move_leader", direction: "decelerate" });
           break;
         case "a":
-          handleCommand({ type: "move_leader", direction: "west" });
+          handleCommand({ type: "move_leader", direction: "left" });
           break;
         case "d":
-          handleCommand({ type: "move_leader", direction: "east" });
+          handleCommand({ type: "move_leader", direction: "right" });
           break;
         case "q":
           handleCommand({ type: "altitude_change", amount: 10 });
