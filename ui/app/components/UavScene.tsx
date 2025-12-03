@@ -17,9 +17,13 @@ type Props = {
 	cameraTarget?: CameraTarget;
 	formationMode?: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	obstacles?: ObstacleType[];
 =======
 >>>>>>> 6c20b7e (formationMode)
+=======
+	obstacles?: ObstacleType[];
+>>>>>>> 3d08e3f (ready for sim obstacles)
 };
 
 /**
@@ -30,7 +34,11 @@ type Props = {
  * - places glowing spheres for each UAV, colored by role
  * - allows camera orbiting
  * - draws simple trails from UAVs
+<<<<<<< HEAD
  * - renders server-synced obstacles (cylinders, boxes, spheres)
+=======
+ * - renders server-synced obstacles (cylinders and boxes)
+>>>>>>> 3d08e3f (ready for sim obstacles)
  */
 
 export default function UavScene({
@@ -39,9 +47,13 @@ export default function UavScene({
 	cameraTarget,
 	formationMode,
 <<<<<<< HEAD
+<<<<<<< HEAD
 	obstacles = [],
 =======
 >>>>>>> 6c20b7e (formationMode)
+=======
+	obstacles = [],
+>>>>>>> 3d08e3f (ready for sim obstacles)
 }: Props) {
 	const scale = 0.1; // shrinks world into view
 
@@ -150,6 +162,65 @@ export default function UavScene({
 						<cylinderGeometry args={[0.2, 0.2, 0.02, 16]} />
 						<meshStandardMaterial color="#3b82f6" />
 					</mesh>
+<<<<<<< HEAD
+=======
+
+					{/* server-synced obstacles */}
+					{obstacles.map((obs, idx) => {
+						if (obs.type === "cylinder") {
+							return (
+								<mesh
+									key={`obs-${idx}`}
+									position={[
+										obs.x * scale,
+										(obs.height * scale) / 2,
+										obs.y * scale,
+									]}
+								>
+									<cylinderGeometry
+										args={[
+											obs.radius * scale,
+											obs.radius * scale,
+											obs.height * scale,
+											24,
+										]}
+									/>
+									<meshStandardMaterial
+										color="#ef4444"
+										transparent
+										opacity={0.6}
+									/>
+								</mesh>
+							);
+						} else if (obs.type === "box") {
+							return (
+								<mesh
+									key={`obs-${idx}`}
+									position={[
+										obs.x * scale,
+										(obs.height * scale) / 2,
+										obs.y * scale,
+									]}
+								>
+									<boxGeometry
+										args={[
+											obs.width * scale,
+											obs.height * scale,
+											obs.depth * scale,
+										]}
+									/>
+									<meshStandardMaterial
+										color="#f97316"
+										transparent
+										opacity={0.5}
+									/>
+								</mesh>
+							);
+						}
+						return null;
+					})}
+				</group>
+>>>>>>> 3d08e3f (ready for sim obstacles)
 
 					{/* server-synced obstacles */}
 					{obstacles.map((obs, idx) => {

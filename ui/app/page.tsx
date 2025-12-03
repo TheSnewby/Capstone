@@ -23,6 +23,7 @@ import CommandPanel, { Command } from "./components/CommandPanel";
 
 export default function TelemetryPage() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const { uavs, status, settings, obstacles, send } = useTelemetry();
 	const router = useRouter();
 	const [showSplash, setShowSplash] = useState(true);
@@ -36,6 +37,8 @@ export default function TelemetryPage() {
 	});
 	const [formationMode, setFormationMode] = useState<string | undefined>(undefined);
 =======
+=======
+>>>>>>> 3d08e3f (ready for sim obstacles)
 <<<<<<< HEAD
   const { uavs, status, settings, send } = useTelemetry();
   const router = useRouter();
@@ -276,6 +279,9 @@ export default function TelemetryPage() {
     if (!settings) return;
 =======
 	const { uavs, status, settings, send } = useTelemetry();
+=======
+	const { uavs, status, settings, obstacles, send } = useTelemetry();
+>>>>>>> 15c8ebe (ready for sim obstacles)
 	const router = useRouter();
 	const [showSplash, setShowSplash] = useState(true);
 	const [showTrails, setShowTrails] = useState(true);
@@ -494,6 +500,7 @@ export default function TelemetryPage() {
 						showTrails={showTrails}
 						cameraTarget={cameraTarget}
 						formationMode={formationMode}
+						obstacles={obstacles}
 					/>
 				</section>
 
@@ -505,8 +512,11 @@ export default function TelemetryPage() {
 				<section>
 					<TelemetryTable uavs={uavs} />
 				</section>
+<<<<<<< HEAD
 
 >>>>>>> 1d40e57 (camera pointing, making things a bit faster)
+=======
+>>>>>>> 3d08e3f (ready for sim obstacles)
 			</div>
 		</main>
 	);

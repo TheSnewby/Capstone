@@ -50,6 +50,7 @@ pub struct SwarmSettings {
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum ObstacleType {
     #[serde(rename_all = "camelCase")]
+<<<<<<< HEAD
     Cylinder {
         x: f64,
         y: f64,
@@ -62,16 +63,29 @@ pub enum ObstacleType {
         x: f64,
         y: f64,
         z: f64,
+=======
+    Box {
+        x: f64,
+        y: f64,
+>>>>>>> 3d08e3f (ready for sim obstacles)
         width: f64,
         depth: f64,
         height: f64,
     },
     #[serde(rename_all = "camelCase")]
+<<<<<<< HEAD
     Sphere {
         x: f64,
         y: f64,
         z: f64,
         radius: f64,
+=======
+    Cylinder {
+        x: f64,
+        y: f64,
+        radius: f64,
+        height: f64,
+>>>>>>> 3d08e3f (ready for sim obstacles)
     },
 }
 
