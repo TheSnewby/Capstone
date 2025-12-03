@@ -22,7 +22,7 @@ import SwarmControls, { SwarmSettings } from "./components/SwarmControls";
 import CommandPanel, { Command } from "./components/CommandPanel";
 
 export default function TelemetryPage() {
-	const { uavs, status, settings, send } = useTelemetry();
+	const { uavs, status, settings, obstacles, send } = useTelemetry();
 	const router = useRouter();
 	const [showSplash, setShowSplash] = useState(true);
 	const [showTrails, setShowTrails] = useState(true);
@@ -240,6 +240,7 @@ export default function TelemetryPage() {
 						showTrails={showTrails}
 						cameraTarget={cameraTarget}
 						formationMode={formationMode}
+						obstacles={obstacles}
 					/>
 				</section>
 
@@ -251,7 +252,6 @@ export default function TelemetryPage() {
 				<section>
 					<TelemetryTable uavs={uavs} />
 				</section>
-
 			</div>
 		</main>
 	);

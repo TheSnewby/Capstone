@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Line } from "@react-three/drei";
-import { UavState } from "../hooks/useTelemetry";
+import { UavState, ObstacleType } from "../hooks/useTelemetry";
 
 type CameraTarget = {
 	x: number;
@@ -16,6 +16,7 @@ type Props = {
 	showTrails?: boolean;
 	cameraTarget?: CameraTarget;
 	formationMode?: string;
+	obstacles?: ObstacleType[];
 };
 
 /**
@@ -23,9 +24,10 @@ type Props = {
  *
  * lightweight 3D visualization of the UAV swarm
  * - draws a nice green grid
- * - places a triangle for each UAV, colored by role
- * - allows camera orbiting!!!
+ * - places glowing spheres for each UAV, colored by role
+ * - allows camera orbiting
  * - draws simple trails from UAVs
+ * - renders server-synced obstacles (cylinders and boxes)
  */
 
 export default function UavScene({
@@ -33,6 +35,7 @@ export default function UavScene({
 	showTrails = true,
 	cameraTarget,
 	formationMode,
+	obstacles = [],
 }: Props) {
 	const scale = 0.1; // shrinks world into view
 
@@ -43,10 +46,8 @@ export default function UavScene({
 	const uavCount = uavs.length;
 
 	// center frame on leader (or cameraTarget if provided)
-	const worldLeaderX =
-		cameraTarget?.x ?? (leader ? leader.position.x : 0);
-	const worldLeaderY =
-		cameraTarget?.y ?? (leader ? leader.position.y : 0);
+	const worldLeaderX = cameraTarget?.x ?? (leader ? leader.position.x : 0);
+	const worldLeaderY = cameraTarget?.y ?? (leader ? leader.position.y : 0);
 
 	const originX = worldLeaderX * scale;
 	const originZ = worldLeaderY * scale;
@@ -125,7 +126,7 @@ export default function UavScene({
 				<ambientLight intensity={0.6} />
 				<directionalLight position={[8, 15, 5]} intensity={1.0} />
 
-				{/* ground grid & axes centered on the leader-relative origin */}
+				{/* ground grid, axes, origin, and obstacles centered on leader-relative origin */}
 				<group position={[-originX, 0, -originZ]}>
 					<gridHelper args={[200, 200, "#00ff00", "#008800"]} />
 					<axesHelper args={[5]} />
@@ -135,6 +136,61 @@ export default function UavScene({
 						<cylinderGeometry args={[0.2, 0.2, 0.02, 16]} />
 						<meshStandardMaterial color="#3b82f6" />
 					</mesh>
+
+					{/* server-synced obstacles */}
+					{obstacles.map((obs, idx) => {
+						if (obs.type === "cylinder") {
+							return (
+								<mesh
+									key={`obs-${idx}`}
+									position={[
+										obs.x * scale,
+										(obs.height * scale) / 2,
+										obs.y * scale,
+									]}
+								>
+									<cylinderGeometry
+										args={[
+											obs.radius * scale,
+											obs.radius * scale,
+											obs.height * scale,
+											24,
+										]}
+									/>
+									<meshStandardMaterial
+										color="#ef4444"
+										transparent
+										opacity={0.6}
+									/>
+								</mesh>
+							);
+						} else if (obs.type === "box") {
+							return (
+								<mesh
+									key={`obs-${idx}`}
+									position={[
+										obs.x * scale,
+										(obs.height * scale) / 2,
+										obs.y * scale,
+									]}
+								>
+									<boxGeometry
+										args={[
+											obs.width * scale,
+											obs.height * scale,
+											obs.depth * scale,
+										]}
+									/>
+									<meshStandardMaterial
+										color="#f97316"
+										transparent
+										opacity={0.5}
+									/>
+								</mesh>
+							);
+						}
+						return null;
+					})}
 				</group>
 
 				{/* UAVs */}
