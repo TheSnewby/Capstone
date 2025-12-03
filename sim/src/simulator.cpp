@@ -33,7 +33,7 @@ UAVSimulator::UAVSimulator(int num_uavs)
 	for (int i = 0; i < num_uavs; i++)
 	{
 		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 50.0));
-		swarm[i].set_velocity(1, 1, 1); // consider defaulting to 0, 0, 0
+		swarm[i].set_velocity(0.0, 2.0, 0.0);
 	}
 
 	// set initial formation (LINE as default)
