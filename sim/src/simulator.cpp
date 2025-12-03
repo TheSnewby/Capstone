@@ -38,7 +38,11 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 	for (int i = 0; i < num_uavs; i++)
 	{
 		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 50.0));
+<<<<<<< HEAD
 		swarm[i].set_velocity(0.0, 2.0, 0.0); // cruisin on y axis
+=======
+		swarm[i].set_velocity(0.0, 2.0, 0.0);
+>>>>>>> 90066da (spawn velocity)
 	}
 
 	// set initial formation (LINE as default)
