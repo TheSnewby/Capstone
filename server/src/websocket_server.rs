@@ -154,7 +154,7 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                                 match cmd_type {
                                                     "move_leader" => {
                                                         if let Some(direction) = cmd.get("direction").and_then(|v| v.as_str()) {
-                                                            // Match the C++ parser: "move_leader north|south|east|west"
+                                                            // Match the C++ parser: "move_leader accelerate|decelerate|left|right"
                                                             let command = format!("move_leader {}", direction.to_lowercase());
                                                             send_control_command_to_sim(&command).await;
                                                         } else {

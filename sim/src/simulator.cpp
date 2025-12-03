@@ -390,23 +390,23 @@ void UAVSimulator::command_listener_loop() {
 			std::string dir;
 			ss >> tag >> dir;
 
-			double dx = 0.0;
-			double dy = 0.0;
+			double dvx = 0.0;
+			double dvy = 0.0;
 
-			if (dir == "north")
-				dy = -1.0;
-			else if (dir == "south")
-				dy = 1.0;
-			else if (dir == "east")
-				dx = 1.0;
-			else if (dir == "west")
-				dx = -1.0;
+			if (dir == "accelerate")
+				dvy = 1.0;
+			else if (dir == "decelerate")
+				dvy = -0.5;
+			else if (dir == "right")
+				dvx = 1.0;
+			else if (dir == "left")
+				dvx = -1.0;
 
 			if (!swarm.empty()) {
-				double x = swarm[0].get_x() + dx;
-				double y = swarm[0].get_y() + dy;
-				double z = swarm[0].get_z();
-				swarm[0].set_position(x, y, z);
+				double vx = swarm[0].get_velx() + dvx;
+				double vy = swarm[0].get_vely() + dvy;
+				double vz = swarm[0].get_velz();
+				swarm[0].set_velocity(vx, vy, vz);
 			}
 		}
 
