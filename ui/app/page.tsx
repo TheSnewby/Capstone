@@ -283,9 +283,10 @@ export default function TelemetryPage() {
 		cohesion: 1.0,
 		separation: 1.0,
 		alignment: 1.0,
-		maxSpeed: 30,
+		maxSpeed: 60,
 		targetAltitude: 50,
 	});
+	const [formationMode, setFormationMode] = useState<string | undefined>(undefined);
 
 	const leader = uavs.find((u) => u.id === 0);
 	const cameraTarget = leader
@@ -295,8 +296,11 @@ export default function TelemetryPage() {
 			z: leader.position.z,
 		}
 		: {
-			x: 0, y: 0, z: 0
-		}
+			x: 0,
+			y: 0,
+			z: 0,
+		};
+
 	// sync local swarmSettings when server-sourced settings arrive over WebSocket
 	useEffect(() => {
 		if (!settings) return;
@@ -313,6 +317,10 @@ export default function TelemetryPage() {
 	}, [settings]);
 
 	const handleCommand = (cmd: Command) => {
+		// track current formation mode for HUD if this is a formation command
+		if (cmd.type === "formation" && "mode" in cmd && typeof cmd.mode === "string") {
+			setFormationMode(cmd.mode);
+		}
 		// send command over the telemetry WebSocket to the Rust backend
 		send({ type: "command", payload: cmd });
 	};
@@ -385,7 +393,9 @@ export default function TelemetryPage() {
 					<h1 className="text-4xl md:text-5xl font-semibold nasa-text tracking-wide mb-3 mx-auto pl-2">
 						SkyWeave
 					</h1>
-					<p className="text-zinc-400 text-lg md:text-xl mb-6 font-orbitron tracking-wider">Control autonomous UAV swarms with real-time telemetry and commands.</p>
+					<p className="text-zinc-400 text-lg md:text-xl mb-6 font-orbitron tracking-wider">
+						Control autonomous UAV swarms with real-time telemetry and commands.
+					</p>
 					<div className="mt-8 w-full grid grid-cols-3 place-items-center gap-4">
 						<button
 							className="mc-button nasa-text text-xs px-5 btn-glow tracking-wider"
@@ -479,7 +489,12 @@ export default function TelemetryPage() {
 						</button>
 					</div>
 
-					<UavScene uavs={uavs} showTrails={showTrails} />
+					<UavScene
+						uavs={uavs}
+						showTrails={showTrails}
+						cameraTarget={cameraTarget}
+						formationMode={formationMode}
+					/>
 				</section>
 
 				<section className="mb-6 grid gap-4 md:grid-cols-2">

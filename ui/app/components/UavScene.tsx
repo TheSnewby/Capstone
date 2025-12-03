@@ -16,7 +16,10 @@ type Props = {
 	showTrails?: boolean;
 	cameraTarget?: CameraTarget;
 	formationMode?: string;
+<<<<<<< HEAD
 	obstacles?: ObstacleType[];
+=======
+>>>>>>> 6c20b7e (formationMode)
 };
 
 /**
@@ -35,7 +38,10 @@ export default function UavScene({
 	showTrails = true,
 	cameraTarget,
 	formationMode,
+<<<<<<< HEAD
 	obstacles = [],
+=======
+>>>>>>> 6c20b7e (formationMode)
 }: Props) {
 	const scale = 0.1; // shrinks world into view
 
@@ -129,10 +135,14 @@ export default function UavScene({
 				{/* ground grid, axes, origin, and obstacles centered on leader-relative origin */}
 				<group position={[-originX, 0, -originZ]}>
 <<<<<<< HEAD
+<<<<<<< HEAD
 					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
 =======
 					<gridHelper args={[50, 50, "#00ff00", "#008800"]} />
 >>>>>>> b1fa34e (camera pointing, making things a bit faster)
+=======
+					<gridHelper args={[200, 200, "#00ff00", "#008800"]} />
+>>>>>>> 74c6a8f (formationMode)
 					<axesHelper args={[5]} />
 
 					{/* scene origin marker */}
