@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import type { ConnectionStatus } from "../hooks/useTelemetry";
 
 export type Command =
-  | { type: "move_leader"; direction: "north" | "south" | "east" | "west" }
+  | { type: "move_leader"; direction: "accelerate" | "decelerate" | "left" | "right" }
   | { type: "altitude_change"; amount: number }
   | { type: "formation"; mode: "line" | "vee" | "circle" }
   | { type: "pause" }
@@ -40,16 +40,16 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
       if (["w", "a", "s", "d", "q", "e"].includes(key)) {
         switch (key) {
           case "w":
-            setKeyPress("north");
+            setKeyPress("accelerate");
             break;
           case "s":
-            setKeyPress("south");
+            setKeyPress("decelerate");
             break;
           case "a":
-            setKeyPress("west");
+            setKeyPress("left");
             break;
           case "d":
-            setKeyPress("east");
+            setKeyPress("right");
             break;
           case "q":
             setKeyPress("alt_up");
@@ -93,12 +93,12 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
           <button
             className={
               "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-200 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
-              (keyPress === "north"
+              (keyPress === "accelerate"
                 ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
                 : "")
             }
             disabled={isDisabled}
-            onClick={() => onCommand({ type: "move_leader", direction: "north" })}
+            onClick={() => onCommand({ type: "move_leader", direction: "accelerate" })}
           >
             ▲
           </button>
@@ -112,7 +112,7 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
                   : "")
               }
               disabled={isDisabled}
-              onClick={() => onCommand({ type: "move_leader", direction: "west" })}
+              onClick={() => onCommand({ type: "move_leader", direction: "left" })}
             >
               ◀
             </button>
@@ -125,7 +125,7 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
                   : "")
               }
               disabled={isDisabled}
-              onClick={() => onCommand({ type: "move_leader", direction: "east" })}
+              onClick={() => onCommand({ type: "move_leader", direction: "right" })}
             >
               ▶
             </button>
@@ -134,12 +134,12 @@ export default function CommandPanel({ onCommand, status }: CommandPanelProps) {
           <button
             className={
               "mc-button btn-glow nasa-text font-semibold tracking-widest text-[0.85rem] px-8 py-3 min-w-[7rem] bg-emerald-900/50 hover:bg-emerald-500/30 border border-emerald-300/70 text-emerald-200 shadow-[0_0_20px_rgba(16,185,129,0.9)] drop-shadow-[0_0_6px_rgba(16,185,129,0.9)] disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-[2px] active:brightness-90 transition-all" +
-              (keyPress === "south"
+              (keyPress === "decelerate"
                 ? " ring-2 ring-emerald-400 translate-y-[2px] brightness-90"
                 : "")
             }
             disabled={isDisabled}
-            onClick={() => onCommand({ type: "move_leader", direction: "south" })}
+            onClick={() => onCommand({ type: "move_leader", direction: "decelerate" })}
           >
             ▼
           </button>

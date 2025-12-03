@@ -71,7 +71,7 @@ export default function TelemetryPage() {
 							<th style={thStyle}>X</th>
 							<th style={thStyle}>Y</th>
 							<th style={thStyle}>Z</th>
-							<th style={thStyle}>Speed (m/s)</th>
+							<th style={thStyle}>Velocity (m/s)</th>
 							<th style={thStyle}>Last Update</th>
 						</tr>
 					</thead>
