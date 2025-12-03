@@ -128,7 +128,11 @@ export default function UavScene({
 
 				{/* ground grid, axes, origin, and obstacles centered on leader-relative origin */}
 				<group position={[-originX, 0, -originZ]}>
+<<<<<<< HEAD
 					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
+=======
+					<gridHelper args={[50, 50, "#00ff00", "#008800"]} />
+>>>>>>> b1fa34e (camera pointing, making things a bit faster)
 					<axesHelper args={[5]} />
 
 					{/* scene origin marker */}
