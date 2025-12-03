@@ -60,10 +60,15 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
 				formation_offsets[i] = {
 					radius * std::cos(angle),
 					radius * std::sin(angle),
+<<<<<<< HEAD
 					0
 					};
 				}
+=======
+					0};
+>>>>>>> 48e4e6e (telemetry fix)
 			}
+		}
 	}
 }
 
@@ -76,65 +81,61 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
  * Return: rotated offset array
  */
 std::array<double, 3> SwarmCoordinator::rotate_offset_3d(
-        const std::array<double, 3>& offset,
-        const std::array<double, 3>& leader_velocity)
+	const std::array<double, 3> &offset,
+	const std::array<double, 3> &leader_velocity)
 {
-    // Handle ~zero leader velocity
-    double mag = sqrt(leader_velocity[0]*leader_velocity[0] +
-                      leader_velocity[1]*leader_velocity[1] +
-                      leader_velocity[2]*leader_velocity[2]);
-    if (mag < 1e-6)
-        return offset;
+	// Handle ~zero leader velocity
+	double mag = sqrt(leader_velocity[0] * leader_velocity[0] +
+					  leader_velocity[1] * leader_velocity[1] +
+					  leader_velocity[2] * leader_velocity[2]);
+	if (mag < 1e-6)
+		return offset;
 
-    // Normalize leader velocity (forward / heading)
-    std::array<double, 3> heading = {
-        leader_velocity[0]/mag,
-        leader_velocity[1]/mag,
-        leader_velocity[2]/mag
-    };
+	// Normalize leader velocity (forward / heading)
+	std::array<double, 3> heading = {
+		leader_velocity[0] / mag,
+		leader_velocity[1] / mag,
+		leader_velocity[2] / mag};
 
-    // Choose a world-up vector, avoid degeneracy for near-vertical headings
-    std::array<double, 3> vertical_axis = {0, 0, 1};
-    if ((fabs(heading[0]) < 1e-3) && (fabs(heading[1]) < 1e-3))
-        vertical_axis = {1, 0, 0};
+	// Choose a world-up vector, avoid degeneracy for near-vertical headings
+	std::array<double, 3> vertical_axis = {0, 0, 1};
+	if ((fabs(heading[0]) < 1e-3) && (fabs(heading[1]) < 1e-3))
+		vertical_axis = {1, 0, 0};
 
-    // Right = vertical_axis × heading  (right-handed coordinate frame)
-    // Right = heading × vertical_axis  (note order swapped)
-std::array<double, 3> right_vector = {
-    heading[1] * vertical_axis[2] - heading[2] * vertical_axis[1],
-    heading[2] * vertical_axis[0] - heading[0] * vertical_axis[2],
-    heading[0] * vertical_axis[1] - heading[1] * vertical_axis[0]
-};
-    double right_vector_magnitude = sqrt(right_vector[0] * right_vector[0] +
-										right_vector[1] * right_vector[1] +
-										right_vector[2] * right_vector[2]);
-    if (right_vector_magnitude < 1e-6)
+	// Right = vertical_axis × heading  (right-handed coordinate frame)
+	// Right = heading × vertical_axis  (note order swapped)
+	std::array<double, 3> right_vector = {
+		heading[1] * vertical_axis[2] - heading[2] * vertical_axis[1],
+		heading[2] * vertical_axis[0] - heading[0] * vertical_axis[2],
+		heading[0] * vertical_axis[1] - heading[1] * vertical_axis[0]};
+	double right_vector_magnitude = sqrt(right_vector[0] * right_vector[0] +
+										 right_vector[1] * right_vector[1] +
+										 right_vector[2] * right_vector[2]);
+	if (right_vector_magnitude < 1e-6)
 		right_vector_magnitude = 1e-6;
-    for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 		right_vector[i] /= right_vector_magnitude;
 
-    // True Vertical Axis = heading × right_vector.
-    std::array<double, 3> true_vertical_axis = {
-        heading[1] * right_vector[2] - heading[2] * right_vector[1],
-        heading[2] * right_vector[0] - heading[0] * right_vector[2],
-        heading[0] * right_vector[1] - heading[1] * right_vector[0]
-    };
-    double true_vertical_axis_magnitude = sqrt(true_vertical_axis[0] * true_vertical_axis[0] +
-											true_vertical_axis[1] * true_vertical_axis[1] +
-											true_vertical_axis[2] * true_vertical_axis[2]);
-    if (true_vertical_axis_magnitude < 1e-6)
+	// True Vertical Axis = heading × right_vector.
+	std::array<double, 3> true_vertical_axis = {
+		heading[1] * right_vector[2] - heading[2] * right_vector[1],
+		heading[2] * right_vector[0] - heading[0] * right_vector[2],
+		heading[0] * right_vector[1] - heading[1] * right_vector[0]};
+	double true_vertical_axis_magnitude = sqrt(true_vertical_axis[0] * true_vertical_axis[0] +
+											   true_vertical_axis[1] * true_vertical_axis[1] +
+											   true_vertical_axis[2] * true_vertical_axis[2]);
+	if (true_vertical_axis_magnitude < 1e-6)
 		true_vertical_axis_magnitude = 1e-6;
-    for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 		true_vertical_axis[i] /= true_vertical_axis_magnitude;
 
-    // Apply rotation matrix: local offset → world space
-    std::array<double, 3> rotation = {
-        (offset[0] * right_vector[0]) + (offset[1] * heading[0]) + (offset[2] * true_vertical_axis[0]),
-        (offset[0] * right_vector[1]) + (offset[1] * heading[1]) + (offset[2] * true_vertical_axis[1]),
-        (offset[0] * right_vector[2]) + (offset[1] * heading[2]) + (offset[2] * true_vertical_axis[2])
-    };
+	// Apply rotation matrix: local offset → world space
+	std::array<double, 3> rotation = {
+		(offset[0] * right_vector[0]) + (offset[1] * heading[0]) + (offset[2] * true_vertical_axis[0]),
+		(offset[0] * right_vector[1]) + (offset[1] * heading[1]) + (offset[2] * true_vertical_axis[1]),
+		(offset[0] * right_vector[2]) + (offset[1] * heading[2]) + (offset[2] * true_vertical_axis[2])};
 
-    return rotation;
+	return rotation;
 }
 
 /**
