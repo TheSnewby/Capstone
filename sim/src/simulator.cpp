@@ -24,20 +24,22 @@ void UAVSimulator::print_swarm_status()
  */
 UAVSimulator::UAVSimulator(int num_uavs)
 {
-	swarm.reserve(num_uavs);		   // allocates memory to reduce resizing slowdowns
-	create_formation_random(num_uavs); // default, but can change to anything
-	// create_formation_circle(num_uavs); 	// for testing each formation creator
-	// create_formation_line(num_uavs);
-	// create_formation_vee(num_uavs);
+	swarm.reserve(num_uavs); // allocates memory to reduce resizing slowdowns
+	// creates a LINE formation
+	for (int i = 0; i < num_uavs; i++)
+	{
+		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 50.0));
+		swarm[i].set_velocity(1, 1, 1); // consider defaulting to 0, 0, 0
+	}
+	change_formation(LINE); // sets formation offsets, LINE current default
+	for (int i = 0; i < num_uavs; i++)
+	{
+		std::array<double, 3> offset = swarm[0].get_SwarmCoord().get_formation_offset(i);
+		swarm[i].set_position(offset[0] + swarm[i].get_x(), offset[1] + swarm[i].get_y(), offset[2] + swarm[i].get_z());
+	}
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
 	print_swarm_status();
-	// set_formation_line(num_uavs);		// for testing each formation setter
-	// print_swarm_status();
-	// set_formation_vee(num_uavs);
-	// print_swarm_status();
-	// set_formation_circle(num_uavs);
-	// print_swarm_status();
 };
 
 /**
@@ -46,6 +48,23 @@ UAVSimulator::UAVSimulator(int num_uavs)
 UAVSimulator::~UAVSimulator()
 {
 	stop_sim();
+}
+
+void UAVSimulator::start_turn_timer()
+{
+	turn_timer_thread = std::thread([this]()
+									{
+		// std::this_thread::sleep_for(std::chrono::seconds(1));
+		// if (running)
+		// 	swarm[0].set_velocity(1, 1, 0);
+
+		std::this_thread::sleep_for(std::chrono::seconds(20));
+		if (running)
+			change_formation(FLYING_V);
+		std::this_thread::sleep_for(std::chrono::seconds(20));
+		if (running)
+			change_formation(CIRCLE); });
+	turn_timer_thread.detach();
 }
 
 /**
@@ -58,6 +77,8 @@ void UAVSimulator::start_sim()
 		return;
 
 	running = true;
+
+// start_turn_timer(); TOGGLE IF YOU WANT PREPLANNED ITINERARY
 
 	std::thread([this]()
 				{
@@ -84,9 +105,8 @@ void UAVSimulator::start_sim()
 						);
 					}
 				}
-				// boids forces skipped for now, reenable later for autonomous behavior
-				// if (i != 0)
-				//	swarm[i].apply_boids_forces();
+				if (i != 0)
+					swarm[i].apply_boids_forces();
 			}
 
 			std::this_thread::sleep_for(sleep_duration);
@@ -108,19 +128,31 @@ void UAVSimulator::change_formation(formation f)
 {
 	int uav_nums = swarm.size();
 
+	SwarmCoordinator &coords = swarm[0].get_SwarmCoord();
+	coords.calculate_formation_offsets(uav_nums, f);
+
+	// formation offsets stored in each uav
+	for (int i = 0; i < uav_nums; i++)
+	{
+		SwarmCoordinator &uav_coord = swarm[i].get_SwarmCoord();
+		uav_coord = coords;
+	}
+
+	form = f; // (could reorder to have this queue off form changes)
+
 	if (f == 1)
 	{
-		set_formation_line(uav_nums);
+		// set_formation_line(uav_nums);
 		std::cout << "Formation changed to LINE." << std::endl;
 	}
 	else if (f == 2)
 	{
-		set_formation_vee(uav_nums);
+		// set_formation_vee(uav_nums);
 		std::cout << "Formation changed to FLYING VEE." << std::endl;
 	}
 	else if (f == 3)
 	{
-		set_formation_circle(uav_nums);
+		// set_formation_circle(uav_nums);
 		std::cout << "Formation changed to CIRCLE." << std::endl;
 	}
 }
@@ -433,8 +465,10 @@ void UAVSimulator::command_listener_loop()
 
 			// make leader's ID 0 instead of assuming UAV at index 0 is leader
 			size_t leader_idx = 0;
-			for (size_t i = 0; i < swarm.size(); i++) {
-				if (swarm[i].get_id() == 0) {
+			for (size_t i = 0; i < swarm.size(); i++)
+			{
+				if (swarm[i].get_id() == 0)
+				{
 					leader_idx = i;
 					break;
 				}
@@ -453,20 +487,24 @@ void UAVSimulator::command_listener_loop()
 			const double min_speed = 1e-3;
 			if (speed < min_speed)
 				heading = M_PI_2; // default heading if stationary
-			
-			if (dir == "accelerate") {
+
+			if (dir == "accelerate")
+			{
 				const double delta_speed = 1.0;
 				speed += delta_speed;
 			}
-			else if (dir == "decelerate") {
+			else if (dir == "decelerate")
+			{
 				const double delta_speed = 0.5;
 				speed = std::max(0.0, speed - delta_speed);
 			}
-			else if (dir == "left") {
+			else if (dir == "left")
+			{
 				const double delta_angle = M_PI / 36; // 5 degrees
 				heading += delta_angle;
 			}
-			else if (dir == "right") {
+			else if (dir == "right")
+			{
 				const double delta_angle = M_PI / 36; // 5 degrees
 				heading -= delta_angle;
 			}
@@ -490,9 +528,12 @@ void UAVSimulator::command_listener_loop()
 			if (swarm.empty())
 				continue;
 
-			size_t leader_idx = 0;;
-			for (size_t i = 0; i < swarm.size(); i++) {
-				if (swarm[i].get_id() == 0) {
+			size_t leader_idx = 0;
+			;
+			for (size_t i = 0; i < swarm.size(); i++)
+			{
+				if (swarm[i].get_id() == 0)
+				{
 					leader_idx = i;
 					break;
 				}
