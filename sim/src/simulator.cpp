@@ -31,6 +31,7 @@ void UAVSimulator::print_swarm_status()
 UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y / RESOLUTION, BORDER_Z / RESOLUTION, RESOLUTION)
 {
 	swarm.reserve(num_uavs); // allocates memory to reduce resizing slowdowns
+<<<<<<< HEAD
 
 	// create base UAVs
 	for (int i = 0; i < num_uavs; i++)
@@ -51,16 +52,32 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 			offset[0] + swarm[i].get_x(),
 			offset[1] + swarm[i].get_y(),
 			offset[2] + swarm[i].get_z());
+=======
+	// creates a LINE formation
+	for (int i = 0; i < num_uavs; i++)
+	{
+		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 50.0));
+		swarm[i].set_velocity(1, 1, 1); // consider defaulting to 0, 0, 0
+	}
+	change_formation(LINE); // sets formation offsets, LINE current default
+	for (int i = 0; i < num_uavs; i++)
+	{
+		std::array<double, 3> offset = swarm[0].get_SwarmCoord().get_formation_offset(i);
+		swarm[i].set_position(offset[0] + swarm[i].get_x(), offset[1] + swarm[i].get_y(), offset[2] + swarm[i].get_z());
+>>>>>>> 6d5964b (sim update)
 	}
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
 	print_swarm_status();
+<<<<<<< HEAD
 
 	// Set Up Environment
 	env.addCylinder({0, 100, 0}, 15.0, 60.0);
 	env.addBox(40, 220, 20, 70, 240, 60);
 	env.addSphere({-20, 150, 30}, 10.0);
 	env.environment_to_rust(command_port);
+=======
+>>>>>>> 6d5964b (sim update)
 };
 
 /**
@@ -75,6 +92,13 @@ void UAVSimulator::start_turn_timer()
 {
 	turn_timer_thread = std::thread([this]()
 									{
+<<<<<<< HEAD
+=======
+		// std::this_thread::sleep_for(std::chrono::seconds(1));
+		// if (running)
+		// 	swarm[0].set_velocity(1, 1, 0);
+
+>>>>>>> 6d5964b (sim update)
 		std::this_thread::sleep_for(std::chrono::seconds(20));
 		if (running)
 			change_formation(FLYING_V);
@@ -95,7 +119,11 @@ void UAVSimulator::start_sim()
 
 	running = true;
 
+<<<<<<< HEAD
 	// start_turn_timer();
+=======
+// start_turn_timer(); TOGGLE IF YOU WANT PREPLANNED ITINERARY
+>>>>>>> 6d5964b (sim update)
 
 	std::thread([this]()
 				{
@@ -158,14 +186,26 @@ void UAVSimulator::change_formation(formation f)
 
 	if (f == 1)
 	{
+<<<<<<< HEAD
+=======
+		// set_formation_line(uav_nums);
+>>>>>>> 6d5964b (sim update)
 		std::cout << "Formation changed to LINE." << std::endl;
 	}
 	else if (f == 2)
 	{
+<<<<<<< HEAD
+=======
+		// set_formation_vee(uav_nums);
+>>>>>>> 6d5964b (sim update)
 		std::cout << "Formation changed to FLYING VEE." << std::endl;
 	}
 	else if (f == 3)
 	{
+<<<<<<< HEAD
+=======
+		// set_formation_circle(uav_nums);
+>>>>>>> 6d5964b (sim update)
 		std::cout << "Formation changed to CIRCLE." << std::endl;
 	}
 }
@@ -539,6 +579,10 @@ void UAVSimulator::command_listener_loop()
 				continue;
 
 			size_t leader_idx = 0;
+<<<<<<< HEAD
+=======
+			;
+>>>>>>> 6d5964b (sim update)
 			for (size_t i = 0; i < swarm.size(); i++)
 			{
 				if (swarm[i].get_id() == 0)
