@@ -24,6 +24,7 @@ import CommandPanel, { Command } from "./components/CommandPanel";
 export default function TelemetryPage() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const { uavs, status, settings, obstacles, send } = useTelemetry();
 	const router = useRouter();
 	const [showSplash, setShowSplash] = useState(true);
@@ -280,8 +281,9 @@ export default function TelemetryPage() {
 =======
 	const { uavs, status, settings, send } = useTelemetry();
 =======
+=======
+>>>>>>> cfd9c0e (fixes)
 	const { uavs, status, settings, obstacles, send } = useTelemetry();
->>>>>>> 15c8ebe (ready for sim obstacles)
 	const router = useRouter();
 	const [showSplash, setShowSplash] = useState(true);
 	const [showTrails, setShowTrails] = useState(true);
@@ -310,7 +312,6 @@ export default function TelemetryPage() {
 	// sync local swarmSettings when server-sourced settings arrive over WebSocket
 	useEffect(() => {
 		if (!settings) return;
->>>>>>> b1fa34e (camera pointing, making things a bit faster)
 
 		setSwarmSettings((prev) => ({
 			cohesion: settings.cohesion ?? prev.cohesion,

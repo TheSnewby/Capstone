@@ -150,19 +150,7 @@ export default function UavScene({
 
 				{/* ground grid, axes, origin, and obstacles centered on leader-relative origin */}
 				<group position={[-originX, 0, -originZ]}>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
-=======
-					<gridHelper args={[50, 50, "#00ff00", "#008800"]} />
->>>>>>> b1fa34e (camera pointing, making things a bit faster)
-=======
-					<gridHelper args={[200, 200, "#00ff00", "#008800"]} />
->>>>>>> 74c6a8f (formationMode)
-=======
-					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
->>>>>>> 38b13d3 (grid bigger)
 					<axesHelper args={[5]} />
 
 					{/* scene origin marker */}
@@ -254,6 +242,7 @@ export default function UavScene({
 					})}
 				</group>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 3d08e3f (ready for sim obstacles)
 
 					{/* server-synced obstacles */}
@@ -342,6 +331,8 @@ export default function UavScene({
 =======
 >>>>>>> a4e53f4 (duplicate fixes)
 >>>>>>> 38b1561 (duplicate fixes)
+=======
+>>>>>>> cfd9c0e (fixes)
 				{/* UAVs */}
 				{uavs.map((uav) => {
 					const isLeader = uav.id === 0; // UAV with ID 0 is leader
@@ -441,6 +432,7 @@ export default function UavScene({
 									/>
 								</mesh>
 <<<<<<< HEAD
+<<<<<<< HEAD
 								{/* animated, fading trail line using drei's Line */}
 								{showTrails && trail.length >= 2 && (
 									<Line
@@ -467,6 +459,8 @@ export default function UavScene({
 								/>
 							)}
 =======
+=======
+>>>>>>> cfd9c0e (fixes)
 								{/* animated, fading trail line using drei's Line */}
 								{showTrails && trail.length >= 2 && (
 									<Line
@@ -478,8 +472,11 @@ export default function UavScene({
 									/>
 								)}
 							</group>
+<<<<<<< HEAD
 >>>>>>> a4e53f4 (duplicate fixes)
 >>>>>>> 38b1561 (duplicate fixes)
+=======
+>>>>>>> cfd9c0e (fixes)
 						</group>
 					);
 				})}

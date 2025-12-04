@@ -198,13 +198,8 @@ std::array<double, 3> UAV::calculate_formation_force() {
 	};
 
 	// formation control parameters
-<<<<<<< HEAD
 	double formation_gain = 0.15; 		// proportional position gain (0.03 - 0.10 depending on under/overcorrecting)
 	double formation_force_cap = 2.0; 	// limit on output magnitude (0.5 - 2.0) - higher allows faster "catch-up"
-=======
-	double formation_gain = 0.05; 		// proportional position gain (0.03 - 0.10 depending on under/overcorrecting)
-	double formation_force_cap = 1.0; 	// limit on output magnitude (0.5 - 2.0) - higher allows faster "catch-up"
->>>>>>> 094b434 (big update)
 
 	// scale position error with proportional position gain
 	std::array<double, 3> formation_command = {
@@ -311,11 +306,7 @@ std::array<double, 3> UAV::calculate_alignment_forces() {
  * apply_boids_forces - applies boids forces to the heading and velocity of the uav
  */
 void UAV::apply_boids_forces() {
-<<<<<<< HEAD
 	double internal_formation_weight = 1.5;
-=======
-	double internal_formation_weight = 1;
->>>>>>> 094b434 (big update)
 	double internal_separation_weight = 2;
 	double internal_alignment_weight = 0.3; // alignment is mostly redundant and may be fully phased out in the future
 	double cohesion_weight = SwarmCoord.get_cohesion();
