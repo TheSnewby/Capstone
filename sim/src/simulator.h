@@ -9,8 +9,17 @@
 #include <string>
 #include <iomanip>
 #include <cstring>
+#include "environment.h"
+
+class UAVTelemetryServer;
 
 class UAV; 
+
+
+#define BORDER_X 500
+#define BORDER_Y 500
+#define BORDER_Z 500
+#define RESOLUTION 5
 
 enum formation {
 	RANDOM = 0,
@@ -30,6 +39,7 @@ private:
 	std::thread turn_timer_thread;
 	std::atomic<bool> command_listener_running{false};
 	int command_port = 6001;
+	Environment env;
 
 public:
 	UAVSimulator(int num_drones);
@@ -53,8 +63,6 @@ public:
 	void stop_command_listener();
 
 private:
-	void physics_loop();
-
 	void create_formation_random(int num_uavs); // default creation
 	void create_formation_line(int num_uavs);	// not sure if will be used
 	void create_formation_vee(int num_uavs);	// not sure if will be used

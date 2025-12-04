@@ -25,7 +25,7 @@ void UAVSimulator::print_swarm_status()
 /**
  * Constructor for UAVSimulator
  */
-UAVSimulator::UAVSimulator(int num_uavs)
+UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y / RESOLUTION, BORDER_Z / RESOLUTION, RESOLUTION)
 {
 	swarm.reserve(num_uavs); // allocates memory to reduce resizing slowdowns
 
@@ -52,6 +52,12 @@ UAVSimulator::UAVSimulator(int num_uavs)
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
 	print_swarm_status();
+
+	// Set Up Environment
+	env.addCylinder({0, 100, 0}, 15.0, 60.0);
+	env.addBox(40, 220, 20, 70, 240, 60);
+	env.addSphere({-20, 150, 30}, 10.0);
+	env.environment_to_rust(command_port);
 };
 
 /**
@@ -86,7 +92,7 @@ void UAVSimulator::start_sim()
 
 	running = true;
 
-	//	start_turn_timer();
+	// start_turn_timer();
 
 	std::thread([this]()
 				{
