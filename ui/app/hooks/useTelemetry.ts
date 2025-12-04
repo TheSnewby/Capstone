@@ -29,6 +29,9 @@ export type ConnectionStatus = "connecting" | "open" | "closed" | "error";
 export type ObstacleType =
 	| {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
 		type: "cylinder";
 		x: number;
 		y: number;
@@ -41,16 +44,20 @@ export type ObstacleType =
 		x: number;
 		y: number;
 		z: number;
+<<<<<<< HEAD
 =======
 		type: "box";
 		x: number;
 		y: number;
 >>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
 		width: number;
 		depth: number;
 		height: number;
 	}
 	| {
+<<<<<<< HEAD
 <<<<<<< HEAD
 		type: "sphere";
 		x: number;
@@ -59,11 +66,18 @@ export type ObstacleType =
 		radius: number;
 =======
 		type: "cylinder";
+=======
+		type: "sphere";
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
 		x: number;
 		y: number;
+		z: number;
 		radius: number;
+<<<<<<< HEAD
 		height: number;
 >>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
 	};
 
 type TelemetryState = {

@@ -51,6 +51,9 @@ pub struct SwarmSettings {
 pub enum ObstacleType {
     #[serde(rename_all = "camelCase")]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
     Cylinder {
         x: f64,
         y: f64,
@@ -63,16 +66,20 @@ pub enum ObstacleType {
         x: f64,
         y: f64,
         z: f64,
+<<<<<<< HEAD
 =======
     Box {
         x: f64,
         y: f64,
 >>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
         width: f64,
         depth: f64,
         height: f64,
     },
     #[serde(rename_all = "camelCase")]
+<<<<<<< HEAD
 <<<<<<< HEAD
     Sphere {
         x: f64,
@@ -81,11 +88,18 @@ pub enum ObstacleType {
         radius: f64,
 =======
     Cylinder {
+=======
+    Sphere {
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
         x: f64,
         y: f64,
+        z: f64,
         radius: f64,
+<<<<<<< HEAD
         height: f64,
 >>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
     },
 }
 
