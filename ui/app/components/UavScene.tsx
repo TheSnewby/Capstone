@@ -148,6 +148,7 @@ export default function UavScene({
 				<group position={[-originX, 0, -originZ]}>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
 =======
 					<gridHelper args={[50, 50, "#00ff00", "#008800"]} />
@@ -155,6 +156,9 @@ export default function UavScene({
 =======
 					<gridHelper args={[200, 200, "#00ff00", "#008800"]} />
 >>>>>>> 74c6a8f (formationMode)
+=======
+					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
+>>>>>>> 38b13d3 (grid bigger)
 					<axesHelper args={[5]} />
 
 					{/* scene origin marker */}
