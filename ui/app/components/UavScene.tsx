@@ -253,6 +253,7 @@ export default function UavScene({
 						return null;
 					})}
 				</group>
+<<<<<<< HEAD
 >>>>>>> 3d08e3f (ready for sim obstacles)
 
 					{/* server-synced obstacles */}
@@ -335,6 +336,12 @@ export default function UavScene({
 						return null;
 					})}
 				</group>
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> a4e53f4 (duplicate fixes)
+>>>>>>> 38b1561 (duplicate fixes)
 				{/* UAVs */}
 				{uavs.map((uav) => {
 					const isLeader = uav.id === 0; // UAV with ID 0 is leader
@@ -433,6 +440,7 @@ export default function UavScene({
 										opacity={0.15}
 									/>
 								</mesh>
+<<<<<<< HEAD
 								{/* animated, fading trail line using drei's Line */}
 								{showTrails && trail.length >= 2 && (
 									<Line
@@ -444,6 +452,34 @@ export default function UavScene({
 									/>
 								)}
 							</group>
+=======
+<<<<<<< HEAD
+							</group>
+
+							{/* animated, fading trail line using drei's Line */}
+							{showTrails && trail.length >= 2 && (
+								<Line
+									points={trailPoints}
+									vertexColors={trailColors}
+									lineWidth={
+										(isLeader ? 2.5 : 1.5) * (0.8 + altNorm * 0.4)
+									}
+								/>
+							)}
+=======
+								{/* animated, fading trail line using drei's Line */}
+								{showTrails && trail.length >= 2 && (
+									<Line
+										points={trailPoints}
+										vertexColors={trailColors}
+										lineWidth={
+											(isLeader ? 2.5 : 1.5) * (0.8 + altNorm * 0.4)
+										}
+									/>
+								)}
+							</group>
+>>>>>>> a4e53f4 (duplicate fixes)
+>>>>>>> 38b1561 (duplicate fixes)
 						</group>
 					);
 				})}
