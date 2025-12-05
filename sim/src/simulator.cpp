@@ -9,8 +9,7 @@ void UAVSimulator::print_swarm_status()
 	size_t swarm_size = swarm.size();
 
 	std::cout << std::fixed << std::setprecision(2);
-	std::cout << "\nPrinting current swarm.\n"
-			  << std::endl;
+	std::cout << "\nPrinting current swarm.\n" << std::endl;
 	std::cout << "ID: Position X, Y, Z. Velocity: vx, vy, vz" << std::endl;
 
 	for (size_t i = 0; i < swarm_size; i++)

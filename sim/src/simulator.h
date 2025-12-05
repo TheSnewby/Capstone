@@ -9,7 +9,9 @@
 #include <string>
 #include <iomanip>
 #include <cstring>
+#include <algorithm>
 #include "environment.h"
+#include "pathfinder.h"
 
 class UAVTelemetryServer;
 
