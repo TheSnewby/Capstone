@@ -16,8 +16,11 @@ void UAVSimulator::print_swarm_status()
 	for (size_t i = 0; i < swarm_size; i++)
 	{
 		std::cout << swarm[i].get_id() << ": Position " << swarm[i].get_x()
+				 
 				  << ", " << swarm[i].get_y() << ", " << swarm[i].get_z()
+				 
 				  << ". Velocity: " << swarm[i].get_velx() << ", " << swarm[i].get_vely()
+				 
 				  << ", " << swarm[i].get_velz() << std::endl;
 	}
 };

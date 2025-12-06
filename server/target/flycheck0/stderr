@@ -1,3 +1,36 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+   0.205620333s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.205641333s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.205644042s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764887308, nanos: 22160043 } < FileTime { seconds: 1764887363, nanos: 281419043 }
+   0.205985792s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.205992583s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764887308, nanos: 22160043 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764887363, nanos: 281419043 } }))
+   0.222470458s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.222475167s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.222476542s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764887308, nanos: 22183543 } < FileTime { seconds: 1764887363, nanos: 281419043 }
+   0.222630583s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.222634875s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764887308, nanos: 22183543 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764887363, nanos: 281419043 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s
+=======
+=======
+>>>>>>> 066e86e (lowercase)
+=======
+>>>>>>> 4ceff35 (telemetry fix)
+=======
+>>>>>>> cd2df3e (WS fix)
+=======
+>>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+>>>>>>> 801db22 (rebuild)
+=======
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
+<<<<<<< HEAD
    0.049619833s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/SkyWeave-1/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/SkyWeave-1/server/src/websocket_server.rs"
    0.049635708s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/SkyWeave-1/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/SkyWeave-1/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
    0.049639250s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/SkyWeave-1/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764762070, nanos: 235845885 } < FileTime { seconds: 1764762073, nanos: 397383736 }
@@ -10,3 +43,112 @@
    0.054406208s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/SkyWeave-1/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/SkyWeave-1/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764762070, nanos: 235840093 }, stale: "/Users/nashthames/SkyWeave-1/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764762073, nanos: 397383736 } }))
     Checking skyweave-server v0.1.0 (/Users/nashthames/SkyWeave-1/server)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
+=======
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.72s
+>>>>>>> 6d5964b (sim update)
+<<<<<<< HEAD
+>>>>>>> edcb7fc (sim update)
+=======
+=======
+   0.047113791s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.047129000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.047132000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764754059, nanos: 29837106 } < FileTime { seconds: 1764754060, nanos: 319721420 }
+   0.047233083s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.047239250s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764754059, nanos: 29837106 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764754060, nanos: 319721420 } }))
+   0.051333333s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.051335541s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.051336875s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764754059, nanos: 29835856 } < FileTime { seconds: 1764754060, nanos: 319721420 }
+   0.051372083s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.051375208s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764754059, nanos: 29835856 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764754060, nanos: 319721420 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.21s
+>>>>>>> 6ccd585 (lowercase)
+<<<<<<< HEAD
+>>>>>>> 066e86e (lowercase)
+=======
+=======
+   0.167643042s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.167665625s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.167667917s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764755162, nanos: 617654702 } < FileTime { seconds: 1764759416, nanos: 747517493 }
+   0.168096250s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.168102833s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764755162, nanos: 617654702 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764759416, nanos: 747517493 } }))
+   0.183372167s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.183376000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.183377417s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764755162, nanos: 617652118 } < FileTime { seconds: 1764759416, nanos: 747517493 }
+   0.184023000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.184029917s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764755162, nanos: 617652118 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764759416, nanos: 747517493 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s
+>>>>>>> 48e4e6e (telemetry fix)
+<<<<<<< HEAD
+>>>>>>> 4ceff35 (telemetry fix)
+=======
+=======
+   0.160539375s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.160562459s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.160565000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764759417, nanos: 73650788 } < FileTime { seconds: 1764762104, nanos: 804021600 }
+   0.160990000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.160997709s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764759417, nanos: 73650788 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764762104, nanos: 804021600 } }))
+   0.178282250s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/websocket_server.rs"
+   0.178292042s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.178293542s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764759417, nanos: 73654329 } < FileTime { seconds: 1764762104, nanos: 804021600 }
+   0.178663292s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.178668917s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764759417, nanos: 73654329 }, stale: "/Users/nashthames/skyweave/server/src/websocket_server.rs", stale_mtime: FileTime { seconds: 1764762104, nanos: 804021600 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.78s
+>>>>>>> f882e04 (WS fix)
+<<<<<<< HEAD
+>>>>>>> cd2df3e (WS fix)
+=======
+=======
+   0.183429292s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/main.rs"
+   0.183455375s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.183458458s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764797208, nanos: 605186653 } < FileTime { seconds: 1764797393, nanos: 324451216 }
+   0.183792000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.183799750s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764797208, nanos: 605186653 }, stale: "/Users/nashthames/skyweave/server/src/main.rs", stale_mtime: FileTime { seconds: 1764797393, nanos: 324451216 } }))
+   0.199978125s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/main.rs"
+   0.199985458s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.199987000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764797254, nanos: 929229470 } < FileTime { seconds: 1764797393, nanos: 324451216 }
+   0.200173292s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.200178583s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764797254, nanos: 929229470 }, stale: "/Users/nashthames/skyweave/server/src/main.rs", stale_mtime: FileTime { seconds: 1764797393, nanos: 324451216 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.90s
+>>>>>>> 15c8ebe (ready for sim obstacles)
+<<<<<<< HEAD
+>>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+=======
+   0.208192166s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.208218541s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.208221416s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764812260, nanos: 269589836 } < FileTime { seconds: 1764812593, nanos: 984888653 }
+   0.208801000s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.208808208s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764812260, nanos: 269589836 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764812593, nanos: 984888653 } }))
+   0.229806666s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.229814875s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.229816375s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764812260, nanos: 269730670 } < FileTime { seconds: 1764812593, nanos: 984888653 }
+   0.230427708s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.230435750s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764812260, nanos: 269730670 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764812593, nanos: 984888653 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.96s
+>>>>>>> 301b8cf (rebuild)
+<<<<<<< HEAD
+>>>>>>> 801db22 (rebuild)
+=======
+=======
+   0.202373083s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.202401208s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server"
+   0.202404416s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764815010, nanos: 479616836 } < FileTime { seconds: 1764815927, nanos: 903825990 }
+   0.203215416s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: false }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.203223875s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-b5629d612545d7b4/dep-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764815010, nanos: 479616836 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764815927, nanos: 903825990 } }))
+   0.220362458s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: stale: changed "/Users/nashthames/skyweave/server/src/telemetry.rs"
+   0.220367583s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:           (vs) "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server"
+   0.220368791s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764815010, nanos: 479624753 } < FileTime { seconds: 1764815927, nanos: 903825990 }
+   0.220754500s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint: fingerprint dirty for skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)/Check { test: true }/TargetInner { name: "skyweave-server", doc: true, ..: with_path("/Users/nashthames/skyweave/server/src/main.rs", Edition2021) }
+   0.220760625s  INFO prepare_target{force=false package_id=skyweave-server v0.1.0 (/Users/nashthames/skyweave/server) target="skyweave-server"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/nashthames/skyweave/server/target/debug/.fingerprint/skyweave-server-1f025629b12546bc/dep-test-bin-skyweave-server", reference_mtime: FileTime { seconds: 1764815010, nanos: 479624753 }, stale: "/Users/nashthames/skyweave/server/src/telemetry.rs", stale_mtime: FileTime { seconds: 1764815927, nanos: 903825990 } }))
+    Checking skyweave-server v0.1.0 (/Users/nashthames/skyweave/server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.06s
+>>>>>>> 0b1375f (telemetry and obstacle updates)
+>>>>>>> 06b8bfc (telemetry and obstacle updates)

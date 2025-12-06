@@ -6,7 +6,9 @@ use crate::config::AppConfig;
 use crate::telemetry::{SwarmState, TelemetryShared};
 use crate::websocket_server::router;
 use std::net::SocketAddr;
+use std::sync::Arc;
 use tokio::net::TcpListener;
+use tokio::sync::RwLock;
 use tracing_subscriber::EnvFilter;
 
 #[tokio::main]
@@ -19,7 +21,14 @@ async fn main() {
     // initialize shared telemetry state
     let swarm = SwarmState::new();
     let (tx, _rx) = tokio::sync::broadcast::channel(1024);
-    let shared = TelemetryShared { swarm, tx };
+
+    // Obstacles are generated / updated by the simulator via telemetry.
+    // Start with an empty list; telemetry::run_udp_listener will keep this in sync.
+    let shared = TelemetryShared {
+        swarm,
+        tx,
+        obstacles: Arc::new(RwLock::new(Vec::new())),
+    };
 
     // start UDP telemetry listener
     let udp_addr: SocketAddr = format!("{}:{}", cfg.udp_bind_addr, cfg.udp_port)

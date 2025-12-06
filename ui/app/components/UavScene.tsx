@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Line } from "@react-three/drei";
-import { UavState } from "../hooks/useTelemetry";
+import { UavState, ObstacleType } from "../hooks/useTelemetry";
 
 type CameraTarget = {
 	x: number;
@@ -15,6 +15,15 @@ type Props = {
 	uavs: UavState[];
 	showTrails?: boolean;
 	cameraTarget?: CameraTarget;
+	formationMode?: string;
+<<<<<<< HEAD
+<<<<<<< HEAD
+	obstacles?: ObstacleType[];
+=======
+>>>>>>> 6c20b7e (formationMode)
+=======
+	obstacles?: ObstacleType[];
+>>>>>>> 3d08e3f (ready for sim obstacles)
 };
 
 /**
@@ -22,17 +31,36 @@ type Props = {
  *
  * lightweight 3D visualization of the UAV swarm
  * - draws a nice green grid
- * - places a triangle for each UAV, colored by role
- * - allows camera orbiting!!!
+ * - places glowing spheres for each UAV, colored by role
+ * - allows camera orbiting
  * - draws simple trails from UAVs
+<<<<<<< HEAD
+<<<<<<< HEAD
+ * - renders server-synced obstacles (cylinders, boxes, spheres)
+=======
+ * - renders server-synced obstacles (cylinders and boxes)
+>>>>>>> 3d08e3f (ready for sim obstacles)
+=======
+ * - renders server-synced obstacles (cylinders, boxes, spheres)
+>>>>>>> 06b8bfc (telemetry and obstacle updates)
  */
 
 export default function UavScene({
 	uavs,
 	showTrails = true,
 	cameraTarget,
+	formationMode,
+<<<<<<< HEAD
+<<<<<<< HEAD
+	obstacles = [],
+=======
+>>>>>>> 6c20b7e (formationMode)
+=======
+	obstacles = [],
+>>>>>>> 3d08e3f (ready for sim obstacles)
 }: Props) {
 	const scale = 0.1; // shrinks world into view
+
 	const trailsRef = useRef<Map<number, [number, number, number][]>>(new Map());
 
 	// leader is ID 0, or first UAV if no explicit leader
@@ -40,10 +68,8 @@ export default function UavScene({
 	const uavCount = uavs.length;
 
 	// center frame on leader (or cameraTarget if provided)
-	const worldLeaderX =
-		cameraTarget?.x ?? (leader ? leader.position.x : 0);
-	const worldLeaderY =
-		cameraTarget?.y ?? (leader ? leader.position.y : 0);
+	const worldLeaderX = cameraTarget?.x ?? (leader ? leader.position.x : 0);
+	const worldLeaderY = cameraTarget?.y ?? (leader ? leader.position.y : 0);
 
 	const originX = worldLeaderX * scale;
 	const originZ = worldLeaderY * scale;
@@ -54,7 +80,8 @@ export default function UavScene({
 		: null;
 	const velocity = leader ? leader.velocity : null;
 	const altitude = leader ? leader.position.z : null;
-	const formation = "N/A"; // placeholder for future formation modes
+
+	const formation = formationMode ? formationMode.toUpperCase() : "N/A";
 
 	return (
 		<div className="w-full h-96 mc-panel mc-panel-inner overflow-hidden relative bg-gradient-to-b from-black/80 to-black/95 border border-emerald-700/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]">
@@ -121,7 +148,7 @@ export default function UavScene({
 				<ambientLight intensity={0.6} />
 				<directionalLight position={[8, 15, 5]} intensity={1.0} />
 
-				{/* ground grid & axes centered on the leader-relative origin */}
+				{/* ground grid, axes, origin, and obstacles centered on leader-relative origin */}
 				<group position={[-originX, 0, -originZ]}>
 					<gridHelper args={[500, 500, "#00ff00", "#008800"]} />
 					<axesHelper args={[5]} />
@@ -131,8 +158,181 @@ export default function UavScene({
 						<cylinderGeometry args={[0.2, 0.2, 0.02, 16]} />
 						<meshStandardMaterial color="#3b82f6" />
 					</mesh>
-				</group>
+<<<<<<< HEAD
+=======
 
+					{/* server-synced obstacles */}
+					{obstacles.map((obs, idx) => {
+						if (obs.type === "cylinder") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<cylinderGeometry
+											args={[
+												obs.radius * scale,
+												obs.radius * scale,
+												obs.height * scale,
+												24,
+											]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						if (obs.type === "box") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<boxGeometry
+											args={[
+												obs.width * scale,
+												obs.height * scale,
+												obs.depth * scale,
+											]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						if (obs.type === "sphere") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<sphereGeometry
+											args={[obs.radius * scale, 24, 24]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						return null;
+					})}
+				</group>
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 3d08e3f (ready for sim obstacles)
+
+					{/* server-synced obstacles */}
+					{obstacles.map((obs, idx) => {
+						if (obs.type === "cylinder") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<cylinderGeometry
+											args={[
+												obs.radius * scale,
+												obs.radius * scale,
+												obs.height * scale,
+												24,
+											]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						if (obs.type === "box") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<boxGeometry
+											args={[
+												obs.width * scale,
+												obs.height * scale,
+												obs.depth * scale,
+											]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						if (obs.type === "sphere") {
+							const centerY = obs.z * scale;
+							return (
+								<group
+									key={`obs-${idx}`}
+									position={[obs.x * scale, centerY, obs.y * scale]}
+								>
+									<mesh>
+										<sphereGeometry
+											args={[obs.radius * scale, 24, 24]}
+										/>
+										<meshBasicMaterial
+											color="#00ff00"
+											wireframe
+											transparent
+											opacity={0.4}
+										/>
+									</mesh>
+								</group>
+							);
+						}
+
+						return null;
+					})}
+				</group>
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> a4e53f4 (duplicate fixes)
+>>>>>>> 38b1561 (duplicate fixes)
+=======
+>>>>>>> cfd9c0e (fixes)
 				{/* UAVs */}
 				{uavs.map((uav) => {
 					const isLeader = uav.id === 0; // UAV with ID 0 is leader
@@ -231,6 +431,21 @@ export default function UavScene({
 										opacity={0.15}
 									/>
 								</mesh>
+<<<<<<< HEAD
+<<<<<<< HEAD
+								{/* animated, fading trail line using drei's Line */}
+								{showTrails && trail.length >= 2 && (
+									<Line
+										points={trailPoints}
+										vertexColors={trailColors}
+										lineWidth={
+											(isLeader ? 2.5 : 1.5) * (0.8 + altNorm * 0.4)
+										}
+									/>
+								)}
+							</group>
+=======
+<<<<<<< HEAD
 							</group>
 
 							{/* animated, fading trail line using drei's Line */}
@@ -243,6 +458,25 @@ export default function UavScene({
 									}
 								/>
 							)}
+=======
+=======
+>>>>>>> cfd9c0e (fixes)
+								{/* animated, fading trail line using drei's Line */}
+								{showTrails && trail.length >= 2 && (
+									<Line
+										points={trailPoints}
+										vertexColors={trailColors}
+										lineWidth={
+											(isLeader ? 2.5 : 1.5) * (0.8 + altNorm * 0.4)
+										}
+									/>
+								)}
+							</group>
+<<<<<<< HEAD
+>>>>>>> a4e53f4 (duplicate fixes)
+>>>>>>> 38b1561 (duplicate fixes)
+=======
+>>>>>>> cfd9c0e (fixes)
 						</group>
 					);
 				})}

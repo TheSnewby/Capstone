@@ -34,6 +34,7 @@ enum ClientMessage {
 /// build the Axum router that serves:
 /// - GET /health   : simple health check
 /// - GET /uavs     : snapshot of current swarm state
+/// - GET /uavs/:id : get a single UAV by id
 /// - GET /ws       : WebSocket streaming telemetry updates
 pub fn router(shared: TelemetryShared) -> Router {
     Router::new()
@@ -132,6 +133,24 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
         // send a snapshot of all UAVs on connect
         if let Ok(initial) = serde_json::to_string(&shared.swarm.list_uavs().await) {
             let _ = sender.send(Message::Text(initial)).await;
+        }
+
+                // send environmental obstacles on connect (if any)
+        {
+            let obstacles_guard = shared.obstacles.read().await;
+
+            if !obstacles_guard.is_empty() {
+                let env_msg = serde_json::json!({
+                    "type": "environment",
+                    "payload": {
+                        "obstacles": &*obstacles_guard,
+                    }
+                });
+
+                if let Ok(txt) = serde_json::to_string(&env_msg) {
+                    let _ = sender.send(Message::Text(txt)).await;
+                }
+            }
         }
 
         loop {
