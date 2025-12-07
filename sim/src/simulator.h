@@ -18,7 +18,6 @@ class UAVTelemetryServer;
 
 class UAV; 
 
-
 #define BORDER_X 500
 #define BORDER_Y 500
 #define BORDER_Z 500

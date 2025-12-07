@@ -48,9 +48,9 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f) {
 				} else {
 					double angle = 2.0 * M_PI * (i - 1) / (num_uavs - 1);
 					formation_offsets[i] = {
-					radius * std::cos(angle),
-					radius * std::sin(angle),
-					0
+						radius * std::cos(angle),
+						radius * std::sin(angle),
+						0
 					};
 				}
 			}
@@ -72,7 +72,8 @@ std::array<double, 3> SwarmCoordinator::rotate_offset_3d(
     // Handle ~zero leader velocity
     double mag = sqrt(leader_velocity[0]*leader_velocity[0] +
                       leader_velocity[1]*leader_velocity[1] +
-                      leader_velocity[2]*leader_velocity[2]);
+                      leader_velocity[2]*leader_velocity[2]
+					);
     if (mag < 1e-6)
         return offset;
 
@@ -90,17 +91,18 @@ std::array<double, 3> SwarmCoordinator::rotate_offset_3d(
 
     // Right = vertical_axis × heading  (right-handed coordinate frame)
     // Right = heading × vertical_axis  (note order swapped)
-std::array<double, 3> right_vector = {
-    heading[1] * vertical_axis[2] - heading[2] * vertical_axis[1],
-    heading[2] * vertical_axis[0] - heading[0] * vertical_axis[2],
-    heading[0] * vertical_axis[1] - heading[1] * vertical_axis[0]
-};
-    double right_vector_magnitude = sqrt(right_vector[0] * right_vector[0] +
-										right_vector[1] * right_vector[1] +
-										right_vector[2] * right_vector[2]);
-    if (right_vector_magnitude < 1e-6)
+	std::array<double, 3> right_vector = {
+    	heading[1] * vertical_axis[2] - heading[2] * vertical_axis[1],
+    	heading[2] * vertical_axis[0] - heading[0] * vertical_axis[2],
+    	heading[0] * vertical_axis[1] - heading[1] * vertical_axis[0]
+	};
+	double right_vector_magnitude = sqrt(right_vector[0] * right_vector[0] +
+										 right_vector[1] * right_vector[1] +
+										 right_vector[2] * right_vector[2]
+										);
+	if (right_vector_magnitude < 1e-6)
 		right_vector_magnitude = 1e-6;
-    for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 		right_vector[i] /= right_vector_magnitude;
 
     // True Vertical Axis = heading × right_vector.
@@ -110,8 +112,9 @@ std::array<double, 3> right_vector = {
         heading[0] * right_vector[1] - heading[1] * right_vector[0]
     };
     double true_vertical_axis_magnitude = sqrt(true_vertical_axis[0] * true_vertical_axis[0] +
-											true_vertical_axis[1] * true_vertical_axis[1] +
-											true_vertical_axis[2] * true_vertical_axis[2]);
+											   true_vertical_axis[1] * true_vertical_axis[1] +
+											   true_vertical_axis[2] * true_vertical_axis[2]
+											  );
     if (true_vertical_axis_magnitude < 1e-6)
 		true_vertical_axis_magnitude = 1e-6;
     for (int i = 0; i < 3; i++)
@@ -131,8 +134,7 @@ std::array<double, 3> right_vector = {
  * get's the formation offset for this specific uav
  */
 std::array<double, 3> SwarmCoordinator::get_formation_offset(int uav_id) {
-	if (uav_id >= formation_offsets.size())
-	{
+	if (uav_id >= formation_offsets.size()) {
 		std::cout << "Invalid UAV ID " << uav_id << ". size of formation_offsets: " << formation_offsets.size() << std::endl;
 		return {0, 0, 0};
 	}
