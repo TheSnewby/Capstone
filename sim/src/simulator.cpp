@@ -9,7 +9,8 @@ void UAVSimulator::print_swarm_status()
 	size_t swarm_size = swarm.size();
 
 	std::cout << std::fixed << std::setprecision(2);
-	std::cout << "\nPrinting current swarm.\n" << std::endl;
+	std::cout << "\nPrinting current swarm.\n"
+			  << std::endl;
 	std::cout << "ID: Position X, Y, Z. Velocity: vx, vy, vz" << std::endl;
 
 	for (size_t i = 0; i < swarm_size; i++)
@@ -53,14 +54,12 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 	print_swarm_status();
 
 	// Set Up Environment
-	env.addCylinder({0, 100, 0}, 15.0, 60.0);
-	env.addBox(40, 220, 20, 70, 240, 60);
-	env.addSphere({-20, 150, 30}, 10.0);
-	env.environment_to_rust(command_port);
+	env.generate_random_obstacles(20);
+	env.environment_to_rust(RUST_UDP_PORT);
 
 	Pathfinder pathfinder(env);
 	std::array<double, 3> startXYZ = swarm[0].get_pos();
-	std::array<double, 3> goalXYZ  = {100, 300, 300};		// make argv?
+	std::array<double, 3> goalXYZ = {100, 300, 300}; // make argv?
 	std::vector<std::array<double, 3>> path = pathfinder.plan(startXYZ, goalXYZ);
 
 	// Pathfollower pathfollower(swarm[0], env.getResolution());

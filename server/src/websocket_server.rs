@@ -1,4 +1,4 @@
-use crate::telemetry::{SwarmSettings, TelemetryShared, UavState};
+use crate::telemetry::{ObstacleType, SwarmSettings, TelemetryShared, UavState};
 use axum::{
     extract::{
         ws::{Message, WebSocket, WebSocketUpgrade},
@@ -19,7 +19,7 @@ fn sim_addr() -> String {
     env::var("SKYWEAVE_SIM_ADDR").unwrap_or_else(|_| "127.0.0.1:6001".to_string())
 }
 
-/// message sent from the UI over WebSocket
+/// message sent from the UI or bridge over WebSocket
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type", content = "payload")]
 enum ClientMessage {
@@ -135,7 +135,7 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
             let _ = sender.send(Message::Text(initial)).await;
         }
 
-                // send environmental obstacles on connect (if any)
+        // send environmental obstacles on connect (if any)
         {
             let obstacles_guard = shared.obstacles.read().await;
 
@@ -160,6 +160,44 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                         Some(Ok(msg)) => {
                             match msg {
                                 Message::Text(text) => {
+                                    // First, handle environment messages coming from the UDP→WS bridge:
+                                    // { "type": "environment", "obstacles": [ ... ] }
+                                    if let Ok(raw) = serde_json::from_str::<serde_json::Value>(&text) {
+                                        if raw.get("type").and_then(|v| v.as_str()) == Some("environment") {
+                                            if let Some(obstacles_val) = raw.get("obstacles") {
+                                                match serde_json::from_value::<Vec<ObstacleType>>(obstacles_val.clone()) {
+                                                    Ok(obstacles) => {
+                                                        let count = obstacles.len();
+                                                        {
+                                                            let mut guard = shared.obstacles.write().await;
+                                                            *guard = obstacles;
+                                                        }
+                                                        tracing::info!(
+                                                            "ws_recv: updated environment from bridge with {} obstacles",
+                                                            count
+                                                        );
+                                                    }
+                                                    Err(err) => {
+                                                        tracing::warn!(
+                                                            "Failed to decode environment obstacles from WS: {} (raw: {})",
+                                                            err,
+                                                            text
+                                                        );
+                                                    }
+                                                }
+                                            } else {
+                                                tracing::warn!(
+                                                    "Environment message missing `obstacles` field: {}",
+                                                    text
+                                                );
+                                            }
+
+                                            // We've fully handled this message; skip normal ClientMessage parsing.
+                                            continue;
+                                        }
+                                    }
+
+                                    // Non-environment messages use the normal typed ClientMessage flow.
                                     match serde_json::from_str::<ClientMessage>(&text) {
                                         Ok(ClientMessage::Command(cmd)) => {
                                             tracing::info!("swarm_command_from_ui={}", cmd);

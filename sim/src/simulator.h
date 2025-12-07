@@ -14,6 +14,8 @@
 #include "pathfinder.h"
 #include "path_follower.h"
 
+constexpr int RUST_UDP_PORT = 6000;
+
 class UAVTelemetryServer;
 
 class UAV; 
