@@ -37,7 +37,7 @@ export default function UavScene({
 	formationMode,
 	obstacles = [],
 }: Props) {
-	const scale = 0.1; // shrinks world into view
+	const scale = 1.0; // shrinks world into view
 	const obstacleVisualScale = 3.0; // make obstacles chonkier
 
 	const trailsRef = useRef<Map<number, [number, number, number][]>>(new Map());
