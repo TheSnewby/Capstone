@@ -259,8 +259,14 @@ void Environment::generate_random_obstacles(int count)
 	int max_ix = std::max(0, nx - 1);
 	int max_iy = std::max(0, ny - 1);
 
-	std::uniform_int_distribution<int> ix_dist(0, max_ix);
-	std::uniform_int_distribution<int> iy_dist(0, max_iy);
+	// generate obstacles across the whole grid
+	double world_min_x = origin[0];
+	double world_max_x = origin[0] + (max_ix + 1) * resolution;
+	double world_min_y = origin[1];
+	double world_max_y = origin[1] + (max_iy + 1) * resolution;
+
+	std::uniform_real_distribution<double> x_world_dist(world_min_x, world_max_x);
+	std::uniform_real_distribution<double> y_world_dist(world_min_y, world_max_y);
 	std::uniform_int_distribution<int> type_dist(0, 2); // 0=cylinder, 1=box, 2=sphere
 
 	// size distributions in meters
@@ -268,18 +274,53 @@ void Environment::generate_random_obstacles(int count)
 	std::uniform_real_distribution<double> height_dist(40.0, 90.0);
 	std::uniform_real_distribution<double> box_size_dist(20.0, 60.0);
 
+	// track placed obstacle centers to reduce clustering
+	std::vector<std::array<double, 2>> placed_centers;
+	const double min_spacing = 150.0; // meters between obstacle centers
+
 	// base altitude for obstacles (the grid's ground level)
 	double base_z = origin[2];
 
 	for (int n = 0; n < count; ++n)
 	{
-		int i = ix_dist(rng);
-		int j = iy_dist(rng);
+		// choose a random spot anywhere in the environment, with minimum spacing
+		double cx = 0.0;
+		double cy = 0.0;
+		bool placed = false;
 
-		// get world coordinates of grid cell center
-		auto wc = toWorld(i, j, 0);
-		double cx = wc[0];
-		double cy = wc[1];
+		for (int attempt = 0; attempt < 10 && !placed; ++attempt)
+		{
+			double cand_x = x_world_dist(rng);
+			double cand_y = y_world_dist(rng);
+
+			bool too_close = false;
+			for (const auto &c : placed_centers)
+			{
+				double dx = cand_x - c[0];
+				double dy = cand_y - c[1];
+				if (dx * dx + dy * dy < min_spacing * min_spacing)
+				{
+					too_close = true;
+					break;
+				}
+			}
+
+			if (!too_close)
+			{
+				cx = cand_x;
+				cy = cand_y;
+				placed = true;
+			}
+		}
+
+		// if we failed to find a spaced-out position in a few tries, just use the last candidate
+		if (!placed)
+		{
+			cx = x_world_dist(rng);
+			cy = y_world_dist(rng);
+		}
+
+		placed_centers.push_back({cx, cy});
 
 		int t = type_dist(rng);
 
