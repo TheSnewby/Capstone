@@ -26,10 +26,37 @@ export type UavState = {
 
 export type ConnectionStatus = "connecting" | "open" | "closed" | "error";
 
+export type ObstacleType =
+	| {
+		type: "cylinder";
+		x: number;
+		y: number;
+		z: number;
+		radius: number;
+		height: number;
+	}
+	| {
+		type: "box";
+		x: number;
+		y: number;
+		z: number;
+		width: number;
+		depth: number;
+		height: number;
+	}
+	| {
+		type: "sphere";
+		x: number;
+		y: number;
+		z: number;
+		radius: number;
+	};
+
 type TelemetryState = {
 	uavs: UavState[];
 	status: ConnectionStatus;
 	settings: any | null;
+	obstacles: ObstacleType[];
 	send: (message: unknown) => void;
 };
 
@@ -49,7 +76,7 @@ const isUavState = (data: any): data is UavState => {
 	);
 };
 
-const isSettingsUpdate = (data: any): data is { type: string; payload: any } => {
+const isSettingsUpdate = (data: any): data is { type: "settings_update"; payload: any } => {
 	return (
 		data &&
 		typeof data === "object" &&
@@ -58,17 +85,32 @@ const isSettingsUpdate = (data: any): data is { type: string; payload: any } => 
 	);
 };
 
+const isEnvironmentUpdate = (
+	data: any
+): data is { type: "environment"; payload: { obstacles: ObstacleType[] } } => {
+	return (
+		data &&
+		typeof data === "object" &&
+		data.type === "environment" &&
+		data.payload &&
+		Array.isArray(data.payload.obstacles)
+	);
+};
+
 /**
  * useTelemetry
  * - opens a WebSocket to the rust server
- * - receives either:
+ * - receives:
  *   - array of UavState (initial snapshot)
  *   - single UavState (incremental update)
+ *   - { type: "settings_update", payload: {...} }
+ *   - { type: "environment", payload: { obstacles: [...] } }
  */
 export function useTelemetry(): TelemetryState {
 	const [uavs, setUavs] = useState<UavState[]>([]);
 	const [status, setStatus] = useState<ConnectionStatus>("connecting");
 	const [settings, setSettings] = useState<any | null>(null);
+	const [obstacles, setObstacles] = useState<ObstacleType[]>([]);
 	const wsRef = useRef<WebSocket | null>(null);
 
 	const send = useCallback(
@@ -112,17 +154,14 @@ export function useTelemetry(): TelemetryState {
 
 		ws.onopen = () => {
 			setStatus("open");
-			// console.log("WS connected");
 		};
 
 		ws.onclose = () => {
 			setStatus("closed");
-			// console.log("WS closed");
 		};
 
 		ws.onerror = () => {
 			setStatus("error");
-			// console.error("WS error", event);
 		};
 
 		ws.onmessage = (event) => {
@@ -132,6 +171,12 @@ export function useTelemetry(): TelemetryState {
 				// settings update from server
 				if (isSettingsUpdate(data)) {
 					setSettings(data.payload);
+					return;
+				}
+
+				// environment / obstacles from server
+				if (isEnvironmentUpdate(data)) {
+					setObstacles(data.payload.obstacles ?? []);
 					return;
 				}
 
@@ -205,5 +250,5 @@ export function useTelemetry(): TelemetryState {
 		);
 	}, [uavs]);
 
-	return { uavs, status, settings, send };
+	return { uavs, status, settings, obstacles, send };
 }
