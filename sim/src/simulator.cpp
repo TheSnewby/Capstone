@@ -27,27 +27,62 @@ void UAVSimulator::print_swarm_status()
  */
 UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y / RESOLUTION, BORDER_Z / RESOLUTION, RESOLUTION)
 {
+	// create base UAVs at a common starting point and base altitude
 	swarm.reserve(num_uavs); // allocates memory to reduce resizing slowdowns
-
-	// create base UAVs
 	for (int i = 0; i < num_uavs; i++)
 	{
-		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 50.0));
+		// leader and followers start co-located; formation offsets will spread them out
+		swarm.push_back(UAV(i, 8000 + i, 0.0, 0.0, 20.0));
+		// give everyone an initial forward velocity along +Y
 		swarm[i].set_velocity(0.0, 1.0, 0.0); // cruisin on y axis
 	}
 
-	// set initial formation (LINE as default)
+	// set initial formation (LINE as default) and compute offsets
 	change_formation(LINE);
 
-	// apply formation offsets to positions
-	for (int i = 0; i < num_uavs; i++)
+	// apply rotated formation offsets around the leader so the swarm starts in formation
+	if (!swarm.empty())
 	{
-		std::array<double, 3> offset =
-			swarm[0].get_SwarmCoord().get_formation_offset(i);
-		swarm[i].set_position(
-			offset[0] + swarm[i].get_x(),
-			offset[1] + swarm[i].get_y(),
-			offset[2] + swarm[i].get_z());
+		// use UAV with id 0 as leader
+		std::size_t leader_idx = 0;
+		for (std::size_t i = 0; i < swarm.size(); ++i)
+		{
+			if (swarm[i].get_id() == 0)
+			{
+				leader_idx = i;
+				break;
+			}
+		}
+
+		// leader position and velocity define the frame for rotation
+		double leader_x = swarm[leader_idx].get_x();
+		double leader_y = swarm[leader_idx].get_y();
+		double leader_z = swarm[leader_idx].get_z();
+
+		std::array<double, 3> leader_vel = {
+			swarm[leader_idx].get_velx(),
+			swarm[leader_idx].get_vely(),
+			swarm[leader_idx].get_velz()};
+
+		// if leader is stationary, assume a default forward heading along +Y
+		double speed = std::sqrt(leader_vel[0] * leader_vel[0] + leader_vel[1] * leader_vel[1]);
+		if (speed < 1e-3)
+		{
+			leader_vel = {0.0, 1.0, 0.0};
+		}
+
+		SwarmCoordinator &coords = swarm[leader_idx].get_SwarmCoord();
+
+		for (int i = 0; i < num_uavs; i++)
+		{
+			std::array<double, 3> base_offset = coords.get_formation_offset(i);
+			std::array<double, 3> rotated_offset = coords.rotate_offset_3d(base_offset, leader_vel);
+
+			swarm[i].set_position(
+				leader_x + rotated_offset[0],
+				leader_y + rotated_offset[1],
+				leader_z + rotated_offset[2]);
+		}
 	}
 
 	std::cout << "Created swarm with " << num_uavs << " UAVs" << std::endl;
