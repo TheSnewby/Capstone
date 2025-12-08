@@ -10,23 +10,21 @@ class UAV; // forward declaration to avoid circular header dependencies
 class Pathfollower {
 private:
 	UAV& leader;
-	std::vector<std::array<double, 3>> waypoints;
+	std::vector<std::array<double, 3>> path;
 	int currentIndex = 0;
 	double lookahead = 10.0;
 	double tolerance;
-	double resolution;
-
 
 public:
-	Pathfollower(UAV& leader_, double resolution_) : leader(leader_), resolution(resolution_) {};
+	Pathfollower(UAV& leader_, double resolution) : leader(leader_), tolerance(resolution) {};
 
-	//getter
+	void update_leader_velocity(double dt);
 
 	//setter
+	void setPath(const std::vector<std::array<double, 3>>& waypoints);
 	void setLookahead(double lookahead_)	{ lookahead = lookahead_; }
 	void setTolerance(double tolerance_)	{ tolerance = tolerance_; }
 
 private:
-	void simplifyPath(const std::vector<std::array<double, 3>>& raw);
 	std::array<double, 3> computeCarrot() const;
 };

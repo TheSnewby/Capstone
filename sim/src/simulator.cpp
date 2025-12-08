@@ -59,11 +59,11 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 
 	Pathfinder pathfinder(env);
 	std::array<double, 3> startXYZ = swarm[0].get_pos();
-	std::array<double, 3> goalXYZ = {100, 300, 300}; // make argv?
+	std::array<double, 3> goalXYZ  = {100, 400, 300};		// make argv?
 	std::vector<std::array<double, 3>> path = pathfinder.plan(startXYZ, goalXYZ);
 
-	// Pathfollower pathfollower(swarm[0], env.getResolution());
-	// pathfollower.run();
+	Pathfollower pathfollower(swarm[0], env.getResolution());
+	pathfollower.setPath(path);
 };
 
 /**
@@ -74,6 +74,10 @@ UAVSimulator::~UAVSimulator()
 	stop_sim();
 }
 
+
+/**
+ * start_turn_timer - testing function with places for commands
+ */
 void UAVSimulator::start_turn_timer()
 {
 	turn_timer_thread = std::thread([this]()
@@ -103,11 +107,13 @@ void UAVSimulator::start_sim()
 	std::thread([this]()
 				{
 		using namespace std::chrono;
-		const auto sleep_duration = milliseconds(50);    // 20 updates per second
+		const auto sleep_duration = milliseconds(int(1000 * UAVDT));    // 20 Hz Updates with .05 UAVDT
 		const int telemetry_port = 6000;
 
 		while (running) {
 			for (auto &uav : swarm) {
+				if (uav.get_id() == 0) // comment out these two lines if not functioning
+					pathfollower.update_leader_velocity(UAVDT);
 				uav.update_position(UAVDT); // UAVDT found in uav.h
 				uav.uav_to_telemetry_server(telemetry_port);
 			}

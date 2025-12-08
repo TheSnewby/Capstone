@@ -30,6 +30,9 @@ public:
 	// Constructor
 	Pathfinder(Environment& e) : env(e), nx(e.getNx()), ny(e.getNy()), nz(e.getNz()), res(e.getResolution()) {}
 
+	// getter
+	double getResolution() { return res; }
+
 	// setter
 	void setEpsilon(double epsilon_) { epsilon = epsilon_; }
 
