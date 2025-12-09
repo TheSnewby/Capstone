@@ -5,14 +5,24 @@ using json = nlohmann::json;
 struct Cylinder
 {
 	double x, y, z, radius, height;
+
+	Cylinder(double x_,double y_,double z_,
+           double rad_,double h_)
+    : x(x_),y(y_),z(z_),radius(rad_),height(h_) {}
 };
 struct Box
 {
 	double x, y, z, width, depth, height;
+
+	Box(double x_,double y_,double z_, double wid_, double dep_,double h_)
+    : x(x_),y(y_),z(z_), width(wid_), depth(dep_),height(h_) {}
 };
 struct Sphere
 {
 	double x, y, z, radius;
+
+	Sphere(double x_,double y_,double z_, double rad_)
+    : x(x_),y(y_),z(z_),radius(rad_) {}
 };
 
 void to_json(json &j, Cylinder const &c)

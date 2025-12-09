@@ -1,5 +1,9 @@
 #pragma once
-#include "simulator.h"
+#include "formation.h"
+#include <vector>
+#include <array>
+#include <cmath>
+#include <iostream>
 
 // Currently Centralized
 // Might need to be converted into a struct in uav.h or sim.h

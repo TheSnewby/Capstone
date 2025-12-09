@@ -1,5 +1,4 @@
 #include "pathfollower.h"
-#include "uav.h"
 
 /**
  * setPath - sets the path from the passed waypoints and resets currentIndex

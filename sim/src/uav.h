@@ -1,4 +1,5 @@
 #pragma once
+#include "swarm_coordinator.h"
 #include <array>
 #include <vector>
 #include <string>
@@ -17,11 +18,10 @@
 #include <unistd.h>
 #include <cmath>
 #include <algorithm>
-#include "swarm_coordinator.h"
 
 #define UAVDT .05 // UAV time step
 
-class SwarmCoordinator; // forward declaration to avoid circular header dependencies
+// class SwarmCoordinator; forward declaration to avoid circular header dependencies
 
 // for the stretch goal of allowing a user to manually control an individual UAV
 enum class UAVControleMode {

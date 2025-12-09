@@ -54,4 +54,5 @@ private:
 
 	void print_idx_path(std::vector<int> path);
 	void print_xyz_path(std::vector<std::array<double, 3>> path);
+	std::vector<std::array<double, 3>> flatArrayToWorldArray(const std::vector<int>& raw);
 };

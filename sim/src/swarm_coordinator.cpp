@@ -1,3 +1,4 @@
+#include "formation.h"
 #include "swarm_coordinator.h"
 
 void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
