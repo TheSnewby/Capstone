@@ -9,6 +9,7 @@ export type SwarmSettings = {
 	alignment: number; // how strongly they match neighbor heading
 	maxSpeed: number; // cap on speed (m/s)
 	targetAltitude: number; // preferred cruise altitude
+	swarmSize: number; // number of UAVs in the swarm
 };
 
 type SwarmControlsProps = {
@@ -40,6 +41,7 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
 				alignment: next.alignment,
 				maxSpeed: next.maxSpeed,
 				targetAltitude: next.targetAltitude,
+				swarmSize: next.swarmSize,
 			},
 		});
 	};

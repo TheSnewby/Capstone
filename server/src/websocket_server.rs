@@ -131,7 +131,6 @@ async fn send_swarm_settings_to_sim(settings: &SwarmSettings) {
             "cohesion": settings.cohesion,
             "separation": settings.separation,
             "alignment": settings.alignment,
-            // sim expects camelCase key for max speed
             "maxSpeed": settings.max_speed,
             "target_altitude": settings.target_altitude,
         }

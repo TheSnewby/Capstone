@@ -5,41 +5,48 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
 	formation_offsets.clear();
 	formation_offsets.resize(num_uavs);
 
+	// Use a tighter spacing than the base separation for all formations
+	const double spacing = separation * 0.5; // 50% of the default separation
+
 	switch (f)
 	{
 	case LINE:
+		// Leader at origin in local formation space
 		if (num_uavs > 0)
-			formation_offsets[0] = {0, 0, 0};
+			formation_offsets[0] = {0.0, 0.0, 0.0};
 
-		for (int i = 1; i < num_uavs; i++)
+		// Followers trail directly behind the leader along local +Y (tighter spacing)
+		for (int i = 1; i < num_uavs; ++i)
 		{
 			formation_offsets[i] = {
-				0.0,
-				-static_cast<double>(i) * separation,
+				0.0, // no lateral offset
+				-static_cast<double>(i) * spacing,
 				0.0};
 		}
 		break;
 
 	case FLYING_V:
-		// Leader at origin in local formation space
+		// leader at origin in local formation space
 		if (num_uavs > 0)
-			formation_offsets[0] = {0, 0, 0};
+			formation_offsets[0] = {0.0, 0.0, 0.0};
 
-		for (int i = 1; i < num_uavs; i++)
+		// followers form a V trailing behind the leader (tighter spacing)
+		for (int i = 1; i < num_uavs; ++i)
 		{
-			int wing = (i + 1) / 2;
-			int side = (i % 2 == 1) ? -1 : 1;
+			int wing = (i + 1) / 2;			  // distance step from leader
+			int side = (i % 2 == 1) ? -1 : 1; // -1 = left, +1 = right
+
 			formation_offsets[i] = {
-				wing * side * separation, // left/right
-				-wing * separation,		  // behind leader
-				0};
+				static_cast<double>(wing * side) * spacing * 0.5, // reduced lateral spread for a tighter V
+				-static_cast<double>(wing) * spacing,
+				0.0};
 		}
 		break;
 
 	case CIRCLE:
 		// Circle in local XY; altitude is controlled by the UAV's altitude controller
 		// using the swarm's target_altitude, not by these local offsets.
-		const double radius = get_separation();
+		const double radius = spacing;
 
 		for (int i = 0; i < num_uavs; i++)
 		{

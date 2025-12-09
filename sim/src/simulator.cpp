@@ -208,6 +208,58 @@ void UAVSimulator::change_formation(formation f)
 	}
 }
 
+void UAVSimulator::resize_swarm(int new_size)
+{
+	if (new_size < 1)
+		new_size = 1;
+
+	// Preserve leader state if available
+	double leader_x = 0.0;
+	double leader_y = 0.0;
+	double leader_z = 20.0;
+	double leader_vx = 0.0;
+	double leader_vy = 1.0;
+	double leader_vz = 0.0;
+
+	if (!swarm.empty())
+	{
+		std::size_t leader_idx = 0;
+		for (std::size_t i = 0; i < swarm.size(); ++i)
+		{
+			if (swarm[i].get_id() == 0)
+			{
+				leader_idx = i;
+				break;
+			}
+		}
+
+		leader_x = swarm[leader_idx].get_x();
+		leader_y = swarm[leader_idx].get_y();
+		leader_z = swarm[leader_idx].get_z();
+		leader_vx = swarm[leader_idx].get_velx();
+		leader_vy = swarm[leader_idx].get_vely();
+		leader_vz = swarm[leader_idx].get_velz();
+	}
+
+	// rebuild the swarm around the leader
+	swarm.clear();
+	swarm.reserve(new_size);
+
+	for (int i = 0; i < new_size; ++i)
+	{
+		int uav_port = 8000 + i;
+		// leader and followers start co-located; formation offsets will spread them out
+		UAV uav(i, uav_port, leader_x, leader_y, leader_z);
+		uav.set_velocity(leader_vx, leader_vy, leader_vz);
+		swarm.push_back(uav);
+	}
+
+	// Recompute formation offsets for the current formation so the new swarm starts in formation
+	change_formation(form);
+
+	std::cout << "Resized swarm to " << new_size << " UAVs" << std::endl;
+}
+
 /**
  * create_formation_random - randomizes the placement of UAVs
  * @num_uavs: number of uavs to generate

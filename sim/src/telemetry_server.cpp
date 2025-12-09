@@ -154,6 +154,10 @@ void UAVTelemetryServer::update_json_pkg(const char *json_str, const struct sock
 				{
 					tuning.target_altitude = p["target_altitude"].get<double>();
 				}
+				if (p.contains("swarm_size") && p["swarm_size"].is_number_integer())
+				{
+					tuning.swarm_size = p["swarm_size"].get<int>();
+				}
 
 				set_swarm_tuning(tuning);
 

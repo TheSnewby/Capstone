@@ -212,21 +212,8 @@ std::array<double, 3> UAV::calculate_formation_force()
 	// Local formation offset for this UAV (defined by the formation type: LINE, VEE, CIRCLE)
 	std::array<double, 3> formation_offset = SwarmCoord.get_formation_offset(get_id());
 
-	double heading_angle = std::atan2(leader_vel[1], leader_vel[0]); // atan2(vy, vx)
-	double cosH = std::cos(heading_angle);
-	double sinH = std::sin(heading_angle);
-
-	double local_side = formation_offset[0];	 // left/right
-	double local_forward = -formation_offset[1]; // forward along heading (invert so -Y = behind)
-
-	double world_dx = local_forward * cosH + local_side * (-sinH);
-	double world_dy = local_forward * sinH + local_side * cosH;
-
-	// Rotate into world frame in the XY plane, keep Z as-is
-	std::array<double, 3> rotated_offset = {
-		world_dx,
-		world_dy,
-		formation_offset[2]};
+	// Use SwarmCoordinator's 3D rotation helper to map local offsets into world space
+	std::array<double, 3> rotated_offset = SwarmCoord.rotate_offset_3d(formation_offset, leader_vel);
 
 	// Target location within formation in relation to leader's location
 	std::array<double, 3> formation_target = {
@@ -355,6 +342,7 @@ void UAV::apply_boids_forces()
 	double alignment_weight = tuning.alignment;
 	double max_speed = tuning.max_speed;
 	double target_altitude = tuning.target_altitude;
+	double swarm_size = tuning.swarm_size;
 
 	std::array<double, 3> formation_force = calculate_formation_force();
 

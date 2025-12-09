@@ -58,6 +58,7 @@ export type SwarmSettingsPayload = {
 	alignment: number;
 	maxSpeed: number;
 	targetAltitude: number;
+	swarmSize: number;
 };
 
 export type UiCommand =
