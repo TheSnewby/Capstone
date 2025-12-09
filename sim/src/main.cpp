@@ -5,7 +5,7 @@
 
 int main()
 {
-	int num_uav = 10;
+	int num_uav = 9;
 	UAVSimulator sim(num_uav);
 	std::vector<UAV> &swarm = sim.get_swarm();
 
