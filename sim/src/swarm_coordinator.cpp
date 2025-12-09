@@ -15,7 +15,7 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
 		if (num_uavs > 0)
 			formation_offsets[0] = {0.0, 0.0, 0.0};
 
-		// Followers trail directly behind the leader along local +Y (tighter spacing)
+		// Followers trail directly behind the leader along local -Y (tighter spacing)
 		for (int i = 1; i < num_uavs; ++i)
 		{
 			formation_offsets[i] = {
@@ -26,20 +26,34 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
 		break;
 
 	case FLYING_V:
-		// leader at origin in local formation space
+		// Leader at origin in local formation space
 		if (num_uavs > 0)
 			formation_offsets[0] = {0.0, 0.0, 0.0};
 
-		// followers form a V trailing behind the leader (tighter spacing)
-		for (int i = 1; i < num_uavs; ++i)
+		// Followers form a symmetric V trailing behind the leader.
+		// We place followers in left/right pairs, each "ring" one step farther back.
 		{
-			int wing = (i + 1) / 2;			  // distance step from leader
-			int side = (i % 2 == 1) ? -1 : 1; // -1 = left, +1 = right
+			int wing_index = 0; // 0 = first pair behind leader, then 1, 2, ...
+			bool place_left = true;
 
-			formation_offsets[i] = {
-				static_cast<double>(wing * side) * spacing * 0.5, // reduced lateral spread for a tighter V
-				-static_cast<double>(wing) * spacing,
-				0.0};
+			for (int i = 1; i < num_uavs; ++i)
+			{
+				// After placing a right-side UAV, advance to the next ring.
+				if (!place_left)
+					++wing_index;
+
+				double k = static_cast<double>(wing_index + 1);
+				double lateral = k * spacing * 0.5; // X: narrower V
+				double back = k * spacing;			// Y: distance behind leader
+
+				double x = place_left ? -lateral : lateral; // left/right
+				double y = -back;							// behind leader (local -Y)
+
+				formation_offsets[i] = {x, y, 0.0};
+
+				// Toggle side for next UAV (left -> right -> left ...)
+				place_left = !place_left;
+			}
 		}
 		break;
 

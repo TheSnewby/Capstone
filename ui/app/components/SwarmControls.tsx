@@ -108,6 +108,16 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
 					value={settings.targetAltitude}
 					onChange={(v) => updateField("targetAltitude", v)}
 				/>
+
+				{/* swarm size */}
+				<ControlRow
+					label="SWARM SIZE (UAVs)"
+					min={1}
+					max={20}
+					step={1}
+					value={settings.swarmSize}
+					onChange={(v) => updateField("swarmSize", v)}
+				/>
 			</div>
 		</section>
 	);
