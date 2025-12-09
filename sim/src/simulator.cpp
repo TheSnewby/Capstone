@@ -13,7 +13,7 @@ void UAVSimulator::generate_test_obstacles() {
  * RTB - Return To Base: returns leader to base 
  */
 void UAVSimulator::RTB() {
-	pathfinder.plan(swarm[0].get_pos(), {0, 0, 20});
+	pathfinder.plan(swarm[0].get_pos(), {0.0, 0.0, 20.0});
 }
 
 
@@ -272,7 +272,7 @@ void UAVSimulator::resize_swarm(int new_size)
 	{
 		int uav_port = 8000 + i;
 		// leader and followers start co-located; formation offsets will spread them out
-		UAV uav(i, uav_port, leader_x, leader_y, leader_z);
+		UAV uav(i, uav_port, leader_x, leader_y, leader_z, env);
 		uav.set_velocity(leader_vx, leader_vy, leader_vz);
 		swarm.push_back(uav);
 	}
