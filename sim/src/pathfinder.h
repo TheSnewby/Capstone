@@ -3,6 +3,9 @@
 #include <unordered_map>
 #include <queue>
 
+#define ROOT2 1.414
+#define ROOT3 1.732
+
 class Pathfinder {
 private:
 	Environment& env;
@@ -38,10 +41,20 @@ public:
 
 private:
 	// The 6 neighbor offsets of a cell (might expand to the 26)
-	static constexpr std::array<std::array<int, 3>, 6> nbrs = {{
+	static constexpr std::array<std::array<int, 3>, 26> nbrs = {{
+		// Face neighbors (cost = 1.0)
 		{{1, 0, 0}}, {{-1, 0, 0}},
 		{{0, 1, 0}}, {{0 , -1, 0}},
-		{{0, 0, 1}}, {{0, 0, -1}}
+		{{0, 0, 1}}, {{0, 0, -1}},
+
+		// Edge neighbors (cost = sqrt(2) ≈ 1.414)
+		{{1, 1, 0}}, {{1, -1, 0}}, {{-1, 1, 0}}, {{-1, -1, 0}},
+		{{1, 0, 1}}, {{1, 0, -1}}, {{-1, 0, 1}}, {{-1, 0, -1}},
+		{{0, 1, 1}}, {{0, 1, -1}}, {{0, -1, 1}}, {{0, -1, -1}},
+
+		// Corner neighbors (cost = sqrt(3) ≈ 1.732)
+		{{1, 1, 1}}, {{1, 1, -1}}, {{1, -1, 1}}, {{1, -1, -1}},
+		{{-1, 1, 1}}, {{-1, 1, -1}}, {{-1, -1, 1}}, {{-1, -1, -1}}
 	}};
 
 	inline int toIdx(int i, int j, int k) const {
@@ -55,4 +68,6 @@ private:
 	void print_idx_path(std::vector<int> path);
 	void print_xyz_path(std::vector<std::array<double, 3>> path);
 	std::vector<std::array<double, 3>> flatArrayToWorldArray(const std::vector<int>& raw);
+
+	double getMoveCost(const std::array<int, 3>& move) const;
 };

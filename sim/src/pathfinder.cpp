@@ -65,6 +65,20 @@ std::vector<std::array<double, 3>> Pathfinder::flatArrayToWorldArray(const std::
 	return world;
 }
 
+double Pathfinder::getMoveCost(const std::array<int, 3>& move) const {
+	int dx = abs(move[0]);
+	int dy = abs(move[1]);
+	int dz = abs(move[2]);
+	int nonZeros = (dx > 0) + (dy > 0) + (dz > 0); // adds up to 1, 2, or 3
+
+	if (nonZeros == 1)
+		return (1.0);
+	else if (nonZeros == 2)
+		return (ROOT2);
+	else
+		return (ROOT3);
+}
+
 /**
  * findPath - finds a path from start to finish in world coords
  */
@@ -133,7 +147,8 @@ std::vector<int> Pathfinder::rawAStar (
 				continue;
 
 			int nidx = toIdx(ni, nj, nk);		// idx of n (neighbor)
-			double tg = gscore[cur.idx] + 1.0;	// tentative g-score. 1.0 cost: distance between cells)
+			double moveCost = getMoveCost(nbr);
+			double tg = gscore[cur.idx] + moveCost;	// tentative g-score. 1.0 cost: distance between cells)
 			if (tg < gscore[nidx]) {			// if lower score, add to open
 				gscore[nidx] = tg;				// set new score for neighbor
 				parent[nidx] = cur.idx;			// set parent of current node
