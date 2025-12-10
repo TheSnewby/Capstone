@@ -32,29 +32,17 @@ void SwarmCoordinator::calculate_formation_offsets(int num_uavs, formation f)
 			formation_offsets[0] = {0.0, 0.0, 0.0};
 
 		// Followers form a symmetric V trailing behind the leader.
-		// We place followers in left/right pairs, each "ring" one step farther back.
+		// We place followers in left/right pairs, each ring one step farther back.
+		for (int i = 1; i < num_uavs; ++i)
 		{
-			int wing_index = 0; // 0 = first pair behind leader, then 1, 2, ...
-			bool place_left = true;
+			int wing = (i + 1) / 2;			  // 1,1,2,2,3,3,...
+			int side = (i % 2 == 1) ? -1 : 1; // -1 (left), +1 (right)
+			double k = static_cast<double>(wing);
 
-			for (int i = 1; i < num_uavs; ++i)
-			{
-				// After placing a right-side UAV, advance to the next ring.
-				if (!place_left)
-					++wing_index;
+			double x = side * k * spacing; // lateral offset
+			double y = -k * spacing;	   // distance behind leader (local -Y)
 
-				double k = static_cast<double>(wing_index + 1);
-				double lateral = k * spacing * 0.5; // X: narrower V
-				double back = k * spacing;			// Y: distance behind leader
-
-				double x = place_left ? -lateral : lateral; // left/right
-				double y = -back;							// behind leader (local -Y)
-
-				formation_offsets[i] = {x, y, 0.0};
-
-				// Toggle side for next UAV (left -> right -> left ...)
-				place_left = !place_left;
-			}
+			formation_offsets[i] = {x, y, 0.0};
 		}
 		break;
 

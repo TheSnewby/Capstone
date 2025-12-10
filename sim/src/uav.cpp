@@ -215,11 +215,12 @@ std::array<double, 3> UAV::calculate_formation_force()
 	// Use SwarmCoordinator's 3D rotation helper to map local offsets into world space
 	std::array<double, 3> rotated_offset = SwarmCoord.rotate_offset_3d(formation_offset, leader_vel);
 
-	// Target location within formation in relation to leader's location
+	// Target location within formation in relation to leader's location.
+	// Keep Z at the leader's altitude so formations stay planar.
 	std::array<double, 3> formation_target = {
 		leader_pos[0] + rotated_offset[0],
 		leader_pos[1] + rotated_offset[1],
-		leader_pos[2] + rotated_offset[2]};
+		leader_pos[2]};
 
 	// position error
 	std::array<double, 3> formation_error = {
@@ -332,16 +333,20 @@ std::array<double, 3> UAV::calculate_alignment_forces()
  *
  * Return: repulsion obstacle force
  */
-std::array<double, 3> UAV::calculate_obstacle_forces() {
+std::array<double, 3> UAV::calculate_obstacle_forces()
+{
 	std::array<int, 3> gridPos = env.toGrid(get_pos());
 	std::array<double, 3> obstacleForce = {0, 0, 0};
 
-	int checkRadius = 3;	// 1 - 3
-	double maxForce = 5.0; 	// might remove if results undesireable
+	int checkRadius = 3;   // 1 - 3
+	double maxForce = 5.0; // might remove if results undesireable
 
-	for (int dk = -checkRadius; dk <= checkRadius; dk++) {
-		for (int dj = -checkRadius; dj <= checkRadius; dj++) {
-			for (int di = -checkRadius; di <= checkRadius; di++) {
+	for (int dk = -checkRadius; dk <= checkRadius; dk++)
+	{
+		for (int dj = -checkRadius; dj <= checkRadius; dj++)
+		{
+			for (int di = -checkRadius; di <= checkRadius; di++)
+			{
 				if (di == 0 && dj == 0 && dk == 0)
 					continue;
 
@@ -349,10 +354,12 @@ std::array<double, 3> UAV::calculate_obstacle_forces() {
 				int nj = gridPos[1] + dj;
 				int nk = gridPos[2] + dk;
 
-				if (env.isBlocked(ni, nj, nk)) {
+				if (env.isBlocked(ni, nj, nk))
+				{
 					double distance = sqrt(di * di + dj * dj + dk * dk);
-					if (distance > 0) {
-						double strength = maxForce / (distance * distance); //inverse square
+					if (distance > 0)
+					{
+						double strength = maxForce / (distance * distance); // inverse square
 						obstacleForce[0] += (di / distance) * strength;
 						obstacleForce[1] += (dj / distance) * strength;
 						obstacleForce[2] += (dk / distance) * strength;
@@ -370,10 +377,10 @@ std::array<double, 3> UAV::calculate_obstacle_forces() {
  */
 void UAV::apply_boids_forces()
 {
-	double internal_formation_weight = 1.5;
-	double internal_separation_weight = 2.0;
-	double internal_alignment_weight = 0.3; // alignment is mostly redundant and may be fully phased out in the future
-	double internal_obstacle_weight = 3.0;  // Obstacle Avoidance
+double internal_formation_weight = 2.5;   // prioritize holding formation slots
+double internal_separation_weight = 1.0;  // reduce separation dominance
+double internal_alignment_weight = 0.3;   // alignment is mostly redundant and may be fully phased out in the future
+double internal_obstacle_weight = 3.0;	// Obstacle Avoidance
 
 	SwarmTuning tuning = get_swarm_tuning();
 	double cohesion_weight = tuning.cohesion;
@@ -381,20 +388,34 @@ void UAV::apply_boids_forces()
 	double alignment_weight = tuning.alignment;
 	double obstacle_weight = 1.0;
 	double max_speed = tuning.max_speed;
-	double target_altitude = tuning.target_altitude;
+	// Hold current altitude; avoid global target_altitude pulling the swarm up or down.
+	double target_altitude = get_z();
 	double swarm_size = tuning.swarm_size;
 
 	std::array<double, 3> formation_force = calculate_formation_force();
 
 	// skip formation forces for the first few timesteps so the swarm doesn't explode on spawn
-	static int formation_bootstrap_steps = 0;
-	if (formation_bootstrap_steps < 5)
-	{
-		formation_force = {0.0, 0.0, 0.0};
-		++formation_bootstrap_steps;
-	}
+	// static int formation_bootstrap_steps = 0;
+	// if (formation_bootstrap_steps < 5)
+	// {
+	//	formation_force = {0.0, 0.0, 0.0};
+	//	++formation_bootstrap_steps;
+	//}
 
 	std::array<double, 3> separation_force = calculate_separation_forces();
+	// cap separation force so it can't overwhelm formation behavior
+	double sep_mag = std::sqrt(
+		separation_force[0] * separation_force[0] +
+		separation_force[1] * separation_force[1] +
+		separation_force[2] * separation_force[2]);
+	double separation_force_cap = 1.5;
+	if (sep_mag > separation_force_cap && sep_mag > 1e-6)
+	{
+		double scale = separation_force_cap / sep_mag;
+		separation_force[0] *= scale;
+		separation_force[1] *= scale;
+		separation_force[2] *= scale;
+	}
 	std::array<double, 3> alignment_force = calculate_alignment_forces();
 	std::array<double, 3> obstacle_force = calculate_obstacle_forces();
 	std::array<double, 3> net_force;
@@ -428,14 +449,14 @@ void UAV::apply_boids_forces()
 	// 	(alignment_force[1] * alignment_weight * internal_alignment_weight),
 	// 	(alignment_force[2] * alignment_weight * internal_alignment_weight)};
 
-	net_force[0] =	(formation_force[0] * cohesion_weight * internal_formation_weight) +
-					(separation_force[0] * separation_weight * internal_separation_weight) +
-					(alignment_force[0] * alignment_weight * internal_alignment_weight) +
-					(obstacle_force[0] * obstacle_weight * internal_obstacle_weight);
-	net_force[1] =	(formation_force[1] * cohesion_weight * internal_formation_weight) +
-					(separation_force[1] * separation_weight * internal_separation_weight) +
-					(alignment_force[1] * alignment_weight * internal_alignment_weight) +
-					(obstacle_force[1] * obstacle_weight * internal_obstacle_weight);
+	net_force[0] = (formation_force[0] * cohesion_weight * internal_formation_weight) +
+				   (separation_force[0] * separation_weight * internal_separation_weight) +
+				   (alignment_force[0] * alignment_weight * internal_alignment_weight) +
+				   (obstacle_force[0] * obstacle_weight * internal_obstacle_weight);
+	net_force[1] = (formation_force[1] * cohesion_weight * internal_formation_weight) +
+				   (separation_force[1] * separation_weight * internal_separation_weight) +
+				   (alignment_force[1] * alignment_weight * internal_alignment_weight) +
+				   (obstacle_force[1] * obstacle_weight * internal_obstacle_weight);
 
 	// Altitude control: gently push Z toward target_altitude
 	double altitude_error = target_altitude - get_z();
