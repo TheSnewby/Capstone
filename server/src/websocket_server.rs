@@ -283,9 +283,9 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                                     "flight_mode" => {
                                                         if let Some(mode) = cmd.get("mode").and_then(|v| v.as_str()) {
                                                             tracing::info!("flight_mode command from UI: {}", mode);
-                                                            // Forward the entire JSON command into the shared swarm model
-                                                            // so the backend/sim can interpret and enforce the mode.
-                                                            shared.swarm.apply_command(cmd.clone()).await;
+                                                            // Forward to sim so it can enable/disable autopilot on the leader.
+                                                            let command = format!("flight_mode {}", mode.to_lowercase());
+                                                            send_control_command_to_sim(&command).await;
                                                         } else {
                                                             tracing::warn!("flight_mode command missing `mode` field: {:?}", cmd);
                                                         }

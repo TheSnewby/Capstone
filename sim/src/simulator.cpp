@@ -152,7 +152,7 @@ void UAVSimulator::start_sim()
 
 		while (running) {
 			for (auto &uav : swarm) {
-				if (uav.get_id() == 0) // comment out these two lines if not functioning
+				if (uav.get_id() == 0 && pathfollower && leader_autopilot.load()) // only drive leader when autopilot enabled
 					pathfollower->update_leader_velocity(UAVDT);
 				uav.update_position(UAVDT); // UAVDT found in uav.h
 				uav.uav_to_telemetry_server(telemetry_port);
@@ -571,6 +571,9 @@ void UAVSimulator::command_listener_loop()
 			std::string dir;
 			ss >> tag >> dir;
 
+			// manual commands disable autopilot until explicitly re-enabled
+			leader_autopilot.store(false);
+
 			if (swarm.empty())
 				continue;
 
@@ -654,6 +657,20 @@ void UAVSimulator::command_listener_loop()
 			double y = swarm[leader_idx].get_y();
 			double z = swarm[leader_idx].get_z() + delta;
 			swarm[leader_idx].set_position(x, y, z);
+		}
+
+		// toggle leader flight mode: "flight_mode autonomous|controlled"
+		else if (command.rfind("flight_mode", 0) == 0)
+		{
+			std::stringstream ss(command);
+			std::string tag;
+			std::string mode;
+			ss >> tag >> mode;
+
+			if (mode == "autonomous")
+				leader_autopilot.store(true);
+			else if (mode == "controlled")
+				leader_autopilot.store(false);
 		}
 
 		// clear buffer for next recvfrom
