@@ -28,6 +28,7 @@ async fn main() {
         swarm,
         tx,
         obstacles: Arc::new(RwLock::new(Vec::new())),
+        goal: Arc::new(RwLock::new(None)),
     };
 
     // start UDP telemetry listener

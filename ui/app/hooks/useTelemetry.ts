@@ -52,6 +52,13 @@ export type ObstacleType =
 		radius: number;
 	};
 
+export type GoalMarker = {
+	x: number;
+	y: number;
+	z: number;
+	radius: number;
+};
+
 export type SwarmSettingsPayload = {
 	cohesion: number;
 	separation: number;
@@ -71,6 +78,7 @@ type TelemetryState = {
 	status: ConnectionStatus;
 	settings: any | null;
 	obstacles: ObstacleType[];
+	goal: GoalMarker | null;
 	send: (message: unknown) => void;
 	sendUiCommand: (cmd: UiCommand) => void;
 };
@@ -102,7 +110,7 @@ const isSettingsUpdate = (data: any): data is { type: "settings_update"; payload
 
 const isEnvironmentUpdate = (
 	data: any
-): data is { type: "environment"; payload: { obstacles: ObstacleType[] } } => {
+): data is { type: "environment"; payload: { obstacles: ObstacleType[]; goal?: GoalMarker | null } } => {
 	return (
 		data &&
 		typeof data === "object" &&
@@ -126,6 +134,7 @@ export function useTelemetry(): TelemetryState {
 	const [status, setStatus] = useState<ConnectionStatus>("connecting");
 	const [settings, setSettings] = useState<any | null>(null);
 	const [obstacles, setObstacles] = useState<ObstacleType[]>([]);
+	const [goal, setGoal] = useState<GoalMarker | null>(null);
 	const wsRef = useRef<WebSocket | null>(null);
 
 	const send = useCallback(
@@ -199,6 +208,7 @@ export function useTelemetry(): TelemetryState {
 				// environment / obstacles from server
 				if (isEnvironmentUpdate(data)) {
 					setObstacles(data.payload.obstacles ?? []);
+					setGoal(data.payload.goal ?? null);
 					return;
 				}
 
@@ -272,5 +282,5 @@ export function useTelemetry(): TelemetryState {
 		);
 	}, [uavs]);
 
-	return { uavs, status, settings, obstacles, send, sendUiCommand };
+	return { uavs, status, settings, obstacles, goal, send, sendUiCommand };
 }

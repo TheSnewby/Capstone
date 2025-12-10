@@ -410,6 +410,18 @@ void Environment::generate_random_obstacles(int count)
 	}
 }
 
+void Environment::setGoal(const std::array<double, 3> &center, double radius)
+{
+	goal_set = true;
+	goal_data = {center[0], center[1], center[2], radius};
+	msg["goal"] = {
+		{"x", center[0]},
+		{"y", center[1]},
+		{"z", center[2]},
+		{"radius", radius},
+	};
+}
+
 /**
  * environment_to_rust - sends environment json str to rust server
  */

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Line } from "@react-three/drei";
 import * as THREE from "three";
-import { UavState, ObstacleType } from "../hooks/useTelemetry";
+import { UavState, ObstacleType, GoalMarker } from "../hooks/useTelemetry";
 
 type CameraTarget = {
 	x: number;
@@ -18,6 +18,7 @@ type Props = {
 	cameraTarget?: CameraTarget;
 	formationMode?: string;
 	obstacles?: ObstacleType[];
+	goal?: GoalMarker | null;
 };
 
 function LeaderOrbitControls({ target }: { target: [number, number, number] }) {
@@ -59,6 +60,7 @@ export default function UavScene({
 	cameraTarget,
 	formationMode,
 	obstacles = [],
+	goal = null,
 }: Props) {
 	const scale = 1.0; // shrinks world into view
 	const obstacleVisualScale = 3.0; // make obstacles chonkier
@@ -173,6 +175,36 @@ export default function UavScene({
 						<cylinderGeometry args={[0.2, 0.2, 0.02, 16]} />
 						<meshStandardMaterial color="#3b82f6" />
 					</mesh>
+
+					{/* server-synced obstacles */}
+					{goal && (
+						<group
+							position={[
+								goal.x * scale,
+								goal.z * scale,
+								goal.y * scale,
+							]}
+						>
+							<mesh>
+								<sphereGeometry args={[goal.radius * scale, 28, 28]} />
+								<meshStandardMaterial
+									color="#00ff00"
+									emissive="#22ff88"
+									emissiveIntensity={2.2}
+								/>
+							</mesh>
+							<mesh>
+								<sphereGeometry args={[goal.radius * 1.4 * scale, 28, 28]} />
+								<meshStandardMaterial
+									color="#00ff00"
+									transparent
+									opacity={0.2}
+									emissive="#00ff00"
+									emissiveIntensity={1.5}
+								/>
+							</mesh>
+						</group>
+					)}
 
 					{/* server-synced obstacles */}
 					{obstacles.map((obs, idx) => {

@@ -35,6 +35,8 @@ private:
 	std::array<double, 3> origin;	// world coordinates for (0, 0, 0)
 	std::vector<uint8_t> occupancy; // flat array: 0 - free, 1 - blocked
 	nlohmann::json msg;				// json to send to telemetry (to send to rust)
+	bool goal_set = false;
+	std::array<double, 4> goal_data{}; // x, y, z, radius
 
 public:
 	Environment(int nx_, int ny_, int nz_, double res_) : nx(nx_),
@@ -46,6 +48,7 @@ public:
 	{
 		msg["type"] = "environment";
 		msg["obstacles"] = nlohmann::json::array();
+		msg["goal"] = nullptr;
 	}
 
 	// Getters
@@ -66,6 +69,7 @@ public:
 	void addSphere(const std::array<double, 3> &center, double radius);
 	void addCylinder(const std::array<double, 3> &center, double radius, double height);
 	void generate_random_obstacles(int count);
+	void setGoal(const std::array<double, 3> &center, double radius);
 	int environment_to_rust(int port);
 
 private:

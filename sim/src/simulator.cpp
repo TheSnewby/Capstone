@@ -98,7 +98,6 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 	// Set Up Environment
 	env.generate_random_obstacles(40);
 	// generate_test_obstacles(); 					// for testing
-	env.environment_to_rust(RUST_UDP_PORT);
 
 	std::array<double, 3> startXYZ = swarm[0].get_pos();
 	// Pick a corner goal 50m above start altitude to ensure vertical clearance
@@ -106,6 +105,9 @@ UAVSimulator::UAVSimulator(int num_uavs) : env(BORDER_X / RESOLUTION, BORDER_Y /
 	double corner_x = (BORDER_X / 2.0) - corner_offset;
 	double corner_y = (BORDER_Y / 2.0) - corner_offset;
 	std::array<double, 3> goalXYZ = {corner_x, corner_y, startXYZ[2] + 50.0};
+	// mark goal for visualization (approx 3x UAV size)
+	env.setGoal(goalXYZ, 6.0);
+	env.environment_to_rust(RUST_UDP_PORT);
 	std::vector<std::array<double, 3>> path = pathfinder.plan(startXYZ, goalXYZ);
 	pathfollower = std::make_unique<Pathfollower>(swarm[0], env.getResolution());
 	pathfollower->setPath(path);

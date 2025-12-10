@@ -24,6 +24,15 @@ pub struct Velocity {
     pub vz: f64,
 }
 
+/// goal marker for visualization
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Goal {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub radius: f64,
+}
+
 /// state of a single UAV sent to WebSocket clients
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UavState {
@@ -87,6 +96,8 @@ struct EnvironmentMessage {
     #[serde(rename = "type")]
     msg_type: String,
     obstacles: Vec<ObstacleType>,
+    #[serde(default)]
+    goal: Option<Goal>,
 }
 
 /// state of UAV swarm
@@ -176,6 +187,8 @@ pub struct TelemetryShared {
     pub tx: broadcast::Sender<UavState>,
     /// Obstacles as last reported by the simulator
     pub obstacles: Arc<RwLock<Vec<ObstacleType>>>,
+    /// Goal marker for visualization
+    pub goal: Arc<RwLock<Option<Goal>>>,
 }
 
 /// start UDP listener that receives telemetry frames and environment updates,
@@ -217,9 +230,14 @@ pub async fn run_udp_listener(bind_addr: SocketAddr, shared: TelemetryShared) {
                         let mut guard = shared.obstacles.write().await;
                         *guard = env.obstacles.clone();
                     }
+                    {
+                        let mut guard = shared.goal.write().await;
+                        *guard = env.goal.clone();
+                    }
                     tracing::info!(
-                        "udp_recv: updated environment from sim with {} obstacles",
-                        env.obstacles.len()
+                        "udp_recv: updated environment from sim with {} obstacles and goal={:?}",
+                        env.obstacles.len(),
+                        env.goal
                     );
                     // this packet was an environment update; no telemetry frame inside
                     return;
