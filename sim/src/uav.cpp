@@ -377,10 +377,10 @@ std::array<double, 3> UAV::calculate_obstacle_forces()
  */
 void UAV::apply_boids_forces()
 {
-double internal_formation_weight = 2.5;   // prioritize holding formation slots
-double internal_separation_weight = 1.0;  // reduce separation dominance
-double internal_alignment_weight = 0.3;   // alignment is mostly redundant and may be fully phased out in the future
-double internal_obstacle_weight = 3.0;	// Obstacle Avoidance
+	double internal_formation_weight = 2.5;	 // prioritize holding formation slots
+	double internal_separation_weight = 1.0; // reduce separation dominance
+	double internal_alignment_weight = 0.3;	 // alignment is mostly redundant and may be fully phased out in the future
+	double internal_obstacle_weight = 3.0;	 // Obstacle Avoidance
 
 	SwarmTuning tuning = get_swarm_tuning();
 	double cohesion_weight = tuning.cohesion;

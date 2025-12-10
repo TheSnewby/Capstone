@@ -6,23 +6,23 @@ struct Cylinder
 {
 	double x, y, z, radius, height;
 
-	Cylinder(double x_,double y_,double z_,
-           double rad_,double h_)
-    : x(x_),y(y_),z(z_),radius(rad_),height(h_) {}
+	Cylinder(double x_, double y_, double z_,
+			 double rad_, double h_)
+		: x(x_), y(y_), z(z_), radius(rad_), height(h_) {}
 };
 struct Box
 {
 	double x, y, z, width, depth, height;
 
-	Box(double x_,double y_,double z_, double wid_, double dep_,double h_)
-    : x(x_),y(y_),z(z_), width(wid_), depth(dep_),height(h_) {}
+	Box(double x_, double y_, double z_, double wid_, double dep_, double h_)
+		: x(x_), y(y_), z(z_), width(wid_), depth(dep_), height(h_) {}
 };
 struct Sphere
 {
 	double x, y, z, radius;
 
-	Sphere(double x_,double y_,double z_, double rad_)
-    : x(x_),y(y_),z(z_),radius(rad_) {}
+	Sphere(double x_, double y_, double z_, double rad_)
+		: x(x_), y(y_), z(z_), radius(rad_) {}
 };
 
 void to_json(json &j, Cylinder const &c)
@@ -221,7 +221,8 @@ void Environment::addCylinder(const std::array<double, 3> &center, double radius
 
 	for (int k = gc[2] - h_cell; k <= gc[2] + h_cell; k++)
 	{
-		if (k <= 0 || k >= nz)
+		// allow k == 0 so the cylinder's base sits on the grid instead of floating
+		if (k < 0 || k >= nz)
 			continue;
 		// world Z-value of this layer's center
 		double wz = origin[2] + (k + 0.5) * resolution;
