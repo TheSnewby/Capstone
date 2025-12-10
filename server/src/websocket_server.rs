@@ -131,8 +131,10 @@ async fn send_swarm_settings_to_sim(settings: &SwarmSettings) {
             "cohesion": settings.cohesion,
             "separation": settings.separation,
             "alignment": settings.alignment,
-            "maxSpeed": settings.max_speed,
+            // C++ sim expects snake_case keys
+            "max_speed": settings.max_speed,
             "target_altitude": settings.target_altitude,
+            "swarm_size": settings.swarm_size,
         }
     });
 

@@ -89,15 +89,11 @@ export default function SwarmControls({ settings, onChange }: SwarmControlsProps
 
 				<div className="h-px bg-zinc-800 my-2" />
 
-				{/* max Speed */}
-				<ControlRow
-					label="MAX SPEED (m/s)"
-					min={0}
-					max={5}
-					step={0.5}
-					value={settings.maxSpeed}
-					onChange={(v) => updateField("maxSpeed", v)}
-				/>
+				{/* fixed max speed display */}
+				<div className="flex justify-between items-center text-[0.7rem] tracking-wide">
+					<span>MAX SPEED (m/s)</span>
+					<span className="font-semibold">{settings.maxSpeed.toFixed(1)}</span>
+				</div>
 
 				{/* target Altitude */}
 				<ControlRow
