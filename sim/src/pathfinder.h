@@ -11,7 +11,7 @@ private:
 	Environment& env;
 	int nx, ny, nz;
 	double res;
-	double epsilon = 1e-3;	//for simplifying actions
+	double epsilon = 1;	//for simplifying actions
 
 public:
 	struct Node {

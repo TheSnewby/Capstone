@@ -254,6 +254,13 @@ std::vector<int> Pathfinder::rawAStar (
 	return (rev);
 }
 
+
+/**
+ * smoothPath - removes redundant waypoints in the A* path
+ * @raw: raw A* path
+ *
+ * Return: smoothed A* path
+ */
 std::vector<std::array<double, 3>> Pathfinder::smoothPath(const std::vector<int>& raw){
 	// copy raw path into "pts"
 	std::vector<std::array<double, 3>> pts = flatArrayToWorldArray(raw);
@@ -278,13 +285,21 @@ std::vector<std::array<double, 3>> Pathfinder::smoothPath(const std::vector<int>
 	return corners;
 }
 
+
+/**
+ * plan - create a flight path for the leader
+ * @start:  starting coords in world space
+ * @goal: 	goal coords in world space
+ *
+ * Return: returns a full A* path for the leader
+ */
 std::vector<std::array<double, 3>> Pathfinder::plan(
 	const std::array<double, 3>& start,
 	const std::array<double, 3>& goal
 ) {
 	std::vector<int> raw = rawAStar(start, goal);
-	// return (flatArrayToWorldArray(raw)); // comment out when uncommenting below
-	std::vector<std::array<double, 3>> smooth = smoothPath(raw);
-	print_xyz_path(smooth);
-	return smooth;
+	return (flatArrayToWorldArray(raw)); // comment out when uncommenting below
+	// std::vector<std::array<double, 3>> smooth = smoothPath(raw);
+	// print_xyz_path(smooth);
+	// return smooth;
 }
