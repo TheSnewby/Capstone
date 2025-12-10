@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/nashthames/SkyWeave-1/sim/build/cmake_install.cmake",
-		"/Users/nashthames/SkyWeave-1/sim/build/_deps/nlohmann_json-build/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
