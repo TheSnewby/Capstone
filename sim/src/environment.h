@@ -69,7 +69,7 @@ public:
 	void addSphere(const std::array<double, 3> &center, double radius);
 	void addCylinder(const std::array<double, 3> &center, double radius, double height);
 	void generate_random_obstacles(int count);
-	void setGoal(const std::array<double, 3> &center, double radius);
+	void setGoal(const std::array<double, 3>& center, double radius);
 	int environment_to_rust(int port);
 
 private:

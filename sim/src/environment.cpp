@@ -6,23 +6,23 @@ struct Cylinder
 {
 	double x, y, z, radius, height;
 
-	Cylinder(double x_, double y_, double z_,
-			 double rad_, double h_)
-		: x(x_), y(y_), z(z_), radius(rad_), height(h_) {}
+	Cylinder(double x_,double y_,double z_,
+           double rad_,double h_)
+    : x(x_),y(y_),z(z_),radius(rad_),height(h_) {}
 };
 struct Box
 {
 	double x, y, z, width, depth, height;
 
-	Box(double x_, double y_, double z_, double wid_, double dep_, double h_)
-		: x(x_), y(y_), z(z_), width(wid_), depth(dep_), height(h_) {}
+	Box(double x_,double y_,double z_, double wid_, double dep_,double h_)
+    : x(x_),y(y_),z(z_), width(wid_), depth(dep_),height(h_) {}
 };
 struct Sphere
 {
 	double x, y, z, radius;
 
-	Sphere(double x_, double y_, double z_, double rad_)
-		: x(x_), y(y_), z(z_), radius(rad_) {}
+	Sphere(double x_,double y_,double z_, double rad_)
+    : x(x_),y(y_),z(z_),radius(rad_) {}
 };
 
 void to_json(json &j, Cylinder const &c)
@@ -368,27 +368,27 @@ void Environment::generate_random_obstacles(int count)
 
 		placed_obstacles.push_back({cx, cy, effective_radius});
 
-		if (t == 0)
-		{
-			// cylinder: rests on the grid
-			double center_z = base_z + height / 2.0; // base at grid level
-			std::array<double, 3> center{cx, cy, center_z};
-			addCylinder(center, radius, height);
-		}
-		else if (t == 1)
-		{
-			// box: also on grid
-			double x0 = cx - width / 2.0;
-			double x1 = cx + width / 2.0;
-			double y0 = cy - depth / 2.0;
-			double y1 = cy + depth / 2.0;
-			double z0 = 0.0;	// start at grid level
-			double z1 = height; // extend upward from ground
-			cx = cx;			// keep center values unchanged for JSON
-			cy = cy;
+	if (t == 0)
+	{
+		// cylinder: rests on the grid
+		double center_z = base_z + height / 2.0; // base at grid level
+		std::array<double, 3> center{cx, cy, center_z};
+		addCylinder(center, radius, height);
+	}
+	else if (t == 1)
+	{
+		// box: also on grid
+		double x0 = cx - width / 2.0;
+		double x1 = cx + width / 2.0;
+		double y0 = cy - depth / 2.0;
+		double y1 = cy + depth / 2.0;
+		double z0 = 0.0;            // start at grid level
+		double z1 = height;         // extend upward from ground
+		cx = cx; // keep center values unchanged for JSON
+		cy = cy;
 
-			addBox(x0, y0, z0, x1, y1, z1);
-		}
+		addBox(x0, y0, z0, x1, y1, z1);
+	}
 		else
 		{
 			// sphere: generated between grid level and 200m ceiling

@@ -19,15 +19,14 @@
 constexpr int RUST_UDP_PORT = 6000;
 
 class UAVTelemetryServer;
-class UAV;
+class UAV; 
 
 #define BORDER_X 750
 #define BORDER_Y 750
 #define BORDER_Z 750
 #define RESOLUTION 5
 
-class UAVSimulator
-{
+class UAVSimulator {
 private:
 	std::vector<UAV> swarm;
 	std::mutex swarm_mutex;
@@ -80,6 +79,6 @@ private:
 
 	void RTB();
 
-	void start_turn_timer();		// for testing
+	void start_turn_timer(); 		// for testing
 	void generate_test_obstacles(); // for testing
 };
