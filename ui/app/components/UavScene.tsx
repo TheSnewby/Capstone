@@ -63,7 +63,7 @@ export default function UavScene({
 	goal = null,
 }: Props) {
 	const scale = 1.0; // shrinks world into view
-	const obstacleVisualScale = 2.0; // visuals match inflated collision footprint
+	const obstacleVisualScale = 1.0; // align visuals with collision footprint
 
 	const trailsRef = useRef<Map<number, [number, number, number][]>>(new Map());
 
@@ -424,27 +424,27 @@ function GoalBeacon({ goal, scale }: { goal: GoalMarker; scale: number }) {
 			<mesh ref={coreRef}>
 				<sphereGeometry args={[goal.radius * scale, 32, 32]} />
 				<meshStandardMaterial
-					color="#7CFF33" // brighter than obstacle green
-					emissive="#66FF00"
-					emissiveIntensity={5.0}
+					color="#a6ff4d" // brighter than obstacle green
+					emissive="#8aff00"
+					emissiveIntensity={6.5}
 				/>
 			</mesh>
 			<mesh ref={haloRef}>
 				<sphereGeometry args={[goal.radius * 1.6 * scale, 32, 32]} />
 				<meshStandardMaterial
-					color="#7CFF33"
+					color="#a6ff4d"
 					transparent
 					opacity={0.16}
-					emissive="#66FF00"
-					emissiveIntensity={3.0}
+					emissive="#8aff00"
+					emissiveIntensity={4.0}
 				/>
 			</mesh>
 			<mesh rotation={[-Math.PI / 2, 0, 0]}>
 				<ringGeometry args={[goal.radius * 1.1 * scale, goal.radius * 1.4 * scale, 48]} />
 				<meshStandardMaterial
-					color="#7CFF33"
-					emissive="#66FF00"
-					emissiveIntensity={3.0}
+					color="#a6ff4d"
+					emissive="#8aff00"
+					emissiveIntensity={4.0}
 					side={THREE.DoubleSide}
 					transparent
 					opacity={0.35}

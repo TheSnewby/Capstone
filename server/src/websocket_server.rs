@@ -1,4 +1,4 @@
-use crate::telemetry::{Goal, ObstacleType, SwarmSettings, TelemetryShared, UavState};
+use crate::telemetry::{ObstacleType, SwarmSettings, TelemetryShared, UavState};
 use axum::{
     extract::{
         ws::{Message, WebSocket, WebSocketUpgrade},
@@ -188,18 +188,16 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
             let obstacles_guard = shared.obstacles.read().await;
             let goal_guard = shared.goal.read().await;
 
-            if !obstacles_guard.is_empty() || goal_guard.is_some() {
-                let env_msg = serde_json::json!({
-                    "type": "environment",
-                    "payload": {
-                        "obstacles": &*obstacles_guard,
-                        "goal": &*goal_guard,
-                    }
-                });
-
-                if let Ok(txt) = serde_json::to_string(&env_msg) {
-                    let _ = sender.send(Message::Text(txt)).await;
+            let env_msg = serde_json::json!({
+                "type": "environment",
+                "payload": {
+                    "obstacles": &*obstacles_guard,
+                    "goal": &*goal_guard,
                 }
+            });
+
+            if let Ok(txt) = serde_json::to_string(&env_msg) {
+                let _ = sender.send(Message::Text(txt)).await;
             }
         }
 
