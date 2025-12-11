@@ -152,8 +152,8 @@ void UAVSimulator::start_sim()
 	if (running)
 		return;
 
-	std::cout<< "UINTMAX = " << UINT_MAX <<std::endl;
-	std::cout<< "INTMAX = " << INT_MAX <<std::endl;
+	std::cout << "UINTMAX = " << UINT_MAX << std::endl;
+	std::cout << "INTMAX = " << INT_MAX << std::endl;
 
 	running = true;
 
@@ -380,15 +380,20 @@ void UAVSimulator::command_listener_loop()
 				continue;
 
 			// make leader's ID 0 instead of assuming UAV at index 0 is leader
-			size_t leader_idx = 0;
-			for (size_t i = 0; i < swarm.size(); i++)
+			auto find_leader_idx = [&]()
 			{
-				if (swarm[i].get_id() == 0)
+				size_t leader_idx = 0;
+				for (size_t i = 0; i < swarm.size(); i++)
 				{
-					leader_idx = i;
-					break;
+					if (swarm[i].get_id() == 0)
+					{
+						leader_idx = i;
+						break;
+					}
 				}
-			}
+				return leader_idx;
+			};
+			size_t leader_idx = find_leader_idx();
 
 			// read current leader velocity
 			double vx = swarm[leader_idx].get_velx();
@@ -459,6 +464,45 @@ void UAVSimulator::command_listener_loop()
 			double y = swarm[leader_idx].get_y();
 			double z = swarm[leader_idx].get_z() + delta;
 			swarm[leader_idx].set_position(x, y, z);
+		}
+
+		// return-to-base command
+		else if (command == "rtb")
+		{
+			if (swarm.empty())
+				continue;
+
+			auto find_leader_idx = [&]()
+			{
+				size_t leader_idx = 0;
+				for (size_t i = 0; i < swarm.size(); i++)
+				{
+					if (swarm[i].get_id() == 0)
+					{
+						leader_idx = i;
+						break;
+					}
+				}
+				return leader_idx;
+			};
+			size_t leader_idx = find_leader_idx();
+
+			// ensure autopilot is on so RTB path is followed
+			leader_autopilot.store(true);
+			std::array<double, 3> start = swarm[leader_idx].get_pos();
+			std::array<double, 3> base = {0.0, 0.0, 20.0};
+			auto path = pathfinder.plan(start, base);
+			if (path.empty())
+			{
+				path.push_back(start);
+				path.push_back(base);
+			}
+			if (!pathfollower)
+			{
+				pathfollower = std::make_unique<Pathfollower>(swarm[leader_idx], env.getResolution());
+			}
+			pathfollower->setPath(path);
+			std::cout << "RTB: leader plotting path back to base" << std::endl;
 		}
 
 		// toggle leader flight mode: "flight_mode autonomous|controlled"

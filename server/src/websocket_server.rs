@@ -319,6 +319,11 @@ async fn handle_ws(socket: WebSocket, shared: TelemetryShared) {
                                                         }
                                                     }
 
+                                                    // return to base: tell the sim to RTB the leader
+                                                    "rtb" => {
+                                                        send_control_command_to_sim("rtb").await;
+                                                    }
+
                                                     // anything else: apply locally
                                                     _ => {
                                                         shared.swarm.apply_command(cmd).await;
