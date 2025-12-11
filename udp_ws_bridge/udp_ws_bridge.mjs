@@ -76,6 +76,7 @@ udp.on("message", (msg, rinfo) => {
 		wrapper = {
 			type: "environment",
 			obstacles: parsed.obstacles ?? [],
+			goal: parsed.goal ?? null,
 		};
 		console.log("Forwarding ENV to WS:", wrapper);
 	} else {

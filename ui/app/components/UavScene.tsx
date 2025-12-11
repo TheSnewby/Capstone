@@ -317,7 +317,7 @@ export default function UavScene({
 						last[2] !== nextPoint[2]
 					) {
 						trail.push(nextPoint);
-						if (trail.length > 60) {
+						if (trail.length > 80) {
 							trail.shift(); // keep a finite tail length
 						}
 					}
@@ -427,27 +427,27 @@ function GoalBeacon({ goal, scale }: { goal: GoalMarker; scale: number }) {
 			<mesh ref={coreRef}>
 				<sphereGeometry args={[goal.radius * scale, 32, 32]} />
 				<meshStandardMaterial
-					color="#a6ff4d" // brighter than obstacle green
-					emissive="#8aff00"
-					emissiveIntensity={6.5}
+					color="#ffd000" // bright yellow
+					emissive="#ffd000"
+					emissiveIntensity={6.8}
 				/>
 			</mesh>
 			<mesh ref={haloRef}>
 				<sphereGeometry args={[goal.radius * 1.6 * scale, 32, 32]} />
 				<meshStandardMaterial
-					color="#a6ff4d"
+					color="#ffd000"
 					transparent
-					opacity={0.16}
-					emissive="#8aff00"
-					emissiveIntensity={4.0}
+					opacity={0.2}
+					emissive="#ffd000"
+					emissiveIntensity={5.0}
 				/>
 			</mesh>
 			<mesh rotation={[-Math.PI / 2, 0, 0]}>
 				<ringGeometry args={[goal.radius * 1.1 * scale, goal.radius * 1.4 * scale, 48]} />
 				<meshStandardMaterial
-					color="#a6ff4d"
-					emissive="#8aff00"
-					emissiveIntensity={4.0}
+					color="#ffd000"
+					emissive="#ffd000"
+					emissiveIntensity={4.8}
 					side={THREE.DoubleSide}
 					transparent
 					opacity={0.35}
