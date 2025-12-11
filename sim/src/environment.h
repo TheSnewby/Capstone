@@ -15,6 +15,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <random>
+#include <cerrno>
+#include <sstream>
 
 /**
  * Environment Class Concepts

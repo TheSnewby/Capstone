@@ -367,8 +367,8 @@ std::array<double, 3> UAV::calculate_obstacle_forces()
 	std::array<double, 3> obstacleForce = {0, 0, 0};
 	std::array<double, 3> worldPos = get_pos();
 
-	int checkRadius = 3;   // 1 - 3
-	double maxForce = 3; // might remove if results undesireable
+	int checkRadius = 1;   // 1 - 3
+	double maxForce = 5.0; // might remove if results undesireable
 
 	for (int dk = -checkRadius; dk <= checkRadius; dk++)
 	{
