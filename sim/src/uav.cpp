@@ -344,9 +344,9 @@ std::array<double, 3> UAV::calculate_alignment_forces()
 		sum_of_velocities[2] += neighbors_status[i].last_known_vel[2];
 	}
 
-	average_velocity[0] = sum_of_velocities[0] / num_neighbors / 2;
-	average_velocity[1] = sum_of_velocities[1] / num_neighbors / 2;
-	average_velocity[2] = sum_of_velocities[2] / num_neighbors / 2;
+	average_velocity[0] = sum_of_velocities[0] / num_neighbors;
+	average_velocity[1] = sum_of_velocities[1] / num_neighbors;
+	average_velocity[2] = sum_of_velocities[2] / num_neighbors;
 
 	// calculate alignment_force
 	alignment_force[0] = average_velocity[0] - get_velx();
@@ -365,8 +365,9 @@ std::array<double, 3> UAV::calculate_obstacle_forces()
 {
 	std::array<int, 3> gridPos = env.toGrid(get_pos());
 	std::array<double, 3> obstacleForce = {0, 0, 0};
+	std::array<double, 3> worldPos = get_pos();
 
-	int checkRadius = 3;   // 1 - 3
+	int checkRadius = 1;   // 1 - 3
 	double maxForce = 5.0; // might remove if results undesireable
 
 	for (int dk = -checkRadius; dk <= checkRadius; dk++)
@@ -383,14 +384,28 @@ std::array<double, 3> UAV::calculate_obstacle_forces()
 				int nk = gridPos[2] + dk;
 
 				if (env.isBlocked(ni, nj, nk))
-				{
-					double distance = sqrt(di * di + dj * dj + dk * dk);
+				{	// repetitive because output screen flashes quickly
+					// std::cout << "\nOBSTACLE DETECTED at grid (" << ni << "," << nj << "," << nk << ")\n" << std::endl;
+
+					// Convert obstacle cell to world coordinates
+                    std::array<double, 3> obstacleWorldPos = env.toWorld(ni, nj, nk);
+
+                    // Calculate world distance
+                    double dx = worldPos[0] - obstacleWorldPos[0];
+                    double dy = worldPos[1] - obstacleWorldPos[1];
+                    double dz = worldPos[2] - obstacleWorldPos[2];
+                    double distance = sqrt(dx*dx + dy*dy + dz*dz);
+
 					if (distance > 0)
 					{
-						double strength = maxForce / (distance * distance); // inverse square
-						obstacleForce[0] += (di / distance) * strength;
-						obstacleForce[1] += (dj / distance) * strength;
-						obstacleForce[2] += (dk / distance) * strength;
+						double strength = maxForce / (distance * distance); // or inverse square
+						obstacleForce[0] += dx * strength;
+						obstacleForce[1] += dy * strength;
+						obstacleForce[2] += dz * strength;
+
+						// DEBUG
+						// double oFmag = obstacleForce[0] * obstacleForce[0] + obstacleForce[1] * obstacleForce[1] + obstacleForce[2] * obstacleForce[2];
+						// std::cout << get_id() << ": Obstacle Force calculated: " << oFmag <<std::endl;
 					}
 				}
 			}
@@ -405,10 +420,10 @@ std::array<double, 3> UAV::calculate_obstacle_forces()
  */
 void UAV::apply_boids_forces()
 {
-	double internal_formation_weight = 2.5;	 // prioritize holding formation slots
+	double internal_formation_weight = 4.0;	 // prioritize holding formation slots
 	double internal_separation_weight = 1.0; // reduce separation dominance
-	double internal_alignment_weight = 0.3;	 // alignment is mostly redundant and may be fully phased out in the future
-	double internal_obstacle_weight = 3.0;	 // Obstacle Avoidance
+	double internal_alignment_weight = 0.5;	 // alignment is mostly redundant and may be fully phased out in the future
+	double internal_obstacle_weight = 1.0;	 // Obstacle Avoidance
 
 	SwarmTuning tuning = get_swarm_tuning();
 	double cohesion_weight = tuning.cohesion;
@@ -450,6 +465,7 @@ void UAV::apply_boids_forces()
 	std::array<double, 3> new_velocity;
 	std::array<double, 3> current_velocity = get_vel();
 
+	// DEBUG RAW MAGNITUDES
 	// double fmag = sqrt(formation_force[0] * formation_force[0] +
 	// 				   formation_force[1] * formation_force[1] +
 	// 				   formation_force[2] * formation_force[2]);
@@ -459,9 +475,14 @@ void UAV::apply_boids_forces()
 	// double amag = sqrt(alignment_force[0] * alignment_force[0] +
 	// 				   alignment_force[1] * alignment_force[1] +
 	// 				   alignment_force[2] * alignment_force[2]);
-	// if (get_id() == 1)
-	// 	std::cout << "F="<<fmag<<" S="<<smag<<" A="<<amag<<std::endl;
+	// double omag = sqrt(obstacle_force[0] * obstacle_force[0] +
+	// 				   obstacle_force[1] * obstacle_force[1] +
+	// 				   obstacle_force[2] * obstacle_force[2]);
 
+	// if (get_id() == 1)
+	// 	std::cout << get_id() << ": F="<<fmag<<" S="<<smag<<" A="<<amag<<" O="<<omag<<std::endl;
+
+	// DEBUG NET FORCE
 	// std::array<double, 3> net_formation_force = {
 	// 	(formation_force[0] * cohesion_weight * internal_formation_weight),
 	// 	(formation_force[1] * cohesion_weight * internal_formation_weight),
@@ -476,6 +497,25 @@ void UAV::apply_boids_forces()
 	// 	(alignment_force[0] * alignment_weight * internal_alignment_weight),
 	// 	(alignment_force[1] * alignment_weight * internal_alignment_weight),
 	// 	(alignment_force[2] * alignment_weight * internal_alignment_weight)};
+
+	// std::array<double, 3> net_obstacle_force = {
+	// 	(obstacle_force[0] * obstacle_weight * internal_obstacle_weight),
+	// 	(obstacle_force[1] * obstacle_weight * internal_obstacle_weight),
+	// 	(obstacle_force[2] * obstacle_weight * internal_obstacle_weight)};
+
+	/*
+	if (get_id() == 1) {
+		std::cout << "UAV " << get_id() << " forces: "
+		<< "formation(" << net_formation_force[0] << "," << net_formation_force[1] << "," << net_formation_force[2] << ") "
+		<< "separation(" << net_separation_force[0] << "," << net_separation_force[1] << "," << net_separation_force[2] << ") "
+		<< "alignment(" << net_alignment_force[0] << "," << net_alignment_force[1] << "," << net_alignment_force[2] << ") "
+		<< "obstacle(" << net_obstacle_force[0] << "," << net_obstacle_force[1] << "," << net_obstacle_force[2] << ") "
+		<< "net(" << net_force[0] << "," << net_force[1] << "," << net_force[2] << ") "
+		<< "New Velocity(" << new_velocity[0] << ", " << new_velocity[1] << ", " << new_velocity[2] << ")" << std::endl;
+	}
+	// */
+
+	// DEBUG END
 
 	net_force[0] = (formation_force[0] * cohesion_weight * internal_formation_weight) +
 				   (separation_force[0] * separation_weight * internal_separation_weight) +
@@ -505,6 +545,8 @@ void UAV::apply_boids_forces()
 	// std::cout << get_id() << ": new vz " << new_velocity[2] << " = " << current_velocity[2] << " + " << net_force[2] << " * UAVDT(" << UAVDT << ")" <<std::endl;
 
 	// std::cout << "max speed: " << max_speed <<std::endl;
+
+	// MAX SPEED CHECK
 	new_velocity[0] = (new_velocity[0] <= max_speed) ? new_velocity[0] : max_speed;
 	new_velocity[1] = (new_velocity[1] <= max_speed) ? new_velocity[1] : max_speed;
 	new_velocity[2] = (new_velocity[2] <= max_speed) ? new_velocity[2] : max_speed;
@@ -512,15 +554,5 @@ void UAV::apply_boids_forces()
 	// std::cout << "Actual new_velocity[1]: " << new_velocity[1] << std::endl;
 	// std::cout << "Actual new_velocity[2]: " << new_velocity[2] << std::endl;
 
-	// DEBUG PRINTOUT:
-
-	/*
-	std::cout << "UAV " << get_id() << " forces: "
-	<< "formation(" << net_formation_force[0] << "," << net_formation_force[1] << "," << net_formation_force[2] << ") "
-	<< "separation(" << net_separation_force[0] << "," << net_separation_force[1] << "," << net_separation_force[2] << ") "
-	<< "alignment(" << net_alignment_force[0] << "," << net_alignment_force[1] << "," << net_alignment_force[2] << ") "
-	<< "net(" << net_force[0] << "," << net_force[1] << "," << net_force[2] << ") "
-	<< "New Velocity(" << new_velocity[0] << ", " << new_velocity[1] << ", " << new_velocity[2] << ")" << std::endl;
-	// */
 	set_velocity(new_velocity[0], new_velocity[1], new_velocity[2]);
 }

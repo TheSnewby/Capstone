@@ -11,6 +11,7 @@
 #include <cstring>
 #include <algorithm>
 #include <memory>
+#include <climits>
 #include "environment.h"
 #include "pathfinder.h"
 #include "pathfollower.h"
@@ -24,7 +25,7 @@ class UAV;
 #define BORDER_X 750
 #define BORDER_Y 750
 #define BORDER_Z 750
-#define RESOLUTION 5
+#define RESOLUTION 10
 
 class UAVSimulator {
 private:
@@ -66,15 +67,6 @@ public:
 	void resize_swarm(int new_size);
 
 private:
-	void create_formation_random(int num_uavs); // default creation
-	void create_formation_line(int num_uavs);	// not sure if will be used
-	void create_formation_vee(int num_uavs);	// not sure if will be used
-	void create_formation_circle(int num_uavs); // not sure if will be used
-
-	void set_formation_line(int num_uavs);
-	void set_formation_vee(int num_uavs);
-	void set_formation_circle(int num_uavs);
-
 	void command_listener_loop();
 
 	void RTB();

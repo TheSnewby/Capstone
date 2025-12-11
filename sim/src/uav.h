@@ -50,11 +50,11 @@ private:
 	std::vector<NeighborInfo> neighbors_status;
 
 	SwarmCoordinator SwarmCoord;
-	Environment env;
+	Environment& env;
 
 public:
 	// Constructor
-	UAV(int set_id, int set_port, double x, double y, double z, Environment env_) :
+	UAV(int set_id, int set_port, double x, double y, double z, Environment& env_) :
 		id(set_id), port(set_port), pos{x, y, z}, vel{0, 0, 0}, env(env_) {}
 
 	// Setters
