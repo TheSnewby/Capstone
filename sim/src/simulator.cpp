@@ -20,8 +20,8 @@ void UAVSimulator::RTB()
 
 	// change speed if at zero
 	auto vel = swarm[0].get_vel();
-	if (sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]) < 1e-2)
-		swarm[0].set_velocity(1,1,1);  // (better if set to direct course)
+	if (sqrt(vel[0] * vel[0] + vel[1] * vel[1] + vel[2] * vel[2]) < 1e-2)
+		swarm[0].set_velocity(1, 1, 1); // (better if set to direct course)
 }
 
 /**
@@ -153,8 +153,8 @@ void UAVSimulator::start_sim()
 	if (running)
 		return;
 
-	std::cout<< "UINTMAX = " << UINT_MAX <<std::endl;
-	std::cout<< "INTMAX = " << INT_MAX <<std::endl;
+	std::cout << "UINTMAX = " << UINT_MAX << std::endl;
+	std::cout << "INTMAX = " << INT_MAX << std::endl;
 
 	running = true;
 
@@ -414,10 +414,13 @@ void UAVSimulator::command_listener_loop()
 				continue;
 
 			// make leader's ID 0 instead of assuming UAV at index 0 is leader
-			auto find_leader_idx = [&]() {
+			auto find_leader_idx = [&]()
+			{
 				size_t leader_idx = 0;
-				for (size_t i = 0; i < swarm.size(); i++) {
-					if (swarm[i].get_id() == 0) {
+				for (size_t i = 0; i < swarm.size(); i++)
+				{
+					if (swarm[i].get_id() == 0)
+					{
 						leader_idx = i;
 						break;
 					}
@@ -490,11 +493,15 @@ void UAVSimulator::command_listener_loop()
 				}
 			}
 
-			// update leader altitude
-			double x = swarm[leader_idx].get_x();
-			double y = swarm[leader_idx].get_y();
-			double z = swarm[leader_idx].get_z() + delta;
-			swarm[leader_idx].set_position(x, y, z);
+			// update leader altitude smoothly by setting a gentle vertical velocity for a short duration
+			double z = swarm[leader_idx].get_z();
+			double target_z = z + delta;
+			double vz = (delta > 0 ? 1.0 : -1.0); // 1 m/s climb or descent
+			// clamp to not overshoot
+			double remaining = target_z - z;
+			if ((delta > 0 && vz > remaining) || (delta < 0 && vz < remaining))
+				vz = remaining;
+			swarm[leader_idx].set_velocity(swarm[leader_idx].get_velx(), swarm[leader_idx].get_vely(), vz);
 		}
 
 		// return-to-base command
@@ -503,10 +510,13 @@ void UAVSimulator::command_listener_loop()
 			if (swarm.empty())
 				continue;
 
-			auto find_leader_idx = [&]() {
+			auto find_leader_idx = [&]()
+			{
 				size_t leader_idx = 0;
-				for (size_t i = 0; i < swarm.size(); i++) {
-					if (swarm[i].get_id() == 0) {
+				for (size_t i = 0; i < swarm.size(); i++)
+				{
+					if (swarm[i].get_id() == 0)
+					{
 						leader_idx = i;
 						break;
 					}
@@ -520,11 +530,13 @@ void UAVSimulator::command_listener_loop()
 			std::array<double, 3> start = swarm[leader_idx].get_pos();
 			std::array<double, 3> base = {0.0, 0.0, 20.0};
 			auto path = pathfinder.plan(start, base);
-			if (path.empty()) {
+			if (path.empty())
+			{
 				path.push_back(start);
 				path.push_back(base);
 			}
-			if (!pathfollower) {
+			if (!pathfollower)
+			{
 				pathfollower = std::make_unique<Pathfollower>(swarm[leader_idx], env.getResolution());
 			}
 			pathfollower->setPath(path);

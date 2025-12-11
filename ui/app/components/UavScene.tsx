@@ -317,7 +317,7 @@ export default function UavScene({
 						last[2] !== nextPoint[2]
 					) {
 						trail.push(nextPoint);
-						if (trail.length > 60) {
+						if (trail.length > 80) {
 							trail.shift(); // keep a finite tail length
 						}
 					}
