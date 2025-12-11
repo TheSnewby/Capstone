@@ -60,8 +60,10 @@ void Pathfollower::update_leader_velocity(double dt) {
 			break;
 	}
 
-	if (currentIndex >= path_size)
+	if (currentIndex >= path_size) {
+		leader.set_velocity(0, 0, 0);
 		return;	// goal reached
+	}
 
 	// compute carrot
 	auto carrot = computeCarrot();

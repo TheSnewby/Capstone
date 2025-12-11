@@ -2,7 +2,7 @@
 
 enum formation {
 	RANDOM = 0,
-	LINE, 
+	LINE,
 	FLYING_V,
 	CIRCLE,
 };
