@@ -257,13 +257,17 @@ void Environment::addCylinder(const std::array<double, 3> &center, double radius
 	msg["obstacles"].push_back(c);
 }
 
+// helper to round to 2 decimal places to shrink JSON size
+static inline double round2(double v) {
+	return std::round(v * 100.0) / 100.0;
+}
+
 void Environment::generate_random_obstacles(int count)
 {
 	if (count <= 0)
 		return;
 
-	const double obstacle_scale = 2.0; // keep collision footprint large and in sync with visuals
-
+	const double obstacle_scale = 2.0;
 	// reset JSON obstacle list; grid will be updated by addBox/addSphere/addCylinder
 	msg["obstacles"] = json::array();
 
@@ -311,20 +315,20 @@ void Environment::generate_random_obstacles(int count)
 		if (t == 0)
 		{
 			// cylinder
-			radius = radius_dist(rng);
-			height = height_dist(rng);
+			radius = round2(radius_dist(rng));
+			height = round2(height_dist(rng));
 		}
 		else if (t == 1)
 		{
 			// box
-			width = box_size_dist(rng);
-			depth = box_size_dist(rng);
-			height = height_dist(rng);
+			width = round2(box_size_dist(rng));
+			depth = round2(box_size_dist(rng));
+			height = round2(height_dist(rng));
 		}
 		else
 		{
 			// sphere
-			radius = radius_dist(rng);
+			radius = round2(radius_dist(rng));
 		}
 
 		// apply global obstacle scale so collision and visuals align
@@ -397,8 +401,8 @@ void Environment::generate_random_obstacles(int count)
 		// if we failed to find a spaced-out position in several tries, just place it anywhere
 		if (!placed)
 		{
-			cx = x_world_dist(rng);
-			cy = y_world_dist(rng);
+			cx = round2(x_world_dist(rng));
+			cy = round2(y_world_dist(rng));
 		}
 
 		placed_obstacles.push_back({cx, cy, effective_radius});
@@ -509,7 +513,9 @@ int Environment::environment_to_rust(int port)
 	std::cout << "DEBUG: sendto returned " << sendto_return << " bytes" << std::endl;
 	if (sendto_return == -1)
 	{
-		std::cout << "DEBUG: sendto in json_to_rust returned -1" << std::endl;
+		std::ostringstream err;
+		err << "DEBUG: sendto in json_to_rust returned -1 errno=" << errno << " (" << strerror(errno) << ")";
+		std::cout << err.str() << std::endl;
 		close(socketfd);
 		return 0;
 	}
